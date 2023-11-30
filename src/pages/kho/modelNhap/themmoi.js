@@ -1,86 +1,64 @@
-// import React, { useState, useRef, useEffect, Fragment } from "react";
-// // import { Button, Modal } from 'antd'
-// import { X } from "react-feather";
-// import Wizard from "@components/wizard";
-// import { ThongTinChung } from "./ThongTinChung";
+import React, { Fragment, useEffect, useState } from "react";
+import { Form, Row, Col, Modal, Input, DatePicker, Select, Button, Steps } from 'antd'
+import { message } from "antd";
+import ThemNguyenLieu from "./ThemNguyenLieu";
+import ThongTinChung from "./ThongTinChung";
+import { theme } from 'antd';
+const FormItem = Form.Item
 
-// import { Modal } from "antd";
+const ThemMoi = ({ open, handleModal, action, getData }) => {
+    const { token } = theme.useToken();
+    const [messageApi, contextHolder] = message.useMessage();
+    const [form] = Form.useForm()
 
-// const ThemMoi = ({ open, handleModal, type, getData, idEdit }) => {
-//   const CloseBtn = (
-//     <X className="cursor-pointer" size={15} onClick={handleModal} />
-//   );
-//   const ref = useRef(null);
-//   const [id, setId] = useState();
-//   const [count, setCount] = useState();
-//   const [eduContent, setEduContent] = useState();
-//   // ** State
-//   const [stepper, setStepper] = useState(null);
+    const [current, setCurrent] = useState(0)
+    const steps = [
+        {
+            key: "1",
+            title: 'Thông tin chung',
+            content: <ThongTinChung />,
+        },
+        {
+            key: "2",
+            title: 'Nguyên liệu',
+            content: <ThemNguyenLieu />,
+        },
+    ]
+    const next = () => {
+        setCurrent(current + 1);
+    };
 
-//   useEffect(() => {
-//     if (idEdit !== undefined) {
-//       setEduContent(idEdit);
-//     }
-//   }, [idEdit]);
+    const prev = () => {
+        setCurrent(current - 1);
+    };
+    return <Fragment>
+        {contextHolder}
+        <Modal
+            title={action === "Add" ? "Thêm mới lịch học" : "Chỉnh sửa lịch học"}
+            open={open}
+            footer={null}
+            onCancel={() => handleModal()}
+        >   <Steps current={current} items={steps} />
+            <div >{steps[current].content}</div>
+            <div style={{ marginTop: 24 }}>
+                {current < steps.length - 1 && (
+                    <Button type="primary" onClick={() => next()}>
+                        Next
+                    </Button>
+                )}
+                {current === steps.length - 1 && (
+                    <Button type="primary" onClick={() => message.success('Processing complete!')}>
+                        Done
+                    </Button>
+                )}
+                {current > 0 && (
+                    <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                        Previous
+                    </Button>
+                )}
+            </div>
+        </Modal>
+    </Fragment>
+};
 
-//   const steps = [
-//     {
-//       id: "thongtinchung",
-//       title: "Thông tin chung",
-//       content: (
-//         <ThongTinChung
-//           getData={getData}
-//           action={type}
-//           educationScheduleID={educationSchedule.ID}
-//           setEduContent={setEduContent}
-//           eduContent={eduContent}
-//           stepper={stepper}
-//           handleModal={handleModal}
-//         />
-//       ),
-//     },
-//     {
-//       id: "chuongtrinhchitiet",
-//       title: "Danh sách nguyên liệu",
-//       content: (
-//         <ThemNguyeLieu
-//           eduContent={eduContent}
-//           setCount={setCount}
-//           getData={getData}
-//           stepper={stepper}
-//           action={type}
-//           educationSchedule={educationSchedule}
-//         />
-//       ),
-//     },
-//   ];
-//   return (
-//     <Modal
-//       open={isAdd}
-//       toggle={handleModal}
-//       onCancel={onReset}
-//       contentClassName="pt-0"
-//       autoFocus={false}
-//       className="modal-md"
-//       footer={[]}
-//     >
-//       <div className="" toggle={handleModal} tag="div">
-//         <h2 className="modal-title">
-//           {action === "Add" ? "Thêm mới Lô hàng " : "Chỉnh sửa Lô hàng "}{" "}
-//         </h2>
-//       </div>
-
-//       <div className="horizontal-wizard">
-//         <Wizard
-//           ref={ref}
-//           steps={steps}
-//           options={{
-//             linear: false,
-//           }}
-//           instance={(el) => setStepper(el)}
-//         />
-//       </div>
-//     </Modal>
-//   );
-// };
-// export default ThemMoi;
+export default ThemMoi

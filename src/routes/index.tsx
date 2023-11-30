@@ -17,7 +17,7 @@ import Combo from "../pages/mathang/combo/Combo";
 import DatBan from "../pages/datban/DatBan";
 import DanhSachKhachHang from "../pages/khachhang/danhsachkhachhang";
 import TonKho from "../pages/kho/TonKho";
-import NhapKho from "../pages/kho/NhapKho";
+import NhapKho from "../pages/kho/nhapkho/NhapKho";
 import KiemKe from "../pages/kho/KiemKe";
 import KhuyenMai from "../pages/khuyenmai/KhuyenMai";
 import NhanVien from "../pages/baocao/nhanvien/NhanVien";
@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
       //   path: RouterLinks.MAT_HANG,
       //   element: <DanhSachHang />,
       // },
-      
+
       {
         path: RouterLinks.DS_MAT_HANG,
         element: <DanhSachSanPham />,

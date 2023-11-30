@@ -1,38 +1,49 @@
-import createApiServices from "../createApiService";
-const api = createApiServices();
+import CreateApiService from "../createApiService";
 
-const getSupplier = (params: any,) => {
+const api = CreateApiService();
+
+const get = (params: any) => {
   return api.makeAuthRequest({
-    url: "/api/v1/supplier",
+    url: `/api/v1/supplier`,
+    method: "GET",
+    params: params
+  });
+};
+
+const getById = (id: Number) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/supplier/${id}`,
     method: "GET",
   });
 };
 
-const createSupplier = (data: any) => {
-    return api.makeAuthRequest({
-      url: "/api/v1/supplier",
-      method: "POST",
-      data,
-    });
-  };
+const create = (data: any) => {
+  return api.makeAuthRequest({
+    url: "/api/v1/supplier",
+    method: "POST",
+    data: data,
+  });
+};
 
-  const deleteSupplier = (Id: string) => {
-    return api.makeAuthRequest({
-      url: `/api/v1/supplier/${Id}`,
-      method: "DELETE",
-    });
-  };
-  
-  const updateSupplier = (Id: string, data: any) => {
-    return api.makeAuthRequest({
-      url: `/api/v1/supplier/${Id}`,
-      method: "PUT",
-      data,
-    });
-  };
-  
+const update = (id: Number, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/supplier/${id}`,
+    method: "PUT",
+    data: data,
+  });
+};
 
-export { getSupplier };
-export { createSupplier };
-export { deleteSupplier };
-export { updateSupplier };
+const deleteById = (id: Number) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/supplier/${id}`,
+    method: "DELETE",
+  });
+};
+
+export const supplierServices = {
+  get,
+  getById,
+  create,
+  update,
+  deleteById,
+};

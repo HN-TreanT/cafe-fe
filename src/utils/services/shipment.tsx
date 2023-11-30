@@ -1,41 +1,49 @@
-import createApiServices from "../createApiService";
-const api = createApiServices();
+import CreateApiService from "../createApiService";
 
-const getShipment =  (params: any,) => {
-  if(!params.search){
-    params.search =""
-  }
+const api = CreateApiService();
+
+const get = (params: any) => {
   return api.makeAuthRequest({
-    url: `/api/v1/shipment?search=${params.search}`,
+    url: `/api/v1/detail-shipment`,
+    method: "GET",
+    params: params
+  });
+};
+
+const getById = (id: Number) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/detail-shipment/${id}`,
     method: "GET",
   });
 };
 
-const createShipment = (data: any) => {
-    return api.makeAuthRequest({
-      url: "/api/v1/shipment",
-      method: "POST",
-      data,
-    });
-  };
+const create = (data: any) => {
+  return api.makeAuthRequest({
+    url: "/api/v1/detail-shipment",
+    method: "POST",
+    data: data,
+  });
+};
 
-  const deleteShipment = (Id: string) => {
-    return api.makeAuthRequest({
-      url: `/api/v1/shipment/${Id}`,
-      method: "DELETE",
-    });
-  };
-  
-  const updateShipment = (Id: string, data: any) => {
-    return api.makeAuthRequest({
-      url: `/api/v1/shipment/${Id}`,
-      method: "PUT",
-      data,
-    });
-  };
-  
+const update = (id: Number, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/detail-shipment/${id}`,
+    method: "PUT",
+    data: data,
+  });
+};
 
-export { getShipment };
-export { createShipment };
-export { deleteShipment };
-export { updateShipment };
+const deleteById = (id: Number) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/detail-shipment/${id}`,
+    method: "DELETE",
+  });
+};
+
+export const ShipmentServices = {
+  get,
+  getById,
+  create,
+  update,
+  deleteById,
+};

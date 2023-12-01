@@ -108,7 +108,7 @@ const NhapKho = () => {
       render: (record) => (
         <div style={{ display: 'flex', justifyContent: 'space-around', paddingRight: '20px', paddingLeft: '20px' }}>
           <EditOutlined onClick={() => handleUpdate(record)} style={{ marginRight: '1rem', color: '#036CBF', cursor: 'pointer' }} />
-          <Popconfirm onConfirm={() => handleDelete(record.Ma_Loai_TTB)} title="Bạn chắc chắn xóa?" cancelText='Hủy' okText='Đồng ý'>
+          <Popconfirm onConfirm={() => handleDelete(record.id)} title="Bạn chắc chắn xóa?" cancelText='Hủy' okText='Đồng ý'>
             <DeleteOutlined style={{ color: 'red', cursor: 'point' }} />
           </Popconfirm>
         </div>
@@ -290,16 +290,16 @@ const NhapKho = () => {
         />
       </Row>
 
-      <ModalAdd shipment={shipment} material={material} nhacc={nhacc} nhanvien={nhanvien} curData={curData} open={openModalAdd} handleModal={hanldeModalAdd} action="Add" getData={getData} />
-      <ModalAdd shipment={shipment} material={material} nhacc={nhacc} nhanvien={nhanvien} curData={curData} open={openModalEdit} handleModal={handleModalEdit} action="Edit" getData={getData} />
+      {/* <ModalAdd shipment={shipment} material={material} nhacc={nhacc} nhanvien={nhanvien} curData={curData} open={openModalAdd} handleModal={hanldeModalAdd} action="Add" getData={getData} />
+      <ModalAdd shipment={shipment} material={material} nhacc={nhacc} nhanvien={nhanvien} curData={curData} open={openModalEdit} handleModal={handleModalEdit} action="Edit" getData={getData} /> */}
 
-      {/* <Modal curData={curData} action="Add" handleModal={hanldeModalAdd} open={openModalAdd} getData={getData}
+      <Modal action="Add" handleModal={hanldeModalAdd} open={openModalAdd}
       />
-      <Modal curData={curData} action="Edit" handleModal={handleModalEdit} open={openModalEdit} getData={getData}
-      /> */}
+      <Modal action="Edit" handleModal={handleModalEdit} open={openModalEdit}
+      />
     </div>
   );
 };
-const ModalAdd = React.lazy(() => import("./ModalNhapKho"))
-// const Modal = React.lazy(() => import("../../kho/modelNhap/themmoi"))
+// const ModalAdd = React.lazy(() => import("./ModalNhapKho"))
+const Modal = React.lazy(() => import("../../kho/nhapkho/modelNhap/themmoi"))
 export default NhapKho;

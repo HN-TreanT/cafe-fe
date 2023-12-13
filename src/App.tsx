@@ -21,6 +21,7 @@ import KiemKe from './pages/kho/KiemKe';
 import DanhsachMatHang from './pages/mathang/danhsachmathang/DanhSachMatHang';
 import Layout from './layouts/Layout';
 import NhanVien from './pages/baocao/nhanvien/NhanVien';
+import OrderPage from './pages/order-page';
 function App() {
   return (
     <Provider store={store}>
@@ -45,6 +46,8 @@ function App() {
                   <Route path={RouterLinks.BAO_CAO_NHAN_VIEN} element={<Suspense fallback={null}><NhanVien /></Suspense>} />
 
                 </Route>
+                <Route path={RouterLinks.ORDER_PAGE} element={<OrderPage />} />
+
 
               </Routes>
 

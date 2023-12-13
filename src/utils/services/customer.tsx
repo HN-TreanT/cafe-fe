@@ -3,8 +3,9 @@ const api = createApiServices();
 
 const getCustomer = (params: any,) => {
   return api.makeAuthRequest({
-    url: `/api/v1/customer?search=${params.search}`,
+    url: `/api/v1/customer`,
     method: "GET",
+    params: params
   });
 };
 

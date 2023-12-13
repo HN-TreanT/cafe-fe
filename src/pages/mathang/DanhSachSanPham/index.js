@@ -9,6 +9,7 @@ import {
 import { Plus, X } from "react-feather"
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
+import ListMaterial from './ListMaterial'
 import {getProduct, createProduct, deleteProduct, updateProduct } from "../../../../src/utils/services/productServices "
 import { categoryServices } from "../../../../src/utils/services/categoryServices"
 import withReactContent from "sweetalert2-react-content"
@@ -34,11 +35,17 @@ const DanhSachSanPham = () => {
             params: {
                 page: currentPage,
                 limit: rowsPerPage,
-                search: search
             },
+            name: search
         })
             .then((res) => {
-                setData(res.data.data)
+                const t = res.data.data.map((item) => {
+                    return {
+                        ...item,
+                        key: item.id
+                    }
+                })
+                setData(t)
                 setCount(res.count)
             })
             .catch((err) => {
@@ -70,7 +77,6 @@ const DanhSachSanPham = () => {
    }
     useEffect(() => {
         getData()
-        getProduct()
         getAllCategory()
     }, [currentPage, rowsPerPage, search])
 
@@ -169,17 +175,19 @@ const DanhSachSanPham = () => {
                         </Tooltip>
                           </>
                     }
-                    {
-                        <Popconfirm
-                        title="Bạn chắc chắn xóa?"
-                        onConfirm={() => handleDelete(record.id)}
-                        cancelText="Hủy"
-                        okText="Đồng ý"
-                    >
-                        <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
-                        <UncontrolledTooltip placement="top" target={`tooltip_delete${record.ID}`}>
-                            Xóa
-                        </UncontrolledTooltip>
+                    { 
+                       <Popconfirm
+                       title="Bạn chắc chắn xóa?"
+                       onConfirm={() => handleDelete(record.id)}
+                       cancelText="Hủy"
+                       okText="Đồng ý"
+                   >
+                    <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                        <DeleteOutlined
+                        style={{ color: "red", cursor: 'pointer', marginRight: '10px' }}
+                        />
+                        </Tooltip>
+                     
                     </Popconfirm>
 
                     }
@@ -191,19 +199,21 @@ const DanhSachSanPham = () => {
     const showTotal = (count) => `Tổng số: ${count}`
 
     return (
-        <Card
-           
-        >
-          <Breadcrumb
-                style={{ margin: "auto",marginBottom:"14px", marginLeft: 0 }}
-                items={[
-                    {
-                        title: (
-                            <span style={{ fontWeight: "bold" }}>Danh sách các sản phẩm</span>
-                        ),
-                    },
-                ]}
-            />
+        <Card>
+        <Breadcrumb
+          style={{ margin: "auto", marginLeft: 0 }}
+          items={[
+            {
+              title: "Mặt hàng",
+            },
+            {
+              title: (
+                <span style={{ fontWeight: "bold" }}>Danh sách mặt hàng</span>
+              ),
+            },
+          ]}
+        />
+
               <Divider style={{ margin: "10px" }}></Divider>
             <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
                 <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -239,6 +249,7 @@ const DanhSachSanPham = () => {
                 <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
                          <Button
+                            style={{backgroundColor: "#036CBF"}}
                             onClick={(e) => {
                             setAction('Add')
                             setIsAdd(true)
@@ -255,6 +266,12 @@ const DanhSachSanPham = () => {
                 columns={columns}
                 dataSource={data}
                 bordered
+                expandable={{
+                    expandedRowRender: (record) => {
+                      return <ListMaterial type="Add" record={record} category={category} getProduct={getData}/>
+                    },
+                    rowExpandable: (record) => record.name !== "Not Expandable",
+                  }}
                 pagination={{
                   current: currentPage,
                   pageSize: rowsPerPage,

@@ -1,29 +1,21 @@
-import React, { useState } from 'react';
-import { Modal, Steps, Form, Input, Button } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Steps, Card } from 'antd';
 import Thongtinchung from './Thongtinchung';
+import Material from './Material';
 const { Step } = Steps;
 
 const Them = ({ isAdd, action, getData, category, handleModal, idEdit }) => {
   const [current, setCurrent] = useState(0);
-
+  const [id, setId] = useState();
   const steps = [
     {
       title: 'Thông tin sản phẩm',
-      content: <Thongtinchung  isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit}/>,
+      content: <Thongtinchung step={current} setStep={setCurrent} setId={setId} isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit}/>,
     },
-    {
-      title: 'Nguyên liệu',
-      content: (
-        <Form>
-          <Form.Item label="Nguyên vật liệu 1">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Nguyên vật liệu 2">
-            <Input />
-          </Form.Item>
-        </Form>
-      ),
-    },
+    action === "Add" ? {
+      title: 'Nguyên liệu tạo',
+      content: <Material step={current} id={id} setStep={setCurrent} isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit}/>,
+    } : null
   ];
 
   const next = () => {
@@ -34,38 +26,31 @@ const Them = ({ isAdd, action, getData, category, handleModal, idEdit }) => {
     setCurrent(current - 1);
   };
 
+  const goToStep = (step) => {
+    setCurrent(step);
+  };
+
   return (
     <Modal
       visible={isAdd}
       onCancel={handleModal}
-      // width={800}
-      // height={400}
-      style={{ top: 20 }}
+      width={800}
+      height={400}
       footer={null}
     >
-      <Steps current={current}>
-        {steps.map((step) => (
-          <Step key={step.title} title={step.title} />
-        ))}
-      </Steps>
-      <div className="steps-content">{steps[current].content}</div>
-      <div className="steps-action">
-        {current > 0 && (
-          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-            Quay lại
-          </Button>
-        )}
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Tiếp theo
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => handleModal()}>
-            Hoàn thành
-          </Button>
-        )}
-      </div>
+      <Card
+        title={action === "Add" ? "Thêm mới thông tin sản phẩm" : "Chỉnh sửa thông tin sản phẩm"}
+        style={{ backgroundColor: "white", width: "100%", height: "100%", fontSize: '21px' }}
+      >
+        <Steps current={current} style={{marginBottom: '30px', maxWidth: '430px'}}>
+          {steps.map((step, index) => (
+            step ? (
+              <Step key={step.title} title={step.title} onClick={() => goToStep(index)} />
+            ) : null
+          ))}
+        </Steps>
+        <div className="steps-content">{steps[current]?.content}</div>
+      </Card>
     </Modal>
   );
 };

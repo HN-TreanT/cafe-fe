@@ -1,14 +1,13 @@
 import {
     Table,
     Input,
-    Card,
-    Modal,
+    Row,
+    Col,
     Button,
     Form,
     Select
   } from "antd";
   import React, { useState, Fragment, useEffect, useRef } from "react";
-  import { Label, Row, Col, UncontrolledTooltip } from "reactstrap";
   import { Plus, X } from "react-feather";
   import {
     PlusOutlined,
@@ -24,7 +23,9 @@ import {
   import withReactContent from "sweetalert2-react-content";
   import { message, Upload } from "antd";
   const Thongtinchung = ({
-    isAdd,
+    step,
+    setStep,
+    setId,
     getData,
     action,
     category,
@@ -92,7 +93,8 @@ import {
               },
             }).then((result) => {
               getData();
-              handleModal();
+              setId(res)
+              setStep(step+1) 
             });
           })
           .catch((err) => {
@@ -139,9 +141,8 @@ import {
             onFinish={onFinish}
             layout="vertical"
           >
-            <Row>
-              <Row>
-                <div className=" col col-6">
+            <Row gutter={16}>
+            <Col span={12} className="gutter-row">
                   <Form.Item
                     style={{ marginBottom: "4px" }}
                     name="name"
@@ -163,8 +164,8 @@ import {
                   >
                     <Input placeholder="Nhập tên sản phẩm" />
                   </Form.Item>
-              </div>
-                <div className="col col-6">
+              </Col>
+              <Col span={12} className="gutter-row">
                   <Form.Item
                     style={{ marginBottom: "4px" }}
                     name="id_category"
@@ -184,9 +185,8 @@ import {
                       onKeyPress={(e) => {}}
                     ></Select>
                   </Form.Item>
-                </div>
-                </Row>
-              <div className=" col col-6">
+                </Col>  
+                <Col span={12} className="gutter-row">
                 <Form.Item
                   style={{ marginBottom: "4px" }}
                   name="price"
@@ -208,8 +208,8 @@ import {
                 >
                   <Input placeholder="Nhập giá bán" />
                 </Form.Item>
-              </div>
-              <div className=" col col-6">
+              </Col>
+              <Col span={12} className="gutter-row">
                 <Form.Item
                   style={{ marginBottom: "4px" }}
                   name="unit"
@@ -231,8 +231,8 @@ import {
                 >
                   <Input placeholder="Nhập đơn vị tính" />
                 </Form.Item>
-              </div>
-              <div className=" col col-12">
+              </Col>
+              <Col span={12} className="gutter-row">
                 <Form.Item
                   style={{ marginBottom: "4px" }}
                   name="description"
@@ -245,9 +245,8 @@ import {
                 >
                   <Input.TextArea placeholder="Nhập mô tả" />
                 </Form.Item>
-              </div>
-              <div className="col col-12">
-                <Col span={6}>
+              </Col>
+              <Col span={12} className="gutter-row">
                   <Form.Item
                     label="Ảnh mặt hàng"
                     name="file"
@@ -278,8 +277,7 @@ import {
                       )}
                     </Upload>
                   </Form.Item>
-                </Col>
-              </div>
+              </Col>
             </Row>
             <Form.Item style={{ display: "flex", justifyContent: "center" }}>
               <Button

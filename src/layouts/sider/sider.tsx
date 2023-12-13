@@ -9,14 +9,15 @@ import {
   InboxOutlined,
   UsergroupAddOutlined,
   ShopOutlined,
-  SettingOutlined,
+  CoffeeOutlined,
+  MoneyCollectOutlined,
   TableOutlined,
-  ClockCircleOutlined,
+  DropboxOutlined,
 } from "@ant-design/icons";
 import {
   UploadOutlined,
   UserOutlined,
-  VideoCameraOutlined,
+  AppstoreAddOutlined,
 } from '@ant-design/icons';
 import SubMenu from "antd/es/menu/SubMenu";
 import { memo } from "react";
@@ -30,7 +31,7 @@ const menuItems = [
     key: "qlttb",
     label: "Báo Cáo",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <HomeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
     children: [
       {
@@ -64,28 +65,28 @@ const menuItems = [
     key: "muontra",
     label: "Mặt hàng",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <CoffeeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
     children: [
       {
         key: RouterLinks.DS_MAT_HANG,
         label: "Danh sách mặt hàng",
       },
-      {
-        key: RouterLinks.THUC_DON,
-        label: "Thực đơn ",
-      },
+      // {
+      //   key: RouterLinks.THUC_DON,
+      //   label: "Thực đơn ",
+      // },
       {
         key: RouterLinks.DANH_MUC,
         label: "Danh mục",
       },
-      {
-        key: RouterLinks.LUA_CHON,
-        label: "Nhóm lựa chọn",
-      },
+      // {
+      //   key: RouterLinks.LUA_CHON,
+      //   label: "Nhóm lựa chọn",
+      // },
       {
         key: RouterLinks.COMBO,
-        label: "combo",
+        label: "Combo",
       },
     ],
   },
@@ -94,7 +95,7 @@ const menuItems = [
     key: RouterLinks.DAT_BAN,
     label: "Đặt bàn",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <TableOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
 
   },
@@ -102,7 +103,7 @@ const menuItems = [
     key: "Nhanvien",
     label: "Nhân viên",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <UserOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
 
   },
@@ -110,7 +111,7 @@ const menuItems = [
     key: RouterLinks.DANH_SACH_KHACH_HANG,
     label: "Khách hàng",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
     children: [
       {
@@ -124,7 +125,7 @@ const menuItems = [
     key: RouterLinks.KHUYEN_MAI,
     label: "Khuyến mãi ",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <AppstoreAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
 
   },
@@ -132,7 +133,7 @@ const menuItems = [
     key: "Kho",
     label: "Kho ",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <DropboxOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
     children: [
       {
@@ -158,7 +159,7 @@ const menuItems = [
     key: "Thuchi",
     label: "Thu chi",
     icon: (
-      <ShopOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <MoneyCollectOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
 
   },

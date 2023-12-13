@@ -1,5 +1,5 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider } from "antd"
-import { useState, Fragment, useEffect, useRef } from "react"
+import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider,Tooltip } from "antd"
+import React, { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
     Row,
@@ -9,11 +9,10 @@ import {
 import { Plus, X } from "react-feather"
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
+import ListMaterial from './ListMaterial'
 import {getProduct, createProduct, deleteProduct, updateProduct } from "../../../../src/utils/services/productServices "
+import { categoryServices } from "../../../../src/utils/services/categoryServices"
 import withReactContent from "sweetalert2-react-content"
-
-
-
 const DanhSachSanPham = () => {
     const [form] = Form.useForm()
 
@@ -24,139 +23,75 @@ const DanhSachSanPham = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
 
-    const [product, setProduct] = useState([])
-
     const [rowsPerPage, setRowsPerpage] = useState(10)
     const [action, setAction] = useState('Add')
 
+    const [category, setCategory] = useState([])
     const [search, setSearch] = useState("")
     const [isAdd, setIsAdd] = useState(false)
 
     const getData = () => {
-        console.log("t", search)
         getProduct({
             params: {
                 page: currentPage,
                 limit: rowsPerPage,
-                search: search
             },
+            name: search
         })
             .then((res) => {
-                setData(res.data.data)
+                const t = res.data.data.map((item) => {
+                    return {
+                        ...item,
+                        key: item.id
+                    }
+                })
+                setData(t)
                 setCount(res.count)
             })
             .catch((err) => {
                 console.log(err)
             })
     }
-
-    // const getProduct = () => {
-    //   productServices.get({
-    //     params: {
-    //         page: currentPage,
-    //         limit: rowsPerPage,
-    //         ...(search && search !== "" && { search }),
-    //     },
-    // })
-    //   .then(res => {
-    //     const data = res.data.data.map((item) => {
-    //       return {
-    //         value: item.id,
-    //         label: item.name
-    //       }
-    //     })
-    //     setProduct(data)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
-    // }
-    useEffect(() => {
-        getData()
-        getProduct()
-        console.log("search", search)
-    }, [currentPage, rowsPerPage, search])
-
-
     const handleModal = () => {
         setIsAdd(false)
-        // setIsEdit(false)
     }
-    const handleEdit = (record) => {
-        form.setFieldsValue({
-            name: record.name,
-            id_product: record.id_product,
+   const getAllCategory = () => {
+    categoryServices.get({
+        params : {
+            page: 1,
+            limit: 100
+        },
+    })
+    .then((res) => {
+        const temps = res.data.data.map((item) => {
+            return {
+                value: item.id,
+                label: item.name
+            }
         })
-        setAction('Edit')
-        setIsAdd(true)
-        setIdEdit(record.id)
-    }
-    const onReset = () => {
-        form.resetFields()
-        handleModal()
-    }
-    const onFinish = (values) => {
-        if (action === 'Add') {
-            createProduct({
-                name: values.name,
-                id_product: values.id_product
-            })
-                .then((res) => {
-                    MySwal.fire({
-                        title: "Thêm mới thành công",
-                        text: "Yêu cầu đã được phê duyệt!",
-                        icon: "success",
-                        customClass: {
-                            confirmButton: "btn btn-success",
-                        },
-                    }).then((result) => {
-                        getData()
-                        form.resetFields()
-                        handleModal()
-                    })
-                })
-                .catch((err) => {
-                    MySwal.fire({
-                        title: "Thêm mới thất bại",
-                        icon: "error",
-                        customClass: {
-                            confirmButton: "btn btn-danger",
-                        },
-                    })
-                })
-        } else {
-            updateProduct(idEdit, values)
-                .then((res) => {
-                    MySwal.fire({
-                        title: "Chỉnh sửa thành công",
-                        text: "Yêu cầu đã được phê duyệt!",
-                        icon: "success",
-                        customClass: {
-                            confirmButton: "btn btn-success",
-                        },
-                    }).then((result) => {
-                        handleModal()
-                        getData()
-                        form.resetFields()
-                    })
-                })
-                .catch((err) => {
-                    MySwal.fire({
-                        title: "Chỉnh sửa thất bại",
-                        icon: "error",
-                        customClass: {
-                            confirmButton: "btn btn-danger",
-                        },
-                    })
-                })
-        }
+        setCategory(temps)
+    })
+    .catch((e) => {
+        console.log(e)
+    })
+   }
+    useEffect(() => {
+        getData()
+        getAllCategory()
+    }, [currentPage, rowsPerPage, search])
 
+    const handleEdit = (record) => {
+        form.setFieldsValue(record);
+        setAction('Edit')
+        setIdEdit(record.id)
+        setIsAdd(true)
     }
+   
     const handleDelete = (key) => {
         deleteProduct(key)
             .then((res) => {
                 MySwal.fire({
-                    title: "Xóa khuyến mãi thành công",
+                    title: "Xóa sản phẩm thành công",
                     icon: "success",
                     customClass: {
                         confirmButton: "btn btn-success",
@@ -171,7 +106,7 @@ const DanhSachSanPham = () => {
             })
             .catch((error) => {
                 MySwal.fire({
-                    title: "Xóa khuyến mãi thất bại",
+                    title: "Xóa sản phẩm thất bại",
                     icon: "error",
                     customClass: {
                         confirmButton: "btn btn-danger",
@@ -180,6 +115,7 @@ const DanhSachSanPham = () => {
                 console.log(error)
             })
     }
+   
     const columns = [
         {
             title: "STT",
@@ -191,30 +127,37 @@ const DanhSachSanPham = () => {
             ),
         },
         {
-            title: "Tên khuyến mãi",
+            title: "Ảnh",
+            dataIndex: "image",
+            width: 50,
+            height: 50,
+            render: (record, index) => (
+              <img src={record} alt={`Ảnh ${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+            )
+        },
+        {
+            title: "Tên sản phẩm",
             dataIndex: "name",
         },
         {
-            title: "Sản phẩm áp dụng",
-            dataIndex: "id_product",
+            title: "Loại",
+            dataIndex: "id_category",
             render: (text, record, index) => {
-              const matchedSchoolYear = product.find(item => item.value === record.id_product)
-              return (
-                  <span>{`${matchedSchoolYear?.label ? matchedSchoolYear.label : ""}`}</span>
-              )
-          }
+                const temp = category.find((item) => item.value === record.id_category)
+                 return <span>{`${temp?.label ? temp.label : ""}`}</span>
+            }
         },
         {
-            title: "Điều kiện áp dụng",
-            dataIndex: "condition",
-            width: "20%",
-            align: "center",
+            title: "Giá Bán",
+            dataIndex: "price",
         },
         {
-            title: "Giảm giá",
-            dataIndex: "discount",
-            width: "20%",
-            align: "center",
+            title: "Đơn vị tính",
+            dataIndex: "unit",
+        },
+        {
+            title: "Mô tả",
+            dataIndex: "description",
         },
         {
             title: "Thao tác",
@@ -224,27 +167,27 @@ const DanhSachSanPham = () => {
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                     {
                         <>
+                        <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
                             <EditOutlined
-                                id={`tooltip_edit${record.ID}`}
-                                style={{ color: "#036CBF", cursor: 'pointer' }}
-                                onClick={(e) => handleEdit(record)}
+                            style={{ color: '#036CBF', marginRight: '10px' }}
+                            onClick={() => handleEdit(record)}
                             />
-                            <UncontrolledTooltip placement="top" target={`tooltip_edit${record.ID}`}>
-                                Chỉnh sửa
-                            </UncontrolledTooltip></>
-
+                        </Tooltip>
+                          </>
                     }
-                    {
-                        <Popconfirm
-                        title="Bạn chắc chắn xóa?"
-                        onConfirm={() => handleDelete(record.id)}
-                        cancelText="Hủy"
-                        okText="Đồng ý"
-                    >
-                        <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
-                        <UncontrolledTooltip placement="top" target={`tooltip_delete${record.ID}`}>
-                            Xóa
-                        </UncontrolledTooltip>
+                    { 
+                       <Popconfirm
+                       title="Bạn chắc chắn xóa?"
+                       onConfirm={() => handleDelete(record.id)}
+                       cancelText="Hủy"
+                       okText="Đồng ý"
+                   >
+                    <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                        <DeleteOutlined
+                        style={{ color: "red", cursor: 'pointer', marginRight: '10px' }}
+                        />
+                        </Tooltip>
+                     
                     </Popconfirm>
 
                     }
@@ -256,19 +199,21 @@ const DanhSachSanPham = () => {
     const showTotal = (count) => `Tổng số: ${count}`
 
     return (
-        <Card
-           
-        >
-          <Breadcrumb
-                style={{ margin: "auto",marginBottom:"14px", marginLeft: 0 }}
-                items={[
-                    {
-                        title: (
-                            <span style={{ fontWeight: "bold" }}>Danh sách các khuyến mãi</span>
-                        ),
-                    },
-                ]}
-            />
+        <Card>
+        <Breadcrumb
+          style={{ margin: "auto", marginLeft: 0 }}
+          items={[
+            {
+              title: "Mặt hàng",
+            },
+            {
+              title: (
+                <span style={{ fontWeight: "bold" }}>Danh sách mặt hàng</span>
+              ),
+            },
+          ]}
+        />
+
               <Divider style={{ margin: "10px" }}></Divider>
             <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
                 <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -304,6 +249,7 @@ const DanhSachSanPham = () => {
                 <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
                          <Button
+                            style={{backgroundColor: "#036CBF"}}
                             onClick={(e) => {
                             setAction('Add')
                             setIsAdd(true)
@@ -320,6 +266,12 @@ const DanhSachSanPham = () => {
                 columns={columns}
                 dataSource={data}
                 bordered
+                expandable={{
+                    expandedRowRender: (record) => {
+                      return <ListMaterial type="Add" record={record} category={category} getProduct={getData}/>
+                    },
+                    rowExpandable: (record) => record.name !== "Not Expandable",
+                  }}
                 pagination={{
                   current: currentPage,
                   pageSize: rowsPerPage,
@@ -338,124 +290,11 @@ const DanhSachSanPham = () => {
                   }
               }}
             />
-            <Modal
-                open={isAdd}
-                toggle={handleModal}
-                onCancel={onReset}
-                contentClassName="pt-0"
-                autoFocus={false}
-                className="modal-md"
-                footer={[]}
-                    >
-                <div
-                    className=""
-                    toggle={handleModal}
-                    tag="div"
-                >
-                     <h2 className="modal-title">{
-                        action === 'Add' ? "Thêm mới khuyến mãi" : "Chỉnh sửa khuyến mãi"
-                    } </h2>
-                </div>
-                
-                <div className="flex-grow-1">
-                    <Form
-                        form={form}
-                        name="control-hooks"
-                        onFinish={onFinish}
-                        layout="vertical"
-                    ><Row>
-
-                            <div className=' col col-12'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="name"
-                                    label="Tên khuyến mãi"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Nhập tên khuyến mãi'
-                                        },
-                                        {
-                                            validator: (rule, value) => {
-                                                if (value && value.trim() === '') {
-                                                    return Promise.reject('Không được nhập toàn dấu cách')
-                                                }
-                                                return Promise.resolve()
-                                            },
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder='Nhập tên khuyến mãi' />
-                                </Form.Item>
-                            </div>
-                            <div className=' col col-12'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="id_product"
-                                    label="Sản phẩm áp dụng"
-                                    rules={[
-                                      {
-                                          required: true,
-                                          message: 'Chọn sản phẩm áp dụng'
-                                      },
-                                  ]}
-                                >
-                                     <Select allowClear 
-                                         options={product} style={{width:"100%"}}  placeholder="Chọn sản phẩm"  onKeyPress={(e) => {
-                                      }}
-                                  ></Select> 
-                                </Form.Item>
-
-                            </div>
-                            <div className=' col col-12'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="condition"
-                                    label="Điều kiện áp dụng"
-                                    rules={[
-                                        {
-                                            validator: (rule, value) => {
-                                                if (value && value.trim() === '') {
-                                                    return Promise.reject('Không hợp lệ')
-                                                }
-                                                return Promise.resolve()
-                                            },
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder='Nhập điều kiện áp dụng' type="number"/>
-                                </Form.Item>
-                            </div>
-                            <div className=' col col-12'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="discount"
-                                    label="Giảm giá"
-                                    rules={[
-                                        {
-                                            validator: (rule, value) => {
-                                                if (value && value.trim() === '') {
-                                                    return Promise.reject('Không hợp lệ')
-                                                }
-                                                return Promise.resolve()
-                                            },
-                                        },
-                                    ]}
-                                >
-                                    <Input placeholder='Nhập giảm giá'  type="number"/>
-                                </Form.Item>
-                            </div>
-                        </Row>
-                        <Form.Item style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Button type="primary" htmlType="submit"
-                                className="addBtn" style={{ marginRight: '20px', width: '94px' }}>
-                                Lưu
-                            </Button>
-                            <Button htmlType="button"
-                                className="addBtn" onClick={onReset} style={{ width: '94px' }}>
-                                Hủy
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </div>
-            </Modal>
+            <Them isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit}/>
+           {/* <AddModal isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit} /> */}
                  </Card>
     )
 }
+const Them = React.lazy(() => import("./step/Them"))
+// const AddModal = React.lazy(() => import("./addModal"))
 export default DanhSachSanPham 

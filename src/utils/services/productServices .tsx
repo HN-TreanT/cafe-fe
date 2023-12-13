@@ -2,15 +2,12 @@ import createApiServices from "../createApiService";
 const api = createApiServices();
 
 const getProduct = (params: any) => {
-  if (!params) {
-    params = { search: "" };
-  } else {
-    params.search = params.search || "";
-  }
 
   return api.makeAuthRequest({
-    url: `/api/v1/product?search=${params.search}`,
+    url: `/api/v1/product`,
     method: "GET",
+    params: params
+
   });
 };
 

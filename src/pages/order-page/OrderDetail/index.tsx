@@ -3,10 +3,16 @@ import { Tabs } from "antd";
 import "./OrderDetail.scss"
 import ContentOrderDetail from "./ContentOrderDetail/ContentOrderDetail";
 import { getCustomer } from "../../../utils/services/customer";
-
-
-const OrderDetail: React.FC = () => {
+import { useDispatch, useSelector } from "react-redux";
+interface props {
+  invoice_details: any[],
+  setInvoiceDetails: any,
+  handleSaveOrder: any
+}
+const OrderDetail: React.FC<props> = (props) => {
+  const {invoice_details, setInvoiceDetails, handleSaveOrder} = props
   const [customer, setCustomer] = useState([])
+   const selectedOrder = useSelector((state: any) => state.order.selectedOrder)
   const getDataCustomer = () => {
     getCustomer({
       page: 1, 
@@ -41,11 +47,12 @@ const OrderDetail: React.FC = () => {
   return (
     <div className="order-detail">
       <Tabs
+       
         type="editable-card"
         onChange={onChange}
         items={[
-          { label: "new tab", 
-          children: <ContentOrderDetail customers={customer}/>,
+          { label: `Yêu cầu #${selectedOrder?.id}`, 
+          children: <ContentOrderDetail invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} customers={customer} handleSaveOrder={handleSaveOrder} />,
          key: "1" },
         ]}
         onEdit={onEdit}

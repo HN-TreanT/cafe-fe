@@ -38,23 +38,91 @@ const _makeAuthRequest = (instantAxios: any) => async (args: any) => {
     Authorization: `Bearer ${token}`,
     ClientID: client_id,
   };
-  instantAxios.interceptors.response.use(
-    (response: any) => response,
-    async (error: any) => {
-      const status = error.response ? error.response.status : null;
-      console.log(status)
-      const originalConfig = error.config;
-      // Access Token was expired
-      if (status === 401) {
-        console.log("check refres")
-        return Auth.refreshToken(token, refreshToken).then((res) => {
-          error.config.headers["Authorization"] = "Bearer " + getAuthToken();
-          return instantAxios(error.config);
-        });
-      }
-      return Promise.reject(error);
-    }
-  );
+  // instantAxios.interceptors.response.use(
+  //   (response: any) => response,
+  //   async (error: any) => {
+  //     const status = error.response ? error.response.status : null;
+  //     console.log(status)
+  //     const originalConfig = error.config;
+  //     // Access Token was expired
+  //     if (status === 401) {
+  //       console.log("check refres")
+  //       return Auth.refreshToken(token, refreshToken).then((res) => {
+  //         error.config.headers["Authorization"] = "Bearer " + getAuthToken();
+  //         return instantAxios(error.config);
+  //       });
+  //     }
+  //     return Promise.reject(error);
+  //   }
+  // );
+  ///test 
+  let isRefreshing = false;
+ let failedQueue: { resolve: (value: unknown) => void; reject: (reason?: any) => void; }[] = [];
+
+       const processQueue = (error: any, token = null) => {
+            failedQueue.forEach(prom => {
+                if (error) {
+                    prom.reject(error);
+                } else {
+                    prom.resolve(token);
+                }
+            });
+
+            failedQueue = [];
+        };
+
+          instantAxios.interceptors.response.use(
+                      (response: any) => {
+                          return response;
+                      },
+          (err: any) => {
+                          const originalRequest = err.config;
+
+                if (err.response.status === 401 && !originalRequest._retry) {
+                    if (isRefreshing) {
+                        return new Promise(function(resolve, reject) {
+                            failedQueue.push({ resolve, reject });
+                        })
+                            .then(token => {
+                                originalRequest.headers['Authorization'] = 'Bearer ' + token;
+                                return axios(originalRequest);
+                            })
+                            .catch(err => {
+                                return Promise.reject(err);
+                            });
+                    }
+
+                    originalRequest._retry = true;
+                    isRefreshing = true;
+
+                    return new Promise(function(resolve, reject) {
+                        axios
+                            .post(`${serverConfig.server}/api/v1/auth/refresh`, {
+                              refresh_token: refreshToken,})
+                            .then(({ data }) => {
+                               if (data.status) {
+                                Auth.saveToken(data.data.access_token)
+                                axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.data.access_token;
+                                originalRequest.headers['Authorization'] = 'Bearer ' + data.data.access_token;
+                                processQueue(null, data.data.access_token);
+                                resolve(axios(originalRequest));
+                               }
+                            })
+                            .catch(err => {
+                                processQueue(err, null);
+                                Auth.removeToken();
+                               window.location.href = "/login";
+                                reject(err);
+                            })
+                            .then(() => {
+                                isRefreshing = false;
+                            });
+                    });
+                }
+
+                return Promise.reject(err);
+            }
+        );
 
   args = {
     ...args,

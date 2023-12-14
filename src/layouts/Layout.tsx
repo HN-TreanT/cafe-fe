@@ -7,6 +7,7 @@ import { Layout, Menu, Button, theme } from 'antd';
 import Sidebar from './sider/sider';
 import { Navigate, Outlet } from 'react-router-dom';
 import './Layout.scss'
+import { RouterLinks } from '../const/RouterLinks';
 
 const { Header, Content } = Layout;
 
@@ -16,9 +17,16 @@ const App: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
   const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role")
   if (!token) {
     return <Navigate to={"/login"} />;
   }
+  
+  if(role === "U") {
+    return <Navigate to={RouterLinks.ORDER_PAGE}/>
+  }
+
+  
 
   return (
     <Layout >

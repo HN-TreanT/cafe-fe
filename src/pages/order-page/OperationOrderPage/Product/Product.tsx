@@ -17,9 +17,13 @@ let items: MenuProps["items"] = [
   { label: "Tất cà mặt hàng", key: "allProduct" },
   {label: "combo", key:"combo"}
 ];
-
-const Product: React.FC = () => {
-
+interface props {
+  invoice_details: any[],
+  setInvoiceDetails: any,
+  hanldeSetInvoiceDetails: any
+}
+const Product: React.FC<props> = (props) => {
+const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState<any>(8)
@@ -37,7 +41,13 @@ const Product: React.FC = () => {
         size : 6
       }).then((res: any) => {
           if(res.status) {
-            setProducts(res.data.data)
+           const temp =  res.data.data.map((item: any) => {
+               return {
+                ...item,
+                isCombo: true
+               }
+            })
+            setProducts(temp)
             setTotalPage(res.data.TotalPage)
           }
           setLoading(false)
@@ -56,7 +66,13 @@ const Product: React.FC = () => {
 
     }).then((res: any) => {
       if(res.status) {
-        setProducts(res.data.data)
+        const temp =  res.data.data.map((item: any) => {
+          return {
+           ...item,
+           isCombo: false
+          }
+       })
+       setProducts(temp) 
         setTotalPage(res.data.count)
       }
       setLoading(false)
@@ -176,7 +192,7 @@ const Product: React.FC = () => {
                       return (
                         <Col key={product?.IdProduct} span={6}>
                           {" "}
-                          <ItemProduct product={product} />
+                          <ItemProduct hanldeSetInvoiceDetails={hanldeSetInvoiceDetails} invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} product={product} />
                         </Col>
                       );
                     })

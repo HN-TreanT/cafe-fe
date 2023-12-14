@@ -10,13 +10,17 @@ import {
   faSquareCheck,
   faBan,
   faPlusCircle,
+  faFolder,
+  faFolderMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import ItemOrderDetail from "./ItemOrderDetail/ItemOrderDetail";
 import SearchCustomer from "./SearchCustomer";
 import { tableServices } from "../../../../utils/services/tableServices";
 import DebounceSelect from "../../../../components/DebouceSelect/DebouceSelect";
 import { getCustomer } from "../../../../utils/services/customer";
-
+import { useDispatch, useSelector } from "react-redux";
+import { convertPrice } from "../../../../utils/helper/convertPrice";
+import useAction from "../../../../redux/useActions";
 interface UserValue {
   value: any,
   label: any
@@ -44,13 +48,21 @@ async function fetchCustomer(search: string): Promise<UserValue[]> {
   }).catch((err :any) => console.log(err))
 }
 interface props {
-  customers: any[]
+  customers: any[],
+  invoice_details: any[],
+  setInvoiceDetails: any,
+  handleSaveOrder: any
 }
+
+
+
 const ContentOrderDetail = (props: props) => {
-  const {customers} = props
+  const {customers, invoice_details, setInvoiceDetails, handleSaveOrder} = props
   const [isOpenModalCancleOrder, setIsOpenCancleOrder] = useState(false);
   const [tables, setTables] = useState([])
-  
+  const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
+  const dispatch = useDispatch()
+  const actions = useAction()
   const getTable = () => {
     tableServices.get({
       page: 1,
@@ -81,6 +93,10 @@ const ContentOrderDetail = (props: props) => {
     getTable()
   
   }, [])
+
+  // useEffect(() => {
+  //   setSelctedOrder(selectedOrder)
+  // }, [selectedOrder, dispatch, actions.OrderActions])
   const filterOption = (input: string, option?: { label: string; value: string }) =>
         (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
   return (
@@ -148,9 +164,9 @@ const ContentOrderDetail = (props: props) => {
           </Row>
         </div>
         <div className="middle-content-order-detail">
-          {Array.isArray([])  ? (
-           [].map((item: any) => (
-              <ItemOrderDetail data={item} key={item?.IdOrderDetail} />
+          {Array.isArray(invoice_details)  ? (
+           invoice_details.map((item: any) => (
+              <ItemOrderDetail  invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails}  data={item} key={item?.id} />
             ))
           ) : (
             <div
@@ -174,28 +190,22 @@ const ContentOrderDetail = (props: props) => {
         <div className="footer-content-order-detail">
           <div className="info-order-detail">
             <div className="info-order-detail-left">
-              <Tooltip placement="top" title="Số lượng khách hàng">
-                <div className="count-customer-order">
-                  <FontAwesomeIcon className="icon-customer-order" icon={faUsers} />
-                  <span>20.00</span>
-                </div>
-              </Tooltip>
               <div className="control-table">
                 <FontAwesomeIcon className="icon-control-table" icon={faFileLines} />
-                <span className="title-controle-table">Tách ghép</span>
+                <span  className="title-controle-table">Tách ghép</span>
               </div>
             </div>
             <div className="total-price-order">
               <span className="title-total-price-order">Tổng tiền:</span>
               <span className="price-total">
-                {/* {order?.Price ? `${VND.format(order.Price)} ` : `0 đ`} */}
+                {selectedOrder?.price ? convertPrice(selectedOrder.price) : `0 đ`}
               </span>
             </div>
           </div>
           <div className="button-control-order-detail">
             <div style={{ paddingLeft: "10px", paddingRight: "10px" }}>
               <Row gutter={[20, 10]}>
-                <Col span={12}>
+                <Col span={8}>
                   <Button
                     onClick={() => setIsOpenCancleOrder(true)}
                     danger
@@ -204,7 +214,17 @@ const ContentOrderDetail = (props: props) => {
                     <span className="title-button">Hủy Đơn</span>
                   </Button>
                 </Col>
-                <Col span={12}>
+                <Col span={8}>
+                  <Button
+                    style={{ color: "white", backgroundColor: "#1677ff" }}
+                    className="button-controler-order"   
+                    onClick={() => handleSaveOrder()}     
+                  >
+                    <FontAwesomeIcon className="icon-button" icon={faFolderMinus} />
+                    <span className="title-button">Lưu</span>
+                  </Button>
+                </Col>
+                <Col span={8}>
                   <Button
                     style={{ color: "white", backgroundColor: "#28B44F" }}
                     className="button-controler-order"

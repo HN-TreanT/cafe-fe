@@ -5,12 +5,14 @@ import stateSaga from "./state/saga";
 import productSaga from "./product/saga";
 import categorySaga from "./category/saga"
 import comboSaga from "./combo/saga"
+import orderSaga from "./order/saga"
 export default function* rootSaga() {
     yield all([
         authSaga(),
         stateSaga(),
         productSaga(),
         categorySaga(),
-        comboSaga()
+        comboSaga(),
+        orderSaga()
     ]);
 }

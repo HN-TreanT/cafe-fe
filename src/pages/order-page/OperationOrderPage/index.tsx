@@ -1,5 +1,5 @@
-import React from "react";
-import { Tabs } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Tabs } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUtensils,
@@ -11,21 +11,7 @@ import useAction from "../../../redux/useActions";
 import Product from "./Product/Product";
 import TableLocation from "./TableLocation";
 
-const items = [
-  
-  {
-    label: "Mặt hàng",
-    key: "product",
-    children: <Product />,
-    icon: faUtensils,
-  },
-  {
-    label: "Vị trí",
-    key: "location",
-    children: <TableLocation />,
-    icon: faLocationDot,
-  },
-];
+
 
 const IconTab = ({ icon, label, children }: any) => (
   <div>
@@ -37,25 +23,36 @@ const IconTab = ({ icon, label, children }: any) => (
     {children}
   </div>
 );
-const OperationOrderPage: React.FC = () => {
+
+interface props {
+  invoice_details: any[],
+  setInvoiceDetails: any,
+  hanldeSetInvoiceDetails: any,
+}
+const OperationOrderPage: React.FC<props> = ({invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails}) => {
   
 
   return (
+  
     <div className="operation-order-page">
+
       <Tabs
-        // onChange={onChange}
-        // defaultActiveKey={selectedPage ? selectedPage : "allOrder"}
-        // activeKey={"product"}
-      >
-        {items.map((item) => (
+      >        
           <Tabs.TabPane
-            tab={<IconTab icon={item.icon} label={item.label} />}
-            key={item.key}
+            tab={<IconTab icon={faUtensils} label={"Mặt hàng"} />}
+            key={"product"}
             className="tab-pane"
           >
-            {item.children}
+            <Product   invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} hanldeSetInvoiceDetails={hanldeSetInvoiceDetails}/>,
           </Tabs.TabPane>
-        ))}
+
+          <Tabs.TabPane
+            tab={<IconTab icon={faLocationDot} label={"Vị trí"} />}
+            key={"location"}
+            className="tab-pane"
+          >
+            <TableLocation invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} />,
+          </Tabs.TabPane>
       </Tabs>
     </div>
   );

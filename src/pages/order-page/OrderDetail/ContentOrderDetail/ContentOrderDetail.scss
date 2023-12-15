@@ -35,7 +35,11 @@
         padding: 10px;
         width: 100%;
         // height: calc((100vh - 14vh) * 0.72);
+        height: 70%;
         flex: 1;
+        position: absolute;
+        top: 2.5rem;
+        left: 0;
         overflow-y: auto;
         overflow-y: scroll; 
         &::-webkit-scrollbar {

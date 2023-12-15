@@ -15,12 +15,15 @@ import tableImage0 from "../../../../assets/dinning-table_0.png";
 import tableImage1 from "../../../../assets/dinning-table-1.png";
 import "./Table.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch, useSelector } from "react-redux";
+import useAction from "../../../../redux/useActions";
 import {
   faCircle,
   faMagnifyingGlass,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
 import { tableServices } from "../../../../utils/services/tableServices";
+import { invoiceServices } from "../../../../utils/services/invoiceService";
 const items: MenuProps["items"] = [
   {
     label: "Tất cả bàn ăn",
@@ -35,35 +38,66 @@ const items: MenuProps["items"] = [
     key: 1,
   },
 ];
-const TableLocation: React.FC = () => {
-   const [loading, setLoading] = useState(false)
+
+interface props {
+  invoice_details: any[],
+  setInvoiceDetails: any,
+}
+const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
+  const dispatch = useDispatch()
+  const actions = useAction()
+   
    const [currentPage, setCurrentPage] = useState(1)
-   const [totalPage, setTotalPage] = useState(0)
-   const [tables, setTables] = useState([])
    const [search, setSearch] = useState<any>()
    const [statusTable, setStatusTable] = useState<any>()
-   const getTables = () => {
-     setLoading(true)
-     tableServices.get({
-      page: 1,
-      size: 12,
-      ...(search && {search: search}),
-      ...(statusTable && {status: statusTable}),
-     }).then((res: any) => {
-        if(res.status) {
-          setTables(res?.data.data)
-          setTotalPage(res?.data.TotalPage)
-        }
-        setLoading(false)
-     }).catch((err:any) => {
+   const loading= useSelector((state: any) => state.state.loadingState)
+    const {data, TotalPage} = useSelector((state: any) => state.table.tablefood)
+
+   const handleSeletecdTable = async (id_table: any) => {
+      try {
+           const response = await invoiceServices.getInvoiceByIdTable(id_table)
+           if (response.status) {
+              dispatch(actions.OrderActions.selectedOrder(response.data))
+              setInvoiceDetails(response?.data.invoice_details.map((item: any) => {
+                return {
+                  id_product: item?.product ? item?.product : null,
+                  id_combo: item?.combo ? item?.id_combo : null,
+                  isCombo: item?.isCombo,
+                  amount: item?.amount,
+                  price: item?.amount,
+                  name: item?.product ? item?.product.name :  item?.combo.name
+                }
+              }))
+           } else {
+            dispatch(actions.OrderActions.selectedOrder({}))
+            setInvoiceDetails([])
+
+           }
+      } catch (err: any) {
         console.log(err)
-        setLoading(false)
-     })
+        dispatch(actions.OrderActions.selectedOrder({
+          invoice_details: [
+            
+          ],
+          tablefood_invoices: [
+            {
+              id_table: id_table
+            }
+          ]
+        }))
+        setInvoiceDetails([])
+
+      }
    }
 
    useEffect(() => {
-     getTables()
-   }, [currentPage, statusTable, search])
+    dispatch(actions.TableFoodActions.loadData({
+      page: currentPage,
+     size: 12,
+     ...(search && {search: search}),
+     ...(statusTable && {status: statusTable}),
+}))
+   }, [currentPage, statusTable, search, dispatch, actions.TableFoodActions])
   return (
     <div className="table-location">
       <Row gutter={[15, 0]}>
@@ -78,6 +112,7 @@ const TableLocation: React.FC = () => {
               }
              }}
             defaultSelectedKeys={["allTable"]}
+           
             mode="horizontal"
             items={items}
           />
@@ -128,7 +163,7 @@ const TableLocation: React.FC = () => {
                           color: "#7facfa",
                         }}
                       />
-                      <span style={{ color: "#7facfa" }}>Đang có người</span>
+                      <span  style={{ color: "#7facfa" }}>Đang có người</span>
                     </div>
                     <div>
                       <FontAwesomeIcon
@@ -147,12 +182,12 @@ const TableLocation: React.FC = () => {
           </div>
         </Col>
         <Col span={24}>
-          <div className="content-table-location">
+          <div style={{position:"relative"}} className="content-table-location">
             <div className="list-table">
               <Row gutter={[10, 30]}>
                 {
-                    loading ? <Spin/> : Array.isArray(tables) ? (
-                      tables?.map((item: any) => {
+                    loading ? <Spin/> : Array.isArray(data) ? (
+                      data?.map((item: any) => {
                          if (item?.status === 0) {
                            return (
                              <Col
@@ -160,7 +195,7 @@ const TableLocation: React.FC = () => {
                                span={4}
                                key={item?.id}
                              >
-                               <div className="item-table">
+                               <div onClick={() => handleSeletecdTable(item?.id)} className="item-table">
                                  <Image
                                    src={tableImage0}
                                    preview={false}
@@ -176,12 +211,10 @@ const TableLocation: React.FC = () => {
                          } else {
                            return (
                              <Col
-                               // onClick={() => handleClickItemTable(tableFood)}
-                               //key={tableFood?.IdTable}
                                span={4}
                                key={item?.id}
                              >
-                               <div className="item-table">
+                               <div onClick={() => handleSeletecdTable(item?.id)} className="item-table">
                                  <Image
                                    src={tableImage1}
                                    preview={false}
@@ -190,7 +223,7 @@ const TableLocation: React.FC = () => {
                                      height: "70px",
                                    }}
                                  />
-                                 <div>{`Bàn ${item?.name}`}</div>
+                                 <div>{` ${item?.name}`}</div>
                                </div>
                              </Col>
                            );
@@ -213,7 +246,7 @@ const TableLocation: React.FC = () => {
                 }
               </Row>
             </div>
-            <div className="pagination-table-location">
+            <div style={{position:"absolute", bottom:"0"}} className="pagination-table-location">
               <Pagination
                 // onChange={handleChangePageTable}
                 // defaultCurrent={selectedPage ? selectedPage : 1}
@@ -221,7 +254,7 @@ const TableLocation: React.FC = () => {
                 // pageSize={18}
                 onChange={(value) => setCurrentPage(value) }
                 current={currentPage}
-                total={totalPage}
+                total={TotalPage}
                 pageSize={18}
               />
             </div>

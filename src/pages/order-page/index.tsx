@@ -42,6 +42,7 @@ const OrderPage: React.FC = () => {
   ];
   const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
   const [invoice_details, setInvoiceDetails] = useState<any>([])
+  const [id_tables, setIdTables] = useState([])
   const hanldeSetInvoiceDetails = (data: any) => {
       console.log(data)
       setInvoiceDetails(data)
@@ -87,7 +88,9 @@ const OrderPage: React.FC = () => {
   }
  
   useEffect(() => {
-   
+   const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+        return item?.id_table
+   } ) :  []
     const mappedInvoiceDetails = Array.isArray(selectedOrder?.invoice_details)
     ? selectedOrder?.invoice_details.map((item: any) => {
         return {
@@ -101,7 +104,7 @@ const OrderPage: React.FC = () => {
         };
       })
     : [];
-
+  setIdTables(mapIdTables)
   setInvoiceDetails(mappedInvoiceDetails);
   }, [selectedOrder])
   return (
@@ -113,7 +116,7 @@ const OrderPage: React.FC = () => {
             <OperationOrderPage hanldeSetInvoiceDetails={hanldeSetInvoiceDetails} invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} />
           </Col>
           <Col span={9}>
-            <OrderDetail invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} handleSaveOrder={handleSaveOrder} />
+            <OrderDetail id_tables={id_tables} setIdTables={setIdTables} invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} handleSaveOrder={handleSaveOrder} />
           </Col>
         </Row>
         <Dropdown menu={{ items }} trigger={["click"]}>

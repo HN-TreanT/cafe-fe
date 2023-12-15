@@ -4,15 +4,24 @@ import "./OrderDetail.scss"
 import ContentOrderDetail from "./ContentOrderDetail/ContentOrderDetail";
 import { getCustomer } from "../../../utils/services/customer";
 import { useDispatch, useSelector } from "react-redux";
+import useAction from "../../../redux/useActions";
 interface props {
   invoice_details: any[],
   setInvoiceDetails: any,
-  handleSaveOrder: any
+  handleSaveOrder: any,
+  setIdTables: any,
+  id_tables: any[]
 }
 const OrderDetail: React.FC<props> = (props) => {
-  const {invoice_details, setInvoiceDetails, handleSaveOrder} = props
+  const {invoice_details, setInvoiceDetails, handleSaveOrder, setIdTables, id_tables} = props
+  const actions = useAction()
+  const dispatch =  useDispatch()
   const [customer, setCustomer] = useState([])
    const selectedOrder = useSelector((state: any) => state.order.selectedOrder)
+   const arrayIdTables = Array.isArray(selectedOrder.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+    return item?.id_table
+   }): []
+   const name_order = arrayIdTables.length > 0 ? `bàn ${arrayIdTables.join(",")}` : " mới"
   const getDataCustomer = () => {
     getCustomer({
       page: 1, 
@@ -38,7 +47,15 @@ const OrderDetail: React.FC<props> = (props) => {
     //console.log(key);
   };
   const onEdit = async () => {
-    
+    dispatch(actions.OrderActions.selectedOrder({
+      invoice_details: [
+        
+      ],
+      tablefood_invoices: [
+      ]
+    }))
+    setInvoiceDetails([])
+
   };
   
   useEffect(() => {
@@ -51,7 +68,7 @@ const OrderDetail: React.FC<props> = (props) => {
         type="editable-card"
         onChange={onChange}
         items={[
-          { label: `Yêu cầu #${selectedOrder?.id}`, 
+          { label: `Yêu cầu ${name_order}`, 
           children: <ContentOrderDetail invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} customers={customer} handleSaveOrder={handleSaveOrder} />,
          key: "1" },
         ]}

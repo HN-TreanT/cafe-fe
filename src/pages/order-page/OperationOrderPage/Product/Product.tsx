@@ -44,9 +44,12 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
            const temp =  res.data.data.map((item: any) => {
                return {
                 ...item,
-                isCombo: true
+                isCombo: true,
+                url : item?.detail_combos[0]?.image ? item?.detail_combos[0]?.image : null
                }
             })
+           
+
             setProducts(temp)
             setTotalPage(res.data.TotalPage)
           }
@@ -72,6 +75,7 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
            isCombo: false
           }
        })
+       
        setProducts(temp) 
         setTotalPage(res.data.count)
       }

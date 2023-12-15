@@ -15,7 +15,7 @@ import tableImage0 from "../../../../assets/dinning-table_0.png";
 import tableImage1 from "../../../../assets/dinning-table-1.png";
 import "./Table.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
 import {
   faCircle,
@@ -46,30 +46,12 @@ interface props {
 const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
   const dispatch = useDispatch()
   const actions = useAction()
-   const [loading, setLoading] = useState(false)
+   
    const [currentPage, setCurrentPage] = useState(1)
-   const [totalPage, setTotalPage] = useState(0)
-   const [tables, setTables] = useState([])
    const [search, setSearch] = useState<any>()
    const [statusTable, setStatusTable] = useState<any>()
-   const getTables = () => {
-     setLoading(true)
-     tableServices.get({
-      page: 1,
-      size: 12,
-      ...(search && {search: search}),
-      ...(statusTable && {status: statusTable}),
-     }).then((res: any) => {
-        if(res.status) {
-          setTables(res?.data.data)
-          setTotalPage(res?.data.TotalPage)
-        }
-        setLoading(false)
-     }).catch((err:any) => {
-        console.log(err)
-        setLoading(false)
-     })
-   }
+   const loading= useSelector((state: any) => state.state.loadingState)
+    const {data, TotalPage} = useSelector((state: any) => state.table.tablefood)
 
    const handleSeletecdTable = async (id_table: any) => {
       try {
@@ -94,7 +76,14 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
       } catch (err: any) {
         console.log(err)
         dispatch(actions.OrderActions.selectedOrder({
-          invoice_details: []
+          invoice_details: [
+            
+          ],
+          tablefood_invoices: [
+            {
+              id_table: id_table
+            }
+          ]
         }))
         setInvoiceDetails([])
 
@@ -102,8 +91,13 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
    }
 
    useEffect(() => {
-     getTables()
-   }, [currentPage, statusTable, search])
+    dispatch(actions.TableFoodActions.loadData({
+      page: currentPage,
+     size: 12,
+     ...(search && {search: search}),
+     ...(statusTable && {status: statusTable}),
+}))
+   }, [currentPage, statusTable, search, dispatch, actions.TableFoodActions])
   return (
     <div className="table-location">
       <Row gutter={[15, 0]}>
@@ -188,12 +182,12 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
           </div>
         </Col>
         <Col span={24}>
-          <div className="content-table-location">
+          <div style={{position:"relative"}} className="content-table-location">
             <div className="list-table">
               <Row gutter={[10, 30]}>
                 {
-                    loading ? <Spin/> : Array.isArray(tables) ? (
-                      tables?.map((item: any) => {
+                    loading ? <Spin/> : Array.isArray(data) ? (
+                      data?.map((item: any) => {
                          if (item?.status === 0) {
                            return (
                              <Col
@@ -252,7 +246,7 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
                 }
               </Row>
             </div>
-            <div className="pagination-table-location">
+            <div style={{position:"absolute", bottom:"0"}} className="pagination-table-location">
               <Pagination
                 // onChange={handleChangePageTable}
                 // defaultCurrent={selectedPage ? selectedPage : 1}
@@ -260,7 +254,7 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
                 // pageSize={18}
                 onChange={(value) => setCurrentPage(value) }
                 current={currentPage}
-                total={totalPage}
+                total={TotalPage}
                 pageSize={18}
               />
             </div>

@@ -19,7 +19,7 @@ import TonKho from './pages/kho/TonKho';
 import NhapKho from './pages/kho/nhapkho/NhapKho';
 import KiemKe from './pages/kho/KiemKe';
 import Layout from './layouts/Layout';
-import NhanVien from './pages/baocao/nhanvien/NhanVien';
+import Employee from './pages/employee';
 import OrderPage from './pages/order-page';
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
                   <Route path={RouterLinks.NHAP_KHO} element={<Suspense fallback={null}><NhapKho /></Suspense>} />
                   <Route path={RouterLinks.DANH_SACH_KHACH_HANG} element={<Suspense fallback={null}><DanhSachKhachHang /></Suspense>} />
 
-                  <Route path={RouterLinks.BAO_CAO_NHAN_VIEN} element={<Suspense fallback={null}><NhanVien /></Suspense>} />
+                  <Route path={RouterLinks.BAO_CAO_NHAN_VIEN} element={<Suspense fallback={null}><Employee /></Suspense>} />
 
                 </Route>
                 <Route path={RouterLinks.ORDER_PAGE} element={<OrderPage />} />

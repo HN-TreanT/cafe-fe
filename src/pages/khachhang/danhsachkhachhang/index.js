@@ -1,4 +1,4 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider } from "antd"
+import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider, Tooltip } from "antd"
 import { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
@@ -216,32 +216,33 @@ const DanhSachKhachHang = () => {
             render: (record) => (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                     {
-                        <>
-                            <EditOutlined
-                                id={`tooltip_edit${record.ID}`}
-                                style={{ color: "#036CBF", cursor: 'pointer' }}
-                                onClick={(e) => handleEdit(record)}
-                            />
-                            <UncontrolledTooltip placement="top" target={`tooltip_edit${record.ID}`}>
-                                Chỉnh sửa
-                            </UncontrolledTooltip></>
-
-                    }
-                    {
-                        <Popconfirm
-                        title="Bạn chắc chắn xóa?"
-                        onConfirm={() => handleDelete(record.id)}
-                        cancelText="Hủy"
-                        okText="Đồng ý"
-                    >
-                        <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
-                        <UncontrolledTooltip placement="top" target={`tooltip_delete${record.ID}`}>
-                            Xóa
-                        </UncontrolledTooltip>
-                    </Popconfirm>
-
-                    }
-
+            <>
+              <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
+                <EditOutlined
+                  style={{ color: "#036CBF", marginRight: "10px" }}
+                  onClick={() => handleEdit(record)}
+                />
+              </Tooltip>
+            </>
+          }
+          {
+            <Popconfirm
+              title="Bạn chắc chắn xóa?"
+              onConfirm={() => handleDelete(record.id)}
+              cancelText="Hủy"
+              okText="Đồng ý"
+            >
+              <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                <DeleteOutlined
+                  style={{
+                    color: "red",
+                    cursor: "pointer",
+                    marginRight: "10px",
+                  }}
+                />
+              </Tooltip>
+            </Popconfirm>
+          }
                 </div>
             ),
         },

@@ -30,7 +30,7 @@ const Promotion = () => {
 
     const [product, setProduct] = useState([])
 
-    const [rowsPerPage, setRowsPerpage] = useState(2)
+    const [rowsPerPage, setRowsPerpage] = useState(10)
     const [action, setAction] = useState('Add')
 
     const [search, setSearch] = useState("")

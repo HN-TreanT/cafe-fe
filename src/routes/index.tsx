@@ -20,7 +20,7 @@ import TonKho from "../pages/kho/TonKho";
 import NhapKho from "../pages/kho/nhapkho/NhapKho";
 import KiemKe from "../pages/kho/KiemKe";
 import KhuyenMai from "../pages/khuyenmai/KhuyenMai";
-import NhanVien from "../pages/baocao/nhanvien/NhanVien";
+import Employee from "../pages/employee";
 export const router = createBrowserRouter([
   {
     path: "login",
@@ -53,7 +53,7 @@ export const router = createBrowserRouter([
       },
       {
         path: RouterLinks.BAO_CAO_NHAN_VIEN,
-        element: <NhanVien />,
+        element: <Employee />,
       },
       // {
       //   path: RouterLinks.MAT_HANG,

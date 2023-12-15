@@ -96,7 +96,7 @@ const menuItems = [
 
   },
   {
-    key: "Nhanvien",
+    key: RouterLinks.BAO_CAO_NHAN_VIEN,
     label: "Nhân viên",
     icon: (
       <UserOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />

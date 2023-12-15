@@ -1,16 +1,18 @@
 import createApiServices from "../createApiService";
 const api = createApiServices();
 
-const getEmployee = () => {
+const getEmployee =   (params: any,) => {
   return api.makeAuthRequest({
-    url: "/api/v1/employee",
+    url: `/api/v1/employee`,
     method: "GET",
+    params
   });
 };
+
 const createEmployee = (data: any) => {
     return api.makeAuthRequest({
       url: "/api/v1/employee",
-      method: "POST",
+      method: "PUT",
       data,
     });
   };

@@ -3,13 +3,17 @@ import { StateAction } from "./state/actions";
 import { ProductActions } from "./product/actions";
 import { categoryAction } from "./category/actions"
 import { comboAction } from "./combo/actions";
+import { OrderActions } from "./order/actions";
+import { TableFoodActions } from "./table_food/actions";
 const useAction = () => {
   const actions = {
     AuthActions,
     StateAction,
     ProductActions,
     categoryAction,
-    comboAction
+    comboAction,
+    OrderActions,
+    TableFoodActions
   };
   return actions
 }

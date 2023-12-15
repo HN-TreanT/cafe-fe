@@ -81,9 +81,8 @@ const DanhSachSanPham = () => {
     }, [currentPage, rowsPerPage, search])
 
     const handleEdit = (record) => {
-        form.setFieldsValue(record);
         setAction('Edit')
-        setIdEdit(record.id)
+        setIdEdit(record)
         setIsAdd(true)
     }
    

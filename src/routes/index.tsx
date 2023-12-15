@@ -9,7 +9,7 @@ import Mathang from "../pages/baocao/MatHang";
 import Khohang from "../pages/baocao/KhoHang";
 import TaiChinh from "../pages/baocao/TaiChinh";
 import DanhSachHang from "../pages/mathang/danhmuc/DanhMucHang";
-import DanhSachSanPham from "../pages/mathang/DanhSachSanPham";
+import DanhSachSanPham from "../pages/mathang/DanhSachSanPham/DanhSachSanPham";
 import ThucDon from "../pages/mathang/ThucDon";
 import DanhMuc from "../pages/mathang/danhmuc/DanhMucHang";
 import LuaChon from "../pages/mathang/LuaChon";

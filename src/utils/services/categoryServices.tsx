@@ -35,7 +35,7 @@ const update = (id: Number, data: any) => {
 
 const deleteById = (id: Number) => {
     return api.makeAuthRequest({
-        url: `/api/lop/${id}`,
+        url: `/api/category/${id}`,
         method: "DELETE",
     });
 };

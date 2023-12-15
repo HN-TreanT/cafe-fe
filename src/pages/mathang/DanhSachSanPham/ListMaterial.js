@@ -67,6 +67,8 @@ const ListMaterial = ({record, getProduct}) => {
     }, [currentPage, rowsPerPage])
 
     const handleEdit = (record) => {
+        console.log(record)
+       
         form.setFieldsValue({
             id_material: record.material.id,
             amount: record.material.amount

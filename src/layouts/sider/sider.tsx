@@ -72,10 +72,6 @@ const menuItems = [
         key: RouterLinks.DS_MAT_HANG,
         label: "Danh sách mặt hàng",
       },
-      // {
-      //   key: RouterLinks.THUC_DON,
-      //   label: "Thực đơn ",
-      // },
       {
         key: RouterLinks.DANH_MUC,
         label: "Danh mục",
@@ -186,7 +182,6 @@ const Sidebar = () => {
         items={menuItems}
         onClick={onClick}
       >
-
         {menuItems.map((item) => {
           if (item.children) {
             return (

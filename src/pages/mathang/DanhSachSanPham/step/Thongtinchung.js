@@ -72,6 +72,12 @@ import {
       setFile(e.file);
     };
   
+    useEffect(() => {
+      if(action === 'Edit') {
+       console.log("idedit", idEdit)
+      form.setFieldValue(idEdit)
+     }
+    }, [idEdit.id])
     const onFinish = (values) => {
       const formData = new FormData();
       formData.append("image", file);
@@ -80,7 +86,6 @@ import {
       formData.append("price", values.price);
       formData.append("id_category", values.id_category);
   
-      // Tiếp tục xử lý lưu thông tin sản phẩm
       if (action === "Add") {
         createProduct(formData)
           .then((res) => {
@@ -107,7 +112,7 @@ import {
             });
           });
       } else {
-        updateProduct(idEdit, values)
+        updateProduct(idEdit?.id, values)
           .then((res) => {
             MySwal.fire({
               title: "Chỉnh sửa thành công",

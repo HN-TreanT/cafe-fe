@@ -24,7 +24,8 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
        dispatch(actions.InvoiceActions.loadData({
         page: currentPage,
         size: 6,  
-        thanh_toan: "chua"
+        thanh_toan: "chua",
+        status: 0
       }))
     }, [actions.InvoiceActions, currentPage, dispatch])
 

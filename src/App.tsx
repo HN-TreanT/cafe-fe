@@ -46,7 +46,7 @@ function App() {
                   <Route path={RouterLinks.BAO_CAO_NHAN_VIEN} element={<Suspense fallback={null}><NhanVien /></Suspense>} />
 
                 </Route>
-                <Route path={RouterLinks.ORDER_PAGE} element={<OrderPage />} />
+                <Route path={RouterLinks.ORDER_PAGE} element={<Suspense fallback={null}><OrderPage /></Suspense>}  />
 
 
               </Routes>

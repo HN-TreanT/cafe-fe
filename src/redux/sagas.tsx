@@ -7,6 +7,7 @@ import categorySaga from "./category/saga"
 import comboSaga from "./combo/saga"
 import orderSaga from "./order/saga"
 import TableSaga from "./table_food/saga"
+import InvoiceSaga from "./invoice/saga"
 export default function* rootSaga() {
     yield all([
         authSaga(),
@@ -15,6 +16,7 @@ export default function* rootSaga() {
         categorySaga(),
         comboSaga(),
         orderSaga(),
-        TableSaga()
+        TableSaga(),
+        InvoiceSaga()
     ]);
 }

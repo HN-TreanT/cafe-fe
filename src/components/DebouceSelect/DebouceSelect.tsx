@@ -45,7 +45,7 @@ function DebounceSelect<
   }, [debounceTimeout, initOption, fetchOptions]);
   useEffect(() => {
    setOptions(initOption)
-  }, [])
+  }, [initOption])
 
   return (
     <Select

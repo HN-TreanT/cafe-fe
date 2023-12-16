@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Row, Col, Button, Modal, Tooltip, Select, Form, message } from "antd";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,8 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { convertPrice } from "../../../../utils/helper/convertPrice";
 import { invoiceServices } from "../../../../utils/services/invoiceService";
 import useAction from "../../../../redux/useActions";
-
-
+import DrawerPayment from "./DrawerPayment/DrawerPayment";
+import DebounceSelect from "../../../../components/DebouceSelect/DebouceSelect";
 interface UserValue {
   value: any,
   label: any
@@ -36,8 +36,8 @@ async function fetchCustomer(search: string): Promise<UserValue[]> {
     if(res.status) {
         const temp = res?.data?.data.map((item: any) => {
           return {
-            label: item?.id,
-            value: item?.name
+            label: `${item?.name} - ${item.phone_number}`,
+            value: item?.id
           }
       })
       return temp
@@ -61,30 +61,56 @@ const ContentOrderDetail = (props: props) => {
   const {customers, invoice_details, setInvoiceDetails, handleSaveOrder} = props
   const [messageApi, contextHolder] = message.useMessage();
 
+  const [openModalCombine, setOpenModalCombine] = useState(false)
+  const [openModalSplit, setOpenModalSplit] = useState(false)
+  const [openDrawer, setOpenDrawer] = useState(false)
   const [isOpenModalCancleOrder, setIsOpenCancleOrder] = useState(false);
   const [tables, setTables] = useState([])
-  const [data, setData] = useState([])
   const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
+  const userInfo = useSelector((state: any) => state.auth.user_info)
   const dispatch = useDispatch()
   const actions = useAction()
 
+  const handleModalSplit = () => {
+    setOpenModalSplit(false)
+  }
+  const handleMOdalCombine = () => {
+    setOpenModalCombine(false)
+  }
 
-  const getTable = () => {
+
+  const getTable = (status: any) => {
     tableServices.get({
       page: 1,
       size : 100,
-      // status: 0
+      status: status
+      // ...(status && {status: status})
     }).then((res: any) => {
+     
        if(res.status) {
           if(Array.isArray(res.data.data)) {
-            const temp = res.data.data.map((item: any) => {
-              return {
-                ...item,
-                value: item.id ,
-                label: item.name
-              }
-            })
-            setTables(temp)
+            if(!status) {
+              const arrayIdTables = Array.isArray(selectedOrder.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+                return item?.id_table
+               }): []
+               const temp = res.data.data.map((item: any) => {
+                return {
+                  ...item,
+                  value: item.id,
+                  label: item.name
+                }
+               }).filter((item: any) => arrayIdTables.includes(item?.value) || item.status === 0)
+               setTables(temp)
+            } else {
+              const temp = res.data.data.map((item: any) => {
+                return {
+                  ...item,
+                  value: item.id ,
+                  label: item.name
+                }
+              })
+              setTables(temp)
+            }
 
           }
           
@@ -96,9 +122,12 @@ const ContentOrderDetail = (props: props) => {
   }
  
   useEffect(() => {
-    getTable()
-  
-  }, [])
+   if(selectedOrder?.id) {
+     getTable(undefined)
+   } else {
+    getTable(0)
+   }
+  }, [selectedOrder])
 
   
 
@@ -111,12 +140,65 @@ const ContentOrderDetail = (props: props) => {
      }): []
      
     form.setFieldsValue({
-      id_tables: arrayIdTables
+      id_tables: arrayIdTables,
+      id_customer: selectedOrder?.id_customer ? selectedOrder?.id_customer: "khach_vang_lai"
   })
-  }, [selectedOrder])
+  }, [form, selectedOrder])
 
 
-  const onFinish = (value: any) => {
+  const hanldeCancleOrder = (id: any) => {
+    
+      if (id) {
+        const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+          return item?.id_table
+          } ) :  []
+         invoiceServices.deleteById(id).then(async (res: any) => {
+            if(res.status) {
+                  await Promise.all(mapIdTables.map( async (item: any) => {
+                    tableServices.update(item, {status: 0}).then((res: any) => {
+                           dispatch(actions.TableFoodActions.loadData({
+                                  page: 1,
+                                size: 12,
+                            }))
+                        }).catch((err: any) => {
+                          console.log(err)
+                        })
+                   }))
+                   dispatch(actions.InvoiceActions.loadData({
+                    page: 1,
+                    size: 6,  
+                    thanh_toan: "chua"
+                   }))
+                   dispatch(actions.OrderActions.selectedOrder({
+                    invoice_details: [
+                      
+                     ],
+                    tablefood_invoices: [
+                     ]
+                    }))
+                    setIsOpenCancleOrder(false)
+            }
+         }).catch((err: any) => {
+              console.log(err)
+              message.error("Hủy đơn thất bại")
+         })
+      } else {
+        setIsOpenCancleOrder(false)
+        dispatch(actions.OrderActions.selectedOrder({
+          invoice_details: [
+            
+          ],
+          tablefood_invoices: [
+          ]
+        }))
+      }
+  }
+
+
+  const onFinish = async (value: any) => {
+    if(value.id_customer === "khach_vang_lai") {
+        value.id_customer = null
+    }
     const lst_invoice_detail = invoice_details.map((item: any) => {
       return {
        id_invoice: selectedOrder?.id,
@@ -129,32 +211,50 @@ const ContentOrderDetail = (props: props) => {
      })
      
      const dataSubmit = {
-       id_employee: selectedOrder?.id_employee ? selectedOrder?.id_employee : null,
+       id_employee: userInfo?.id_employee ? userInfo?.id_employee : null,
        id_customer: selectedOrder?.id_customer ? selectedOrder?.id_customer : null,
        id_promotion: selectedOrder?.id_promotion ? selectedOrder?.id_promotion : null,
        ...value,
        lst_invoice_detail: lst_invoice_detail
 
      }
-    
       if(selectedOrder?.id) {
+        const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+          return item?.id_table
+          } ) :  []
+         await Promise.all(mapIdTables.map( async (item: any) => {
+            tableServices.update(item, {status: 0}).then((res: any) => {
+                    // getTable()
+            }).catch((err: any) => {
+              console.log(err)
+            })
+         }))
          invoiceServices.update(selectedOrder?.id, dataSubmit).then(async (res: any) => {
             if (res.status) {
                  message.success("Chỉnh sửa thành công")
-                await Promise.all(data.map( async (item: any) => {
-                      tableServices.update(item, {status: 0}).then((res: any) => {
-                              // getTable()
-                      }).catch((err: any) => {
-                        console.log(err)
-                      })
-                }))
                 invoiceServices.getById(res.data.id).then((res: any) => {
                       if(res.status) {
+                        // const listDiv = document.querySelectorAll(".seselected_class")
+                        // listDiv.forEach((item: any) => {
+                        //    item.classList.remove("seselected_class")
+                        // })
+                        
+                        // if(Array.isArray(value?.id_tables)) {
+                        //   value?.id_tables.forEach((item: any) => {
+                        //       const new_selected_table = document.getElementById(`table_id_${item}`)
+                        //       new_selected_table?.classList.add("seselected_class")
+                        //   })
+                        // }
                         dispatch(actions.OrderActions.selectedOrder(res.data))
                         dispatch(actions.TableFoodActions.loadData({
                           page: 1,
                          size: 12,
-                     }))
+                        }))
+                        dispatch(actions.InvoiceActions.loadData({
+                          page: 1,
+                          size: 6,  
+                          thanh_toan: "chua"
+                        }))
                       }
                 }).catch ((err: any) => {
                   console.log(err)
@@ -175,7 +275,14 @@ const ContentOrderDetail = (props: props) => {
                       dispatch(actions.TableFoodActions.loadData({
                         page: 1,
                        size: 12,
-                   }))
+                       }))
+                       dispatch(actions.InvoiceActions.loadData({
+                        page: 1,
+                        size: 6,  
+                        thanh_toan: "chua"
+                       }))
+                       
+                   
                     }
               }).catch ((err: any) => {
                 console.log(err)
@@ -189,34 +296,28 @@ const ContentOrderDetail = (props: props) => {
       }
    
   }
+
+  const handlClickCombine = () => {
+    setOpenModalCombine(true)
+  }
+
+  const handleClickSplit = () => {
+    setOpenModalSplit(true)
+  }
   
   return (
-    <div className="content-order-detail">
+    <Fragment>
+        <div className="content-order-detail">
       {contextHolder}
       {/* Drawer payment  */}
-      {/* <DrawerPayment visible={isOpenDrawer} setVisible={setIsOpenDrawer} /> */}
-      {/* Modal edit count customer */}
-      {/* <ModalAcountCustomer
-        isOpenModalCountCustomer={isOpenModalCountCustomer}
-        setIsOpenModalCountModal={setIsOpenModalCountModal}
-        value={selectedOrder?.Amount}
-      /> */}
-      {/* Modal split order */}
-      {/* <ModalSplitOrder visible={isOpenModalSplitOrder} setIsOpenModal={setIsOpenModalSplitOrder} /> */}
-      {/* Modal select table */}
-      {/* <ModalTable
-        visible={isOpenModalTable}
-        setVisible={setIsOpenModalTable}
-        order={order}
-        setOrder={setOrder}
-      /> */}
-      {/* Modal announce cancle order */}
+      <DrawerPayment invoice_tables={invoice_details} visible={openDrawer} setVisible={setOpenDrawer} />
+
       <Modal
         open={isOpenModalCancleOrder}
         title="Thông báo"
         onCancel={() => setIsOpenCancleOrder(false)}
         footer={[
-          <Button  danger key="submit">
+          <Button onClick={() => hanldeCancleOrder(selectedOrder?.id)} type="primary" key="submit">
             <FontAwesomeIcon style={{ paddingRight: "5px" }} icon={faSquareCheck} />
             <span> Đồng ý</span>
           </Button>,
@@ -253,17 +354,17 @@ const ContentOrderDetail = (props: props) => {
             <Col  span={12}>
           
               <Form.Item  name={"id_customer"}>
-                  {/* <DebounceSelect style={{width:"100%", marginRight:"5px"}} placeholder="Chọn khách hàng" initOption={customers} fetchOptions={fetchCustomer}/> */}
-                  <Select  style={{width:"100%", marginRight:"5px"}} placeholder="Chọn khách hàng"/>
+                  {/* <Select style={{width:"100%", marginRight:"5px"}} placeholder="Chọn khách hàng" options={[{
+                      value:"khach_vang_lai",
+                      label: "Khách vãng lai"
+                  }, ...customers]} allowClear showSearch /> */}
+                   <DebounceSelect style={{width:"100%", marginRight:"5px"}} placeholder="Chọn khách hàng" initOption={[{
+                      value:"khach_vang_lai",
+                      label: "Khách vãng lai"
+                  }, ...customers]} fetchOptions={fetchCustomer} />
+                
               </Form.Item>
-              {/* <Tooltip placement="top" title="Thêm khách hàng">
-                    <FontAwesomeIcon
-                      // onClick={handleClickAddCustomer}
-                      icon={faPlusCircle}
-                      className="icon-add-customer-order-detail"
-                    />
-              </Tooltip> */}
-              
+            
             </Col>
           </Row>
         
@@ -295,13 +396,13 @@ const ContentOrderDetail = (props: props) => {
         <div className="footer-content-order-detail">
           <div className="info-order-detail">
             <div className="info-order-detail-left">
-              <div className="control-table" style={{marginRight:"10px"}}>
+              <div  onClick={() => handleClickSplit()} className="control-table" style={{marginRight:"10px"}}>
                 <FontAwesomeIcon className="icon-control-table" icon={faArrowsLeftRightToLine} />
-                <span  className="title-controle-table">Tách bàn</span>
+                <span  className="title-controle-table">Tách đơn</span>
               </div>
-              <div className="control-table" style={{marginRight:"10px"}}>
+              <div onClick={() => handlClickCombine()} className="control-table" style={{marginRight:"10px"}}>
                 <FontAwesomeIcon className="icon-control-table" icon={faDownLeftAndUpRightToCenter} />
-                <span  className="title-controle-table">Ghép bàn</span>
+                <span  className="title-controle-table">Ghép đơn</span>
               </div>
               {/* <div onClick={() => handleChangeTable()} className="control-table">
                 <FontAwesomeIcon className="icon-control-table" icon={faRightLeft} />
@@ -342,7 +443,7 @@ const ContentOrderDetail = (props: props) => {
                   <Button
                     style={{ color: "white", backgroundColor: "#28B44F" }}
                     className="button-controler-order"
-                  
+                    onClick={() => setOpenDrawer(true)}
                   >
                     <FontAwesomeIcon className="icon-button" icon={faMoneyBill1Wave} />
                     <span className="title-button">Thanh toán</span>
@@ -356,7 +457,13 @@ const ContentOrderDetail = (props: props) => {
       </div>
      
     </div>
+    <ModalCombineOrder id_invoice_old={selectedOrder?.id}  open={openModalCombine} handleModal={handleMOdalCombine} curData={invoice_details}/>
+    <ModalSplitOrder id_invoice_old={selectedOrder?.id}  open={openModalSplit} handleModal={handleModalSplit} curData={invoice_details}/>
+
+    </Fragment>
   );
 };
+const ModalCombineOrder = React.lazy(() => import("./ModalCombineOrder/ModalCombineOrder"))
+const ModalSplitOrder = React.lazy(() => import("./ModalSplitOrder"))
 // const ModalChangeTable = React.lazy(() => import("./ModalChangeTable/ModalChangeTable"))
 export default ContentOrderDetail;

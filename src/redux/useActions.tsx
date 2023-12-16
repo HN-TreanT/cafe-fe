@@ -5,6 +5,7 @@ import { categoryAction } from "./category/actions"
 import { comboAction } from "./combo/actions";
 import { OrderActions } from "./order/actions";
 import { TableFoodActions } from "./table_food/actions";
+import { InvoiceActions } from "./invoice/actions";
 const useAction = () => {
   const actions = {
     AuthActions,
@@ -13,7 +14,8 @@ const useAction = () => {
     categoryAction,
     comboAction,
     OrderActions,
-    TableFoodActions
+    TableFoodActions,
+    InvoiceActions
   };
   return actions
 }

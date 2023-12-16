@@ -41,7 +41,7 @@ const NguyenLieu = ({ nl }) => {
         ShipmentServices.get({
             page: currentPage,
             size: rowsPerPage,
-            id: nl?.id
+            id_shipment: nl?.id
         }).then((res) => {
             if (res.status) {
                 setCount(res.data.count)
@@ -102,7 +102,7 @@ const NguyenLieu = ({ nl }) => {
 
     useEffect(() => {
         getData()
-    }, [currentPage, rowsPerPage])
+    }, [currentPage, rowsPerPage, nl])
 
     return <div className="ds_trangthietbi">
         {contextHolder}

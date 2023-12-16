@@ -7,6 +7,8 @@ import { ColumnProps } from "antd/es/table";
 import dayjs from "dayjs";
 import { message } from "antd";
 import { comboServices } from "../../../utils/services/comboServices";
+import { getProduct } from "../../../utils/services/productServices ";
+import SanPham from "./SanPham";
 interface DataType {
   key: number;
   createdAt: Date;
@@ -26,17 +28,35 @@ const Combo = () => {
   const [data, setData] = useState([])
   const [count, setCount] = useState(0)
   const [messageApi, contextHolder] = message.useMessage();
-
+  const [product, setProduct] = useState([]);
+  //lấy dữ liệu sản phẩm
+  const getComboProduct = () => {
+    getProduct({
+      page: 1,
+      size: 100,
+    }).then(res => {
+      if (res.status) {
+        setProduct(res.data.data);
+      }
+    })
+  }
+  //lấy dữ liệu Combo
   const getData = () => {
     dispatch(actions.StateAction.loadingState(true))
     comboServices.get({
       page: currentPage,
       size: rowsPerPage,
-      ...(search && search !== " " && { search })
+      ...(search && search !== " " && { name: search })
     }).then((res) => {
       if (res.status) {
-        setCount(res.data.count)
-        setData(res.data.data)
+        const t = res.data.data.map((item: any) => {
+          return {
+            ...item,
+            key: item.id
+          }
+        })
+        setCount(res.data.TotalPage)
+        setData(t)
       }
       dispatch(actions.StateAction.loadingState(false))
 
@@ -72,8 +92,9 @@ const Combo = () => {
       message.error("Xóa thất bại")
     }
   }
-
-
+  useEffect(() => {
+    getComboProduct();
+  }, []);
   const columns: ColumnProps<DataType>[] = [
     {
       title: "TT",
@@ -185,8 +206,16 @@ const Combo = () => {
         style={{ width: "100%" }}
         rowClassName={() => 'editable-row'}
         bordered
-        dataSource={data}
+        dataSource={data.map((item: any) => ({
+          ...item,
+          key: item.id, // Assuming ID is the unique key for each item
+        }))}
         columns={columns}
+        expandable={{
+          expandedRowRender: (record) => {
+            return <SanPham record={record} />;
+          },
+        }}
         pagination={{
           current: currentPage,
           pageSize: rowsPerPage,
@@ -207,9 +236,9 @@ const Combo = () => {
       />
 
     </Row>
-    <Modal curData={curData} action="Add" handleModal={hanldeModalAdd} open={openModalAdd} getData={getData}
+    <Modal curData={curData} action="Add" handleModal={hanldeModalAdd} open={openModalAdd} getData={getData} product={product}
     />
-    <Modal curData={curData} action="Edit" handleModal={handleModalEdit} open={openModalEdit} getData={getData}
+    <Modal curData={curData} action="Edit" handleModal={handleModalEdit} open={openModalEdit} getData={getData} product={product}
     />
 
   </div>;

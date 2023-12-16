@@ -12,7 +12,8 @@ import {
   Col,
   DatePicker,
   Breadcrumb,
-  Divider
+  Divider,
+  TimePicker
 } from "antd";
 import { useState, Fragment, useEffect, useRef } from "react";
 import { Label, ModalHeader, ModalBody } from "reactstrap";
@@ -438,15 +439,15 @@ const Employee = () => {
             layout="vertical"
           >
              <Row gutter={15}>
-              <Col span={24}>
+             <Col span={24}>
                 <Form.Item
                   style={{ marginBottom: "4px" }}
                   name="name"
-                  label="Tên nhân viên"
+                  label="Họ và tên"
                   rules={[
                     {
                       required: true,
-                      message: "Nhập tên nhân viên",
+                      message: "Nhập họ và tên",
                     },
                     {
                       validator: (rule, value) => {
@@ -460,9 +461,60 @@ const Employee = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Nhập tên nhân viên" />
+                  <Input placeholder="Nhập họ và tên" />
                 </Form.Item>
               </Col>
+             <Col span={12}>
+                <Form.Item
+                  style={{ marginBottom: "4px" }}
+                  name="username"
+                  label="Tên đăng nhập"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Nhập tên đăng nhập",
+                    },
+                    {
+                      validator: (rule, value) => {
+                        if (value && value.trim() === "") {
+                          return Promise.reject(
+                            "Không hợp lệ"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input placeholder="Nhập tên đăng nhập" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  style={{ marginBottom: "4px" }}
+                  name="password"
+                  label="Mật khẩu"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Nhập mật khẩu",
+                    },
+                    {
+                      validator: (rule, value) => {
+                        if (value && value.trim() === "") {
+                          return Promise.reject(
+                            "Không hợp lệ"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input placeholder="Nhập mật khẩu" />
+                </Form.Item>
+              </Col>
+             
               <Col span={12}>
                 <Form.Item
                   style={{ marginBottom: "4px" }}
@@ -608,6 +660,56 @@ const Employee = () => {
                     },
                   ]}
                 >
+                   <Row gutter={15}>
+                    <Col span={12}>
+                <Form.Item
+                  style={{ marginBottom: "4px" }}
+                  name="arrival_time"
+                  label="Thời gian bắt đầu"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Nhập thời gian bắt đầu",
+                    },
+                  ]}
+                >
+                  <TimePicker
+                    size="large"
+                    defaultValue={moment("00:00:00", "HH:mm:ss")}
+                    style={{
+                      width: "100%",
+                      height: " 34px",
+                    }}
+                    placeholder="Thời gian bắt đầu"
+                    format={"HH:mm:ss"}
+                  />
+                </Form.Item>
+              </Col>
+                    <Col span={12}>
+                <Form.Item
+                  style={{ marginBottom: "4px" }}
+                  name="end_time"
+                  label="Thời gian kết thúc"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Nhập thời gian kết thúc",
+                    },
+                  ]}
+                >
+                  <TimePicker
+                    size="large"
+                    defaultValue={moment("00:00:00", "HH:mm:ss")}
+                    style={{
+                      width: "100%",
+                      height: " 34px",
+                    }}
+                    placeholder="Thời gian kết thúc"
+                    format={"HH:mm:ss"}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
                    <Select
                           showSearch
                           allowClear

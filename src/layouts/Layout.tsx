@@ -8,8 +8,8 @@ import Sidebar from './sider/sider';
 import { Navigate, Outlet } from 'react-router-dom';
 import './Layout.scss'
 import { RouterLinks } from '../const/RouterLinks';
-
-const { Header, Content } = Layout;
+import AppHeader from './Header';
+const { Content } = Layout;
 
 const App: React.FC = () => {
 
@@ -25,15 +25,11 @@ const App: React.FC = () => {
   if(role === "U") {
     return <Navigate to={RouterLinks.ORDER_PAGE}/>
   }
-
-  
-
   return (
     <Layout >
       <Sidebar />
       <Layout className="site-layout" style={{ marginLeft: 300 }}>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-        </Header>
+      <AppHeader />
         <Content
           style={{
             margin: '24px 16px 0', overflow: 'initial',

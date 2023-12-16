@@ -12,7 +12,7 @@ const getEmployee =   (params: any,) => {
 const createEmployee = (data: any) => {
     return api.makeAuthRequest({
       url: "/api/v1/employee",
-      method: "PUT",
+      method: "POST",
       data,
     });
   };

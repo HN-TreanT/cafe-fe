@@ -142,7 +142,7 @@ const Material = ({
                 //   align="baseline"
                 // >
                   <Row gutter={15}>
-                    <Col span={12}>
+                    <Col span={14}>
                       <Form.Item
                         style={{ marginBottom: "4px" }}
                         name={[name, "id_material"]}
@@ -168,8 +168,9 @@ const Material = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={11}>
+                    <Col span={8}>
                       <Form.Item
+                        style={{ marginBottom: "7px", display: "flex" }}
                         label={
                           <span>
                             Số lượng<span className="redColor">(*)</span>

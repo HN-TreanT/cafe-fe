@@ -49,11 +49,38 @@ const deleteById = (id: Number) => {
   });
 };
 
+const combineInvoice  = (data: any) => {
+  return api.makeAuthRequest({
+    url: "/api/v1/invoice/combine-inovice",
+    method: "POST",
+    data: data,
+  });
+}
+
+const splitInvoice  = (data: any) => {
+  return api.makeAuthRequest({
+    url: "/api/v1/invoice/split-order",
+    method: "POST",
+    data: data,
+  });
+}
+
+const paymentInvoice = (id: any, data: any) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/invoice/payment/${id}`,
+    method: "POST",
+    data: data,
+  });
+}
+
 export const invoiceServices = {
   get,
   getById,
   create,
   update,
   deleteById,
-  getInvoiceByIdTable
+  getInvoiceByIdTable,
+  combineInvoice,
+  splitInvoice,
+  paymentInvoice
 };

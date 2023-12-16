@@ -31,7 +31,7 @@ const DanhMucHang = () => {
             ...(search && search !== "" && { name: search })
         }).then((res: any) => {
             if (res.status) {
-                setCount(res.data.count)
+                setCount(res.data.TotalPage)
                 setData(res.data.data)
             }
         }).catch((err: any) => {
@@ -135,8 +135,8 @@ const DanhMucHang = () => {
         </Row>
         <Row>
             <Col span={6}>
-                <Space direction="vertical" style={{ width: "100%" }}>
-                    <Typography.Text>Tên các mặt hàng</Typography.Text>
+                <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start" }}>
+                    <label style={{ marginBottom: "4px" }}>Tìm kiếm</label>
                     <Input
                         type="text"
                         placeholder="Tìm kiếm"
@@ -153,7 +153,7 @@ const DanhMucHang = () => {
                             }
                         }}
                     />
-                </Space>
+                </div>
             </Col>
             <Divider style={{ margin: "10px" }}></Divider>
         </Row>

@@ -32,7 +32,7 @@ const OrderDetail: React.FC<props> = (props) => {
               const temp = res.data.data.map((item: any) => {
                 return {
                   value: item?.id,
-                  label: item.name
+                  label: `${item?.name} - ${item.phone_number}`,
                 }
               })
               setCustomer(temp)

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Form, Row, Col, Modal, Input, DatePicker, Select, Button, Upload } from 'antd'
+import { Form, Row, Col, Modal, Input, DatePicker, Select, Button, Upload, Checkbox } from 'antd'
 import { message } from "antd";
 import { comboServices } from "../../../utils/services/comboServices";
 const FormItem = Form.Item
@@ -11,12 +11,14 @@ interface Props {
     handleModal: Function,
     action: string,
     getData: any,
+    product: any,
 
 }
+const { Option } = Select;
 const ModalAddCombo = (props: Props) => {
     const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm()
-    const { curData, open, handleModal, action, getData } = props
+    const { curData, open, handleModal, action, getData, product } = props
     useEffect(() => {
         if (curData) {
 
@@ -101,6 +103,40 @@ const ModalAddCombo = (props: Props) => {
                         >
                             <Input placeholder='Nhập giá' />
                         </FormItem>
+                    </Col>
+                    <Col span={24}>
+                        <Form.Item
+                            style={{ marginBottom: "4px" }}
+                            label={"Sản phẩm"}
+                            name="id_products"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Chọn sản phẩm",
+                                },
+                            ]}
+                        >
+                            <Select
+                                allowClear
+                                mode="multiple"
+                                showSearch
+                                placeholder="Chọn sản phẩm"
+                                filterOption={(input: any, option: any) =>
+                                    option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {product.map((item: any) => (                               
+                                        <Option key={item._product} value={item.id} name={item.id_product}>
+                                            
+                                            {item.name}
+                                        </Option>                                 
+                                ))}
+
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={24}>
+
                     </Col>
                 </Row>
                 <Row>

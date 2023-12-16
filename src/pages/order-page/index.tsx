@@ -8,11 +8,17 @@ import useAction from "../../redux/useActions";
 import { invoiceServices } from "../../utils/services/invoiceService";
 
 import "./OrderPage.scss";
-
+import { RouterLinks } from "../../const/RouterLinks";
+import { useNavigate } from "react-router-dom";
 const OrderPage: React.FC = () => {
  const actions = useAction()
  const dispatch = useDispatch()
+ const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage();
+  const handlLogout = () => {
+    localStorage.clear()
+    navigate(RouterLinks.LOGIN)
+ }
   const items: MenuProps["items"] = [
     {
       label: (
@@ -28,7 +34,7 @@ const OrderPage: React.FC = () => {
     },
     {
       label: (
-        <div>
+        <div onClick={() => handlLogout()}>
           <LogoutOutlined
             style={{ paddingRight: "10px", color: "rgba(0, 0, 0, 0.626)" }}
            
@@ -89,6 +95,7 @@ const OrderPage: React.FC = () => {
  
   useEffect(() => {
    const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+   
         return item?.id_table
    } ) :  []
     const mappedInvoiceDetails = Array.isArray(selectedOrder?.invoice_details)

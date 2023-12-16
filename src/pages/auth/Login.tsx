@@ -18,7 +18,7 @@ const Login = () => {
       const res = await authServices.login(value);
       if (res.status) {
         dispatch(actions.AuthActions.userInfo(res.data))
-        localStorage.setItem("role",  res.data.id_position)
+        localStorage.setItem("role", res.data.id_position)
         localStorage.setItem("username", res.data.TaiKhoan)
         localStorage.setItem("token", res.data.access_token)
         localStorage.setItem("refresh_token", res.data.refresh_token)

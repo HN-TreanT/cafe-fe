@@ -21,6 +21,7 @@ import KiemKe from './pages/kho/KiemKe';
 import Layout from './layouts/Layout';
 import Employee from './pages/employee';
 import OrderPage from './pages/order-page';
+import ChefPage from './pages/chef-page';
 function App() {
   return (
     <Provider store={store}>
@@ -45,7 +46,8 @@ function App() {
                   <Route path={RouterLinks.BAO_CAO_NHAN_VIEN} element={<Suspense fallback={null}><Employee /></Suspense>} />
 
                 </Route>
-                <Route path={RouterLinks.ORDER_PAGE} element={<OrderPage />} />
+                <Route path={RouterLinks.ORDER_PAGE} element={<Suspense fallback={null}><OrderPage /></Suspense>}  />
+                <Route path={RouterLinks.CHEF_PAGE} element={<Suspense fallback={null}><ChefPage /></Suspense>}  />
 
 
               </Routes>

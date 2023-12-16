@@ -5,7 +5,7 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
 import Sidebar from './sider/sider';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, Route } from 'react-router-dom';
 import './Layout.scss'
 import { RouterLinks } from '../const/RouterLinks';
 import AppHeader from './Header';
@@ -24,6 +24,9 @@ const App: React.FC = () => {
   
   if(role === "U") {
     return <Navigate to={RouterLinks.ORDER_PAGE}/>
+  }
+  if(role === "M") {
+    return <Navigate to={RouterLinks.CHEF_PAGE}/>
   }
   return (
     <Layout >

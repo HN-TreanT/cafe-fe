@@ -35,7 +35,7 @@ const update = (id: Number, data: any) => {
 
 const deleteById = (id: Number) => {
     return api.makeAuthRequest({
-        url: `/api/category/${id}`,
+        url: `/api/v1/category/${id}`,
         method: "DELETE",
     });
 };

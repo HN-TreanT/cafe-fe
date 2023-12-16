@@ -24,7 +24,7 @@ const ThemMoi = ({ open, handleModal, action }) => {
         try {
             const res = await detail_shipmentServices.create(values);
             if (res.status) {
-                message.success("Thêm mới thành công");
+                message.success("Thêm mới  thành công");
                 // onSuccess(res.data, res.data.id);
                 setStep1Id(res.data.id);
                 console.log(res.data.id)

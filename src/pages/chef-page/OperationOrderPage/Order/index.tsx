@@ -24,7 +24,8 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
        dispatch(actions.InvoiceActions.loadData({
         page: currentPage,
         size: 6,  
-        thanh_toan: "chua"
+        thanh_toan: "chua",
+        status: 0
       }))
     }, [actions.InvoiceActions, currentPage, dispatch])
 
@@ -53,7 +54,7 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
           }}
           icon={faFileInvoiceDollar}
         />
-        <span>{`Chờ thanh toán(${
+        <span>{`Tổng số yêu cầu(${
         //    orders?.TotalPage ? orders.TotalPage : 0
         TotalPage
         })`}</span>

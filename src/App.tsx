@@ -22,6 +22,7 @@ import DanhsachMatHang from './pages/mathang/danhsachmathang/DanhSachMatHang';
 import Layout from './layouts/Layout';
 import NhanVien from './pages/baocao/nhanvien/NhanVien';
 import OrderPage from './pages/order-page';
+import ChefPage from './pages/chef-page';
 function App() {
   return (
     <Provider store={store}>
@@ -47,6 +48,7 @@ function App() {
 
                 </Route>
                 <Route path={RouterLinks.ORDER_PAGE} element={<Suspense fallback={null}><OrderPage /></Suspense>}  />
+                <Route path={RouterLinks.CHEF_PAGE} element={<Suspense fallback={null}><ChefPage /></Suspense>}  />
 
 
               </Routes>

@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Col, MenuProps, Row, Dropdown, message } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons"
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import OrderDetail from "./OrderDetail";
 import OperationOrderPage from './OperationOrderPage'
-import useAction from "../../redux/useActions";
-import { invoiceServices } from "../../utils/services/invoiceService";
+import { useNavigate } from "react-router-dom";
 
 import "./OrderPage.scss";
 import { RouterLinks } from "../../const/RouterLinks";
-import { useNavigate } from "react-router-dom";
-const OrderPage: React.FC = () => {
- const actions = useAction()
- const dispatch = useDispatch()
- const navigate = useNavigate()
+
+const ChefPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate()
   const handlLogout = () => {
-    localStorage.clear()
-    navigate(RouterLinks.LOGIN)
- }
+     localStorage.clear()
+     navigate(RouterLinks.LOGIN)
+  }
   const items: MenuProps["items"] = [
     {
       label: (
@@ -34,7 +31,7 @@ const OrderPage: React.FC = () => {
     },
     {
       label: (
-        <div onClick={() => handlLogout()}>
+        <div  onClick={() => handlLogout()}>
           <LogoutOutlined
             style={{ paddingRight: "10px", color: "rgba(0, 0, 0, 0.626)" }}
            
@@ -55,43 +52,7 @@ const OrderPage: React.FC = () => {
     
   }
 
-  const handleSaveOrder = () => {
-    const lst_invoice_detail = invoice_details.map((item: any) => {
-      return {
-       id_invoice: selectedOrder?.id,
-       id_product: !item?.isCombo ? item?.id_product : null,
-       id_combo: item?.isCombo ? item?.id_product : null,
-       isCombo: item?.isCombo,
-       price: item?.price,
-       amount: item?.amount
-      }
-     })
-     
-     const dataSubmit = {
-       id_employee: selectedOrder?.id_employee ? selectedOrder?.id_employee : null,
-       id_customer: selectedOrder?.id_customer ? selectedOrder?.id_customer : null,
-       id_promotion: selectedOrder?.id_promotion ? selectedOrder?.id_promotion : null,
-       lst_invoice_detail: lst_invoice_detail
-
-     }
-    
-     invoiceServices.update(selectedOrder?.id, dataSubmit).then((res: any) => {
-        if (res.status) {
-         message.success("Chỉnh sửa thành công")
-             invoiceServices.getById(res.data.id).then((res: any) => {
-                   if(res.status) {
-                    dispatch(actions.OrderActions.selectedOrder(res.data))
-                   }
-             }).catch ((err: any) => {
-              console.log(err)
-             })
-        }
-     }).catch((err: any) => {
-      console.log(err)
-         message.error("Chỉnh sửa thất bại")
-     })
-    
-  }
+  
  
   useEffect(() => {
    const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
@@ -123,7 +84,7 @@ const OrderPage: React.FC = () => {
             <OperationOrderPage hanldeSetInvoiceDetails={hanldeSetInvoiceDetails} invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} />
           </Col>
           <Col span={9}>
-            <OrderDetail id_tables={id_tables} setIdTables={setIdTables} invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} handleSaveOrder={handleSaveOrder} />
+            <OrderDetail id_tables={id_tables} setIdTables={setIdTables} invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails}  />
           </Col>
         </Row>
         <Dropdown menu={{ items }} trigger={["click"]}>
@@ -136,4 +97,4 @@ const OrderPage: React.FC = () => {
     </div>
   );
 };
-export default OrderPage;
+export default ChefPage;

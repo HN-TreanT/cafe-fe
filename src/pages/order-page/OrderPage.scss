@@ -10,6 +10,14 @@
         padding-bottom: 30px;
         .operation-order-page{
             height: 100%;
+            .order{
+              // width: 100%;
+              height: calc(100vh - 15vh);
+              background-color:white;   
+              margin-top: -16px;
+              border-radius: 10px;
+              border-top-left-radius: 0px;
+            }
             .table-location{
               // width: 100%;
               height: calc(100vh - 15vh);

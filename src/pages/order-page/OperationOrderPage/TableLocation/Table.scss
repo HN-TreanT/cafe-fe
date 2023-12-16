@@ -22,7 +22,8 @@
             width: 140px;   
             color:  #7facfa;
             box-shadow:1px 1px 5px #7c7a783a;
-            
+           
+
             cursor: pointer;
              &:hover{
                 background-color: rgba(0, 0, 0, 0.084);
@@ -35,4 +36,9 @@
            
         }
     }
+}
+
+
+.selected_class {
+    background-color: rgba(0, 0, 0, 0.084)  ;
 }

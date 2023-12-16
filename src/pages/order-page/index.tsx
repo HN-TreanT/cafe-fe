@@ -89,6 +89,7 @@ const OrderPage: React.FC = () => {
  
   useEffect(() => {
    const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+   
         return item?.id_table
    } ) :  []
     const mappedInvoiceDetails = Array.isArray(selectedOrder?.invoice_details)

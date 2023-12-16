@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../redux/useActions";
 import Product from "./Product/Product";
 import TableLocation from "./TableLocation";
-
+import Order from "./Order";
 
 
 const IconTab = ({ icon, label, children }: any) => (
@@ -38,6 +38,13 @@ const OperationOrderPage: React.FC<props> = ({invoice_details, setInvoiceDetails
 
       <Tabs
       >        
+           <Tabs.TabPane
+            tab={<IconTab icon={faFileInvoiceDollar} label={"Phiếu yêu cầu"} />}
+            key={"order"}
+            className="tab-pane"
+          >
+            <Order   invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} />,
+          </Tabs.TabPane>
           <Tabs.TabPane
             tab={<IconTab icon={faUtensils} label={"Mặt hàng"} />}
             key={"product"}

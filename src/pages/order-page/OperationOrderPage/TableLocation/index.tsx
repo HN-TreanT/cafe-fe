@@ -46,18 +46,23 @@ interface props {
 const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
   const dispatch = useDispatch()
   const actions = useAction()
+  const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
    
    const [currentPage, setCurrentPage] = useState(1)
    const [search, setSearch] = useState<any>()
    const [statusTable, setStatusTable] = useState<any>()
    const loading= useSelector((state: any) => state.state.loadingState)
-    const {data, TotalPage} = useSelector((state: any) => state.table.tablefood)
+   const {data, TotalPage} = useSelector((state: any) => state.table.tablefood)
 
+   const [mapIdTable, setMapIdTable] = useState<any>([])
+  
    const handleSeletecdTable = async (id_table: any) => {
       try {
            const response = await invoiceServices.getInvoiceByIdTable(id_table)
            if (response.status) {
               dispatch(actions.OrderActions.selectedOrder(response.data))
+              const arrayIdTabler =  response?.data.tablefood_invoices.map((item: any) => item?.id_table)
+              setMapIdTable(arrayIdTabler)
               setInvoiceDetails(response?.data.invoice_details.map((item: any) => {
                 return {
                   id_product: item?.product ? item?.product : null,
@@ -69,12 +74,25 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
                 }
               }))
            } else {
-            dispatch(actions.OrderActions.selectedOrder({}))
+            setMapIdTable([id_table])
+            dispatch(actions.OrderActions.selectedOrder(
+              {
+                invoice_details: [
+            
+                ],
+                tablefood_invoices: [
+                  {
+                    id_table: id_table
+                  }
+                ]
+              }
+            ))
             setInvoiceDetails([])
 
            }
       } catch (err: any) {
         console.log(err)
+         
         dispatch(actions.OrderActions.selectedOrder({
           invoice_details: [
             
@@ -85,10 +103,19 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
             }
           ]
         }))
+        setMapIdTable([id_table])
         setInvoiceDetails([])
 
       }
    }
+
+
+   useEffect(() => {
+      const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
+        return item?.id_table
+       } ) :  []
+      setMapIdTable(mapIdTables)
+   }, [selectedOrder])
 
    useEffect(() => {
     dispatch(actions.TableFoodActions.loadData({
@@ -96,7 +123,8 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
      size: 12,
      ...(search && {search: search}),
      ...(statusTable && {status: statusTable}),
-}))
+     }))
+   
    }, [currentPage, statusTable, search, dispatch, actions.TableFoodActions])
   return (
     <div className="table-location">
@@ -195,7 +223,7 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
                                span={4}
                                key={item?.id}
                              >
-                               <div onClick={() => handleSeletecdTable(item?.id)} className="item-table">
+                               <div id={`table_id_${item?.id}`} onClick={() => handleSeletecdTable(item?.id)} className={`item-table ${mapIdTable.includes(item?.id) ? "selected_class" : ""}`}>
                                  <Image
                                    src={tableImage0}
                                    preview={false}
@@ -214,7 +242,7 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
                                span={4}
                                key={item?.id}
                              >
-                               <div onClick={() => handleSeletecdTable(item?.id)} className="item-table">
+                               <div id={`table_id_${item?.id}`}  onClick={() => handleSeletecdTable(item?.id)}  className={`item-table ${mapIdTable.includes(item?.id) ? "selected_class" : ""}`}>
                                  <Image
                                    src={tableImage1}
                                    preview={false}

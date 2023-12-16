@@ -5,6 +5,7 @@ import CategoryReducer from "./category/reducer";
 import ComboReducer from "./combo/reducer";
 import OrderReducer from "./order/reducers"
 import TableReducer from "./table_food/reducers"
+import invoiceReducer from "./invoice/reducer";
 const rootReducer = {
     auth: AuthReducer,
     state: StateReducer,
@@ -12,7 +13,8 @@ const rootReducer = {
     category: CategoryReducer,
     combo: ComboReducer,
     order: OrderReducer,
-    table: TableReducer
+    table: TableReducer,
+    invoice: invoiceReducer
 };
 
 export default rootReducer;

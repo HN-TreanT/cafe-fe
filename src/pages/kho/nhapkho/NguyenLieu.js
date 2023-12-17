@@ -35,7 +35,6 @@ const NguyenLieu = ({ nl }) => {
             message.error("Xóa thất bại")
         })
     };
-
     const getData = () => {
         setLoading(true)
         ShipmentServices.get({
@@ -53,8 +52,6 @@ const NguyenLieu = ({ nl }) => {
             setLoading(false)
         })
     }
-
-
     const columns = [
         {
             title: "TT",
@@ -99,7 +96,6 @@ const NguyenLieu = ({ nl }) => {
             </div>
         }
     ]
-
     useEffect(() => {
         getData()
     }, [currentPage, rowsPerPage, nl])
@@ -152,8 +148,6 @@ const NguyenLieu = ({ nl }) => {
         </Row>
         {/* <ModalLSTTB ma_ttb={ttb?.Ma_TTB} tinhtrangTTbs={tinhtragnTTbs} curData={curData} open={openModalAdd} handleModal={hanldeModalAdd} action="Add" getData={getData} />
     <ModalLSTTB ma_ttb={ttb?.Ma_TTB} tinhtrangTTbs={tinhtragnTTbs} curData={curData} open={openModalEdit} handleModal={handleModalEdit} action="Edit"  getData={getData}/> */}
-
-
     </div>;
 };
 // const ModalLSTTB = React.lazy(() => import("./ModalLSTT"))

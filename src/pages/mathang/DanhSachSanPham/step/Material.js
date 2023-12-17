@@ -132,15 +132,6 @@ const Material = ({
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
-                // <Space
-                //   key={key}
-                //   style={{
-                //     display: "flex",
-                //     marginBottom: 8,
-                //     width: "100%",
-                //   }}
-                //   align="baseline"
-                // >
                   <Row gutter={15}>
                     <Col span={12}>
                       <Form.Item

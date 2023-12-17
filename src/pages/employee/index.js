@@ -31,6 +31,7 @@ import moment from "moment";
 import WorkShift from "./WorkShift";
 import { getPosition } from "../../utils/services/position";
 import dayjs from "dayjs";
+import { getWorkShift } from "../../utils/services/workShift";
 // import { AbilityContext } from '@src/utility/context/Can'
 
 const Employee = () => {
@@ -41,6 +42,8 @@ const Employee = () => {
   const MySwal = withReactContent(Swal);
   const [data, setData] = useState([]);
   const [position, setPosition] = useState([]);
+  const [workshift, setWorkshift] = useState([]);
+  const [workshiftEm, setWorkshiftEm] = useState([]);
   const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [idEdit, setIdEdit] = useState();
@@ -63,7 +66,10 @@ const Employee = () => {
         label: 'Nam'
     }
   ]
-  
+  const handleChange = (value) => {
+    console.log("value", value)
+    setWorkshiftEm(value)
+  };
   const getData = () => {
     getEmployee({
       page: currentPage,
@@ -99,10 +105,25 @@ const Employee = () => {
       console.log(e);
     });
 };
-
+const getAllWorkshift = () => {
+  getWorkShift()
+    .then((res) => {
+      const t = res.data.data.map((item) => {
+        return {
+          value: item.id,
+          label: `(${item.arrival_time} -> ${item.end_time})`,
+        };
+      });
+      setWorkshift(t);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
   useEffect(() => {
     getData();
     getAllPosition();
+    getAllWorkshift()
   }, [currentPage, rowsPerPage, search]);
 
   const handleModal = () => {
@@ -127,8 +148,12 @@ const Employee = () => {
     handleModal();
   };
   const onFinish = (values) => {
+    console.log("fdsfd",values)
     if (action === "Add") {
-      createEmployee(values)
+      createEmployee({
+        ...values,
+        employee_worshift: workshiftEm
+      })
         .then((res) => {
           MySwal.fire({
             title: "Thêm mới thành công",
@@ -264,21 +289,6 @@ const Employee = () => {
         return record?.position?.name;
       },
     },
-    // {
-    //     title: "Ca làm",
-    //     align: "center",
-    //     render: (text, record, index) => {
-    //         const workshifts = record?.employee_workshifts;
-
-    //         if (workshifts && workshifts.length > 0) {
-    //             const arrivalTimes = workshifts.map(item => item.workshift.arrival_time);
-    //             return arrivalTimes.join(" / ");
-    //         }
-
-    //         return "No workshifts"; // or any default value you prefer if there are no workshifts
-    //     }
-    // },
-
     {
       title: "Thao tác",
       width: 100,
@@ -438,7 +448,7 @@ const Employee = () => {
             layout="vertical"
           >
              <Row gutter={15}>
-             <Col span={24}>
+             <Col span={12}>
                 <Form.Item
                   style={{ marginBottom: "4px" }}
                   name="name"
@@ -647,68 +657,9 @@ const Employee = () => {
                       required: true,
                       message: "Chọn vị trí",
                     },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không hợp lệ"
-                          );
-                        }
-                        return Promise.resolve();
-                      },
-                    },
                   ]}
                 >
-                   <Row gutter={15}>
-                    <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="arrival_time"
-                  label="Thời gian bắt đầu"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập thời gian bắt đầu",
-                    },
-                  ]}
-                >
-                  <TimePicker
-                    size="large"
-                    defaultValue={moment("00:00:00", "HH:mm:ss")}
-                    style={{
-                      width: "100%",
-                      height: " 34px",
-                    }}
-                    placeholder="Thời gian bắt đầu"
-                    format={"HH:mm:ss"}
-                  />
-                </Form.Item>
-              </Col>
-                    <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="end_time"
-                  label="Thời gian kết thúc"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập thời gian kết thúc",
-                    },
-                  ]}
-                >
-                  <TimePicker
-                    size="large"
-                    defaultValue={moment("00:00:00", "HH:mm:ss")}
-                    style={{
-                      width: "100%",
-                      height: " 34px",
-                    }}
-                    placeholder="Thời gian kết thúc"
-                    format={"HH:mm:ss"}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
+                 
                    <Select
                           showSearch
                           allowClear
@@ -716,6 +667,31 @@ const Employee = () => {
                           options={position}
                           style={{  width:"100%" }}
                           placeholder="Chọn vị trí"
+                        />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  style={{ marginBottom: "4px" }}
+                  // name="id_position"
+                  label="Ca làm"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Chọn ca làm",
+                    },
+                  ]}
+                >
+                 
+                   <Select
+                    onChange={handleChange}
+                     mode="multiple"
+                          showSearch
+                          allowClear
+                          filterOption={filterOption}
+                          options={workshift}
+                          style={{  width:"100%" }}
+                          placeholder="Chọn ca làm"
                         />
                 </Form.Item>
               </Col>

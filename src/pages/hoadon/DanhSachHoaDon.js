@@ -9,9 +9,9 @@ import {
   Form,
   Select,
   Divider,
-  Tooltip,
+  Tag ,
   Row,
-  Col
+  Col,
 } from "antd";
 import React, { useState, Fragment, useEffect, useRef } from "react";
 import { Label, UncontrolledTooltip } from "reactstrap";
@@ -29,9 +29,9 @@ import withReactContent from "sweetalert2-react-content";
 import { invoiceServices } from "../../utils/services/invoiceService";
 import { getEmployee } from "../../utils/services/employee";
 import { createCustomer, getCustomer } from "../../utils/services/customer";
-import Employee from "../employee";
 import { tableServices } from "../../utils/services/tableServices";
-import { isE } from "@rc-component/mini-decimal/es/numberUtil";
+import moment from "moment";
+import InvoiceDetail from "./InvoiceDetail";
 const HoaDon = () => {
   const [form] = Form.useForm();
   const filterOption = (input, option) =>
@@ -71,7 +71,6 @@ const HoaDon = () => {
   ];
 
   const getData = () => {
-    console.log("search", searchEmployee, searchTable, searchStatus)
     invoiceServices
       .get({
         params: {
@@ -222,105 +221,85 @@ const HoaDon = () => {
       ),
     },
     {
-        title: "Nhân viên",
-        dataIndex: "id_employee",
-        render: (text, record, index) => {
-          return (
-            <span>{record?.employee?.name }</span>
-          );
-        }
+      title: "Nhân viên",
+      dataIndex: "id_employee",
+      render: (text, record, index) => {
+        return <span>{record?.employee?.name}</span>;
       },
+    },
     {
       title: "Khách hàng",
       dataIndex: "id_customer",
       render: (text, record, index) => {
         return (
-          <span>{record?.customer?.name ? record?.customer?.name : "Khách vãng lai"}</span>
+          <span>
+            {record?.customer?.name ? record?.customer?.name : "Khách vãng lai"}
+          </span>
         );
-      }
+      },
     },
     {
-        title: "Bàn",
-        render: (text, record, index) => {
-          const table1 = record?.tablefood_invoices?.map((item) => item.id_table);
-          const filteredTables = table?.filter((item) => table1?.includes(item.value));
-      
-          // Extract 'label' property and join into a string
-          const labelsString = filteredTables.map((item) => item.label).join(', ');
-          return (
-            <span>{labelsString ? labelsString : "Gọi mang về"}</span>
-          );
-        }
-      },      
-      {
-        title: "Khuyến mãi",
-        dataIndex: "id_promotion",
-        render: (text, record, index) => {
-          return (
-            <span>{record?.promotion?.name || "Không sử dụng"}</span>
-          );
-        }
+      title: "Bàn",
+      render: (text, record, index) => {
+        const table1 = record?.tablefood_invoices?.map((item) => item.id_table);
+        const filteredTables = table?.filter((item) =>
+          table1?.includes(item.value)
+        );
+
+        // Extract 'label' property and join into a string
+        const labelsString = filteredTables
+          .map((item) => item.label)
+          .join(", ");
+        return <span>{labelsString ? labelsString : "Gọi mang về"}</span>;
       },
+    },
+    {
+      title: "Khuyến mãi",
+      dataIndex: "id_promotion",
+      render: (text, record, index) => {
+        return <span>{record?.promotion?.name || "Không sử dụng"}</span>;
+      },
+    },
     {
       title: "Thành tiền",
       dataIndex: "price",
     },
     {
-        title: "Ngày gọi món",
-        dataIndex: "createdAt",
-        render: (text, record, index) => {
-          const dateObject = new Date(record.createdAt);
-          const formattedDate = `${dateObject.getDate().toString().padStart(2, '0')}/${(dateObject.getMonth() + 1).toString().padStart(2, '0')}/${dateObject.getFullYear()}`;
-      
-          return <span>{formattedDate}</span>;
-        }
+      title: "Ngày gọi món",
+      dataIndex: "createdAt",
+      render: (text, record, index) => {
+        const dateObject = new Date(record.createdAt);
+        const formattedDate = `${dateObject
+          .getDate()
+          .toString()
+          .padStart(2, "0")}/${(dateObject.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}/${dateObject.getFullYear()}`;
+
+        return <span>{formattedDate}</span>;
       },
+    },
     {
-        title: "Trạng thái",
-        render: (text, record, index) => {
-          return <span>{record.status ? "Đã hoàn thành" :"Đang thực hiện" }</span>;
-        }
+      title: "Thời gian thanh toán",
+      dataIndex: "time_pay",
+      render: (text, record, index) => {
+        const momentTime = moment(record.time_pay);
+        const formattedTime = momentTime.format("HH:mm:ss DD/MM/YYYY");
+    
+        return <span>{formattedTime ? formattedTime : "Chưa thanh toán"}</span>;
+      }
+    },
+    {
+      title: "Trạng thái",
+      render: (text, record, index) => {
+        return (
+          <Tag color={record.status ? "green" : "blue"}>
+            {record.status ? "Đã hoàn thành" : "Đang thực hiện"}
+          </Tag>
+        );
       },
-      
-    // {
-    //   title: "Thao tác",
-    //   width: 100,
-    //   align: "center",
-    //   render: (record) => (
-    //     <div style={{ display: "flex", justifyContent: "space-around" }}>
-    //       {
-    //         <>
-    //           <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
-    //             <EditOutlined
-    //               style={{ color: "#036CBF", marginRight: "10px" }}
-    //               onClick={() => handleEdit(record)}
-    //             />
-    //           </Tooltip>
-    //         </>
-    //       }
-    //       {
-    //         <Popconfirm
-    //           title="Bạn chắc chắn xóa?"
-    //           onConfirm={() => handleDelete(record.id)}
-    //           cancelText="Hủy"
-    //           okText="Đồng ý"
-    //         >
-    //           <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
-    //             <DeleteOutlined
-    //               style={{
-    //                 color: "red",
-    //                 cursor: "pointer",
-    //                 marginRight: "10px",
-    //               }}
-    //             />
-    //           </Tooltip>
-    //         </Popconfirm>
-    //       }
-    //     </div>
-    //   ),
-    // },
+    }
   ];
-  const showTotal = (count) => `Tổng số: ${count}`;
 
   return (
     <Card>
@@ -332,17 +311,18 @@ const HoaDon = () => {
           },
           {
             title: (
-              <span style={{ fontWeight: "bold" }}>
-                Danh sách hoá đơn
-              </span>
+              <span style={{ fontWeight: "bold" }}>Danh sách hoá đơn</span>
             ),
           },
         ]}
       />
-
       <Divider style={{ margin: "10px" }}></Divider>
-      <Row style={{marginTop: '20px'}}>
-      <Col span={6} className="gutter-row" style={{display: 'flex', marginBottom: '15px'}}>
+      <Row style={{ marginTop: "20px" }}>
+        <Col
+          span={6}
+          className="gutter-row"
+          style={{ display: "flex", marginBottom: "15px" }}
+        >
           <Label
             className=""
             style={{
@@ -371,7 +351,7 @@ const HoaDon = () => {
             ></Select>
           </div>
         </Col>
-        <Col span={6} className="gutter-row"  style={{display: 'flex'}}>
+        <Col span={6} className="gutter-row" style={{ display: "flex" }}>
           <Label
             className=""
             style={{
@@ -380,7 +360,7 @@ const HoaDon = () => {
               height: "34px",
               display: "flex",
               alignItems: "center",
-              marginLeft: '15px'
+              marginLeft: "15px",
             }}
           >
             Trạng thái
@@ -402,25 +382,18 @@ const HoaDon = () => {
           </div>
         </Col>
         <Col span={8} className="gutter-row"></Col>
-        {/* <Col span={2} className="gutter-row">
-          {
-            <Button
-              style={{ backgroundColor: "#036CBF" }}
-              onClick={(e) => {
-                setAction("Add");
-                setIsAdd(true);
-              }}
-              type="primary"
-            >
-              Thêm mới
-            </Button>
-          }
-        </Col> */}
+       
       </Row>
       <Table
         columns={columns}
         dataSource={data}
         bordered
+        expandable={{
+          expandedRowRender: (record) => {
+            return <InvoiceDetail record={record?.id}/>
+          },
+          rowExpandable: (record) => record.name !== "Not Expandable",
+        }}
         pagination={{
           current: currentPage,
           pageSize: rowsPerPage,
@@ -438,7 +411,8 @@ const HoaDon = () => {
             setCurrentPage(pageNumber);
           },
         }}
-      /> </Card>
+      />{" "}
+    </Card>
   );
 };
 export default HoaDon;

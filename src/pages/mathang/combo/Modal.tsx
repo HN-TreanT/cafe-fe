@@ -21,19 +21,31 @@ const ModalAddCombo = (props: Props) => {
     const { curData, open, handleModal, action, getData, product } = props
     useEffect(() => {
         if (curData) {
-
+    
+          const id_details = Array.isArray(curData?.detail_combos) ? curData?.detail_combos.map((item: any) => item.id_product) : []
             form.setFieldsValue({
                 name: curData?.name ? curData?.name : "",
                 price: curData?.price ? curData?.price : "",
+                id_products: id_details
             })
         }
     }, [curData, form])
     const onFinish = async (values: any) => {
+      
+        const dataSubmit = {
+            ...values,
+            id_products:Array.isArray( values?.id_products) ? values?.id_products.map((item: any) => {
+                return {
+                    id_product: item,
+                    check_bonus: false
+                }
+            }) : []
+        }
         try {
             if (action === "Add") {
                 const res = await comboServices.create({
-                    ...values,
-                    role_id: "U"
+                    ...dataSubmit,
+                
                 })
                 if (res.status) {
                     getData()
@@ -44,7 +56,7 @@ const ModalAddCombo = (props: Props) => {
                 }
             } else {
 
-                const res = await comboServices.update(curData.id, values)
+                const res = await comboServices.update(curData.id, dataSubmit)
                 if (res.status) {
                     getData()
                     handleModal()

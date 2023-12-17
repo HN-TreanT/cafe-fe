@@ -14,6 +14,7 @@ import {
   MoneyCollectOutlined,
   TableOutlined,
   DropboxOutlined,
+  
 } from "@ant-design/icons";
 import {
   UploadOutlined,
@@ -29,7 +30,15 @@ interface props {
 }
 const menuItems = [
   {
-    key: "muontra",
+    key: RouterLinks.TONG_QUAN,
+    label: "Tổng quan",
+    icon: (
+      <HomeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+    ),
+
+  },
+  {
+    key: "mathang",
     label: "Mặt hàng",
     icon: (
       <CoffeeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
@@ -71,7 +80,7 @@ const menuItems = [
 
   },
   {
-    key: RouterLinks.DANH_SACH_KHACH_HANG,
+    key: "khachhang",
     label: "Khách hàng",
     icon: (
       <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
@@ -93,7 +102,7 @@ const menuItems = [
 
   },
   {
-    key: "Kho",
+    key: "khohang",
     label: "Kho ",
     icon: (
       <DropboxOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
@@ -115,7 +124,7 @@ const menuItems = [
 
   },
   {
-    key: "HoaDon",
+    key: "hoadon",
     label: "Quản lý thanh toán",
     icon: (
       <MoneyCollectOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
@@ -149,6 +158,7 @@ const Sidebar = () => {
       <Image src={logo} preview={false} style={{ padding: 5, width: "200px", marginLeft: "34px" }} />
       <Menu
         selectedKeys={['/' + window.location.pathname.split("/")[1] + '/' + window.location.pathname.split("/")[2]]}
+        defaultOpenKeys ={[window.location.pathname.split("/")[1]]}
         theme="dark"
         mode="inline"
         items={menuItems}

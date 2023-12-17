@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "types": ["react-to-print"],
+    "types": ["react-to-print", "recharts"],
     "lib": [
       "dom",
       "dom.iterable",

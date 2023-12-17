@@ -73,6 +73,22 @@ const paymentInvoice = (id: any, data: any) => {
   });
 }
 
+const getOrverView = (params: any) => {
+  return api.makeAuthRequest({
+    url: `/api/v1/invoice/over-view/get`,
+    method: "GET",
+    params: params
+  });
+};
+
+const getRevenueOverview = () => {
+  return api.makeAuthRequest({
+    url: `/api/v1/invoice/over-view/revenue-overview`,
+    method: "GET",
+    // params: params
+  });
+};
+
 export const invoiceServices = {
   get,
   getById,
@@ -82,5 +98,7 @@ export const invoiceServices = {
   getInvoiceByIdTable,
   combineInvoice,
   splitInvoice,
-  paymentInvoice
+  paymentInvoice,
+  getOrverView,
+  getRevenueOverview
 };

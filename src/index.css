@@ -69,3 +69,6 @@ code {
 .ant-table-wrapper .ant-table-thead>tr>th:first-child {
   border-left: 1px solid #b8b8b8;
 }
+.ant-select-selection-item{
+  text-align: start;
+}

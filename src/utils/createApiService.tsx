@@ -96,15 +96,26 @@ const _makeAuthRequest = (instantAxios: any) => async (args: any) => {
                     isRefreshing = true;
 
                     return new Promise(function(resolve, reject) {
-                        axios
-                            .post(`${serverConfig.server}/api/v1/auth/refresh`, {
-                              refresh_token: refreshToken,})
-                            .then(({ data }) => {
+                      
+                        // axios
+                        //     .post(`${serverConfig.server}/api/v1/auth/refresh`,
+                        //     { headers: {Authorization : `Bearer ${refreshToken}`} }
+                        //     )
+                        
+                        axios({
+                          method:"POST",
+                          url:`${serverConfig.server}/api/v1/auth/refresh`,
+                          headers: {
+                            Authorization: 'Bearer ' + refreshToken
+                          }
+                        }).then(({ data }) => {
+                          console.log("check data", data)
                                if (data.status) {
-                                Auth.saveToken(data.data.access_token)
-                                axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.data.access_token;
-                                originalRequest.headers['Authorization'] = 'Bearer ' + data.data.access_token;
-                                processQueue(null, data.data.access_token);
+
+                                Auth.saveToken(data.data)
+                                axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.data;
+                                originalRequest.headers['Authorization'] = 'Bearer ' + data.data;
+                                processQueue(null, data.data);
                                 resolve(axios(originalRequest));
                                }
                             })

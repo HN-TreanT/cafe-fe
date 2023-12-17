@@ -1,7 +1,8 @@
 import Sider from "antd/es/layout/Sider";
 import { Image, Menu } from "antd";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from '../../assets/logo.png'
+// import logo from '../../assets/logo.png'
+import logo from '../../assets/output-onlinejpgtools.png'
 import { RouterLinks } from "../../const/RouterLinks";
 import {
   ReconciliationOutlined,

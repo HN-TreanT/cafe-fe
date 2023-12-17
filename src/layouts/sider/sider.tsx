@@ -1,7 +1,7 @@
 import Sider from "antd/es/layout/Sider";
 import { Image, Menu } from "antd";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from '../../assets/logo.png'
+import logo from '../../assets/snapedit_1702777474789.png'
 import { RouterLinks } from "../../const/RouterLinks";
 import {
   ReconciliationOutlined,
@@ -27,7 +27,7 @@ interface props {
   setCollapsed: any
 }
 const menuItems = [
- {
+  {
     key: "muontra",
     label: "Mặt hàng",
     icon: (
@@ -60,7 +60,7 @@ const menuItems = [
     ),
 
   },
-  
+
   {
     key: RouterLinks.BAO_CAO_NHAN_VIEN,
     label: "Nhân viên",
@@ -78,7 +78,7 @@ const menuItems = [
     children: [
       {
         key: RouterLinks.DANH_SACH_KHACH_HANG,
-        label:"Danh sách khách hàng"
+        label: "Danh sách khách hàng"
       }
     ]
 
@@ -145,7 +145,7 @@ const Sidebar = () => {
       top: 0,
       bottom: 0,
     }} width={300} trigger={null}>
-      <Image src={logo} preview={false} style={{ padding: 5 }} />
+      <Image src={logo} preview={false} style={{ padding: 5, width: "200px", marginLeft: "34px" }} />
       <Menu
         selectedKeys={['/' + window.location.pathname.split("/")[1] + '/' + window.location.pathname.split("/")[2]]}
         theme="dark"

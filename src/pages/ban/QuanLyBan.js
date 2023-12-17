@@ -1,4 +1,4 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider, Tooltip } from "antd"
+import { Table, Input, Card, Modal, Button, Popconfirm, Tooltip, Breadcrumb, Form, Select, Divider } from "antd"
 import { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
@@ -9,16 +9,15 @@ import {
 import { Plus, X } from "react-feather"
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
-import {getCustomer, createCustomer, deleteCustomer, updateCustomer } from "../../../utils/services/customer"
+import {getPromotion, createPromotion, deletePromotion, updatePromotion } from "../../utils/services/promotion"
+import { tableServices } from "../../utils/services/tableServices"
+import {getProduct} from "../../utils/services/productServices "
 import withReactContent from "sweetalert2-react-content"
-import { react } from "@babel/types"
-
-// import { AbilityContext } from '@src/utility/context/Can'
 
 
 
-const DanhSachKhachHang = () => {
-    // const ability = useContext(AbilityContext)
+
+const QuanLyDatBan = () => {
     const [form] = Form.useForm()
 
     const selected = useRef()
@@ -28,24 +27,30 @@ const DanhSachKhachHang = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
 
-    const [product, setProduct] = useState([])
-
-    const [rowsPerPage, setRowsPerpage] = useState(10)
+    const [rowsPerPage, setRowsPerpage] = useState(2)
     const [action, setAction] = useState('Add')
 
     const [search, setSearch] = useState("")
     const [isAdd, setIsAdd] = useState(false)
-
-    const gender = [
-        { value: 1, label: 'Nữ' },
-        { value: 0, label: 'Nam' }
-      ]
-
-    const getData = () => { 
-        getCustomer({
+    const filterOption = (input, option) =>
+  (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+    const statusTable = [
+        {
+            value: 1,
+            label: "Đang sử dụng",
+        },
+        {
+            value: 0,
+            label: "Còn trống",
+        },
+    ]
+    const getData = () => {
+        tableServices.get({
+            params: {
                 page: currentPage,
                 limit: rowsPerPage,
                 ...(search && search !== "" && { search }),
+            },
         })
             .then((res) => {
                 setData(res.data.data)
@@ -55,6 +60,7 @@ const DanhSachKhachHang = () => {
                 console.log(err)
             })
     }
+
     useEffect(() => {
         getData()
     }, [currentPage, rowsPerPage, search])
@@ -76,10 +82,7 @@ const DanhSachKhachHang = () => {
     }
     const onFinish = (values) => {
         if (action === 'Add') {
-            createCustomer({
-                name: values.name,
-                id_product: values.id_product
-            })
+            tableServices.create(values)
                 .then((res) => {
                     MySwal.fire({
                         title: "Thêm mới thành công",
@@ -104,7 +107,7 @@ const DanhSachKhachHang = () => {
                     })
                 })
         } else {
-            updateCustomer(idEdit, values)
+            tableServices.update(idEdit, values)
                 .then((res) => {
                     MySwal.fire({
                         title: "Chỉnh sửa thành công",
@@ -131,19 +134,11 @@ const DanhSachKhachHang = () => {
         }
 
     }
-    const callEdit = (data) => {
-        const dataSubmit = {
-            ...selected.current,
-            ...data,
-        }
-    }
-
-   
     const handleDelete = (key) => {
-        deleteCustomer(key)
+        tableServices.deleteById(key)
             .then((res) => {
                 MySwal.fire({
-                    title: "Xóa khách hàng thành công",
+                    title: "Xóa bàn ăn thành công",
                     icon: "success",
                     customClass: {
                         confirmButton: "btn btn-success",
@@ -158,7 +153,7 @@ const DanhSachKhachHang = () => {
             })
             .catch((error) => {
                 MySwal.fire({
-                    title: "Xóa khách hàng thất bại",
+                    title: "Xóa bàn ăn thất bại",
                     icon: "error",
                     customClass: {
                         confirmButton: "btn btn-danger",
@@ -178,36 +173,15 @@ const DanhSachKhachHang = () => {
             ),
         },
         {
-            title: "Tên khách hàng",
+            title: "Tên bàn",
             dataIndex: "name",
         },
         {
-            title: "SĐT",
-            dataIndex: "phone_number",
-        },
-        {
-            title: "Giới tính",
-            dataIndex: "gender",
-            width: "20%",
-            align: "center",
-            render: (text, record, index) => {
-                    const gender1 = gender.find(item => item.value === record.gender)
-                    return (
-                        <span>{`${gender1?.label ? gender1.label : ""}`}</span>
-                    )
-                }
-        },
-        {
-            title: "Email",
-            dataIndex: "email",
-            width: "20%",
-            align: "center",
-        },
-        {
-            title: "Điểm",
-            dataIndex: "point",
-            width: "20%",
-            align: "center",
+            title: "Trạng thái",
+            dataIndex: "status",
+            render: (text, record, index) => (
+                <span>{(record.status ? "Đang sử dụng" : "Còn trống")}</span>
+            )
         },
         {
             title: "Thao tác",
@@ -215,38 +189,37 @@ const DanhSachKhachHang = () => {
             align: "center",
             render: (record) => (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
-                    {
-            <>
-              <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
-                <EditOutlined
-                  style={{ color: "#036CBF", marginRight: "10px" }}
-                  onClick={() => handleEdit(record)}
-                />
-              </Tooltip>
-            </>
-          }
-          {
-            <Popconfirm
-              title="Bạn chắc chắn xóa?"
-              onConfirm={() => handleDelete(record.id)}
-              cancelText="Hủy"
-              okText="Đồng ý"
-            >
-              <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
-                <DeleteOutlined
-                  style={{
-                    color: "red",
-                    cursor: "pointer",
-                    marginRight: "10px",
-                  }}
-                />
-              </Tooltip>
-            </Popconfirm>
-          }
+                     {
+                        <>
+                        <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
+                            <EditOutlined
+                            style={{ color: '#036CBF', marginRight: '10px' }}
+                            onClick={() => handleEdit(record)}
+                            />
+                        </Tooltip>
+                          </>
+                    }
+                    { 
+                       <Popconfirm
+                       title="Bạn chắc chắn xóa?"
+                       onConfirm={() => handleDelete(record.id)}
+                       cancelText="Hủy"
+                       okText="Đồng ý"
+                   >
+                    <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                        <DeleteOutlined
+                        style={{ color: "red", cursor: 'pointer', marginRight: '10px' }}
+                        />
+                        </Tooltip>
+                     
+                    </Popconfirm>
+
+                    }
                 </div>
             ),
         },
     ]
+
     return (
         <Card
            
@@ -256,7 +229,7 @@ const DanhSachKhachHang = () => {
                 items={[
                     {
                         title: (
-                            <span style={{ fontWeight: "bold" }}>Danh sách khách hàng</span>
+                            <span style={{ fontWeight: "bold" }}>Danh sách bàn ăn</span>
                         ),
                     },
                 ]}
@@ -296,6 +269,7 @@ const DanhSachKhachHang = () => {
                 <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
                          <Button
+                         style={{backgroundColor: '#036CBF'}}
                             onClick={(e) => {
                             setAction('Add')
                             setIsAdd(true)
@@ -345,7 +319,7 @@ const DanhSachKhachHang = () => {
                     tag="div"
                 >
                      <h2 className="modal-title">{
-                        action === 'Add' ? "Thêm mới khách hàng" : "Chỉnh sửa khách hàng"
+                        action === 'Add' ? "Thêm mới bàn ăn" : "Chỉnh sửa bàn ăn"
                     } </h2>
                 </div>
                 
@@ -356,89 +330,53 @@ const DanhSachKhachHang = () => {
                         onFinish={onFinish}
                         layout="vertical"
                     ><Row>
+
                             <div className=' col col-12'>
                                 <Form.Item style={{ marginBottom: '4px' }}
                                     name="name"
-                                    label="Tên khách hàng"
+                                    label="Tên bàn ăn"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Nhập tên khách hàng'
+                                            message: 'Nhập tên bàn ăn'
                                         },
                                         {
                                             validator: (rule, value) => {
                                                 if (value && value.trim() === '') {
-                                                    return Promise.reject('Không được nhập toàn dấu cách')
+                                                    return Promise.reject('không hợp lệ')
                                                 }
                                                 return Promise.resolve()
                                             },
                                         },
                                     ]}
                                 >
-                                    <Input placeholder='Nhập tên khách hàng' />
+                                    <Input placeholder='Nhập tên bàn ăn' />
                                 </Form.Item>
                             </div>
-                            <div className=' col col-6'>
+                            <div className=' col col-12'>
                                 <Form.Item style={{ marginBottom: '4px' }}
-                                    name="gender"
-                                    label="Giới tính"
+                                    name="status"
+                                    label="Trạng thái"
                                     rules={[
-                                      {
-                                          required: true,
-                                          message: 'Vui lòng chọn giới tính'
-                                      },
-                                  ]}
+                                        {
+                                            required: true,
+                                            message: 'Chọn trạng thái'
+                                        },
+                                    ]}
                                 >
-                                    <Select
+                                   <Select
+                                        showSearch
                                         allowClear
-                                        options={gender} style={{width:"100%"}} placeholder="Chọn giới tính" >
-
-                                        </Select>
-                                </Form.Item>
-
-                            </div>
-                            <div className=' col col-6'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="phone_number"
-                                    label="Số điện thoại"
-                                    rules={[
-                                      {
-                                          required: true,
-                                          message: 'Số điện thoại'
-                                      },
-                                  ]}
-                                >
-                                    <Input placeholder='Nhập số điện thoại' />
-                                </Form.Item>
-
-                            </div>
-                            <div className=' col col-12'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="email"
-                                    label="Email"
-                                    rules={[
-                                      {
-                                          required: true,
-                                          message: 'Vui lòng nhập email'
-                                      },
-                                  ]}
-                                >
-                                    <Input placeholder='Nhập email' />
-                                </Form.Item>
-
-                            </div>
-                            <div className=' col col-12'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="point"
-                                    label="Điểm tích luỹ"
-                                   
-                                >
-                                    <Input placeholder='Nhập điểm tích luỹ' type="number"/>
+                                        filterOption={filterOption}
+                                        options={statusTable}
+                                        style={{  width:"100%" }}
+                                        placeholder="Chọn trạng thái"
+                                        />
                                 </Form.Item>
                             </div>
-                            
+                         
                         </Row>
-                        <Form.Item style={{ display: 'flex', justifyContent: 'center', marginTop:'15px'}}>
+                        <Form.Item style={{ display: 'flex', justifyContent: 'center', paddingTop: '15px' }}>
                             <Button type="primary" htmlType="submit"
                                 className="addBtn" style={{ marginRight: '20px', width: '94px' }}>
                                 Lưu
@@ -454,4 +392,4 @@ const DanhSachKhachHang = () => {
                  </Card>
     )
 }
-export default DanhSachKhachHang 
+export default QuanLyDatBan 

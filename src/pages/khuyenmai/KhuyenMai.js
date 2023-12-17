@@ -1,4 +1,4 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider } from "antd"
+import { Table, Input, Card, Modal, Button, Popconfirm, Tooltip, Breadcrumb, Form, Select, Divider } from "antd"
 import { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
@@ -53,7 +53,7 @@ const Promotion = () => {
             })
     }
 
-    const getProduct = () => {
+    const getProducts = () => {
      getProduct({
         params: {
             page: currentPage,
@@ -76,7 +76,7 @@ const Promotion = () => {
     }
     useEffect(() => {
         getData()
-        getProduct()
+        getProducts()
     }, [currentPage, rowsPerPage, search])
 
 
@@ -232,33 +232,32 @@ const Promotion = () => {
             align: "center",
             render: (record) => (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
-                    {
+                     {
                         <>
+                        <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
                             <EditOutlined
-                                id={`tooltip_edit${record.ID}`}
-                                style={{ color: "#036CBF", cursor: 'pointer' }}
-                                onClick={(e) => handleEdit(record)}
+                            style={{ color: '#036CBF', marginRight: '10px' }}
+                            onClick={() => handleEdit(record)}
                             />
-                            <UncontrolledTooltip placement="top" target={`tooltip_edit${record.ID}`}>
-                                Chỉnh sửa
-                            </UncontrolledTooltip></>
-
+                        </Tooltip>
+                          </>
                     }
-                    {
-                        <Popconfirm
-                        title="Bạn chắc chắn xóa?"
-                        onConfirm={() => handleDelete(record.id)}
-                        cancelText="Hủy"
-                        okText="Đồng ý"
-                    >
-                        <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
-                        <UncontrolledTooltip placement="top" target={`tooltip_delete${record.ID}`}>
-                            Xóa
-                        </UncontrolledTooltip>
+                    { 
+                       <Popconfirm
+                       title="Bạn chắc chắn xóa?"
+                       onConfirm={() => handleDelete(record.id)}
+                       cancelText="Hủy"
+                       okText="Đồng ý"
+                   >
+                    <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                        <DeleteOutlined
+                        style={{ color: "red", cursor: 'pointer', marginRight: '10px' }}
+                        />
+                        </Tooltip>
+                     
                     </Popconfirm>
 
                     }
-
                 </div>
             ),
         },

@@ -1,36 +1,46 @@
-import { Table, Input, Card, Modal, Button, Form, Select, Space, Row, Col, } from "antd";
-import React, { useState, Fragment, useEffect, useRef } from "react";
-import { Label,  UncontrolledTooltip } from "reactstrap";
-import { Plus, X } from "react-feather";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import Swal from "sweetalert2";
-
-import useAction from "../../../../../src/redux/useActions";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  updateProduct,
-} from "../../../../../src/utils/services/productServices ";
+Row,
+  Input,
+  Col,
+  Modal,
+  Button,
+  Form,
+  Select
+} from "antd";
+import React, { useState, Fragment, useEffect, useRef } from "react";
+import { Plus, X } from "react-feather";
+import {
+  PlusOutlined,
+} from "@ant-design/icons";
+import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { message, Upload } from "antd";
-import {
-  createMaterial,
-  getMaterial,
-} from "../../../../utils/services/material";
-import { createMany } from "../../../../utils/services/useMaterial";
-const Material = ({
-  step,
-  setStep,
-  id,
+import { createUseMaterial, updateUseMaterial } from "../../utils/services/useMaterial";
+import { getMaterial, updateMaterial } from "../../utils/services/material";
+const AddModal = ({
+  isAdd,
   getData,
   action,
-  category,
+  idProduct,
   handleModal,
   idEdit,
 }) => {
-  const filterOption = (input, option) =>
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
   const [form] = Form.useForm();
-  const [material, setMaterial] = useState([]);
+  const [material, setMaterial] = useState()
+  const filterOption = (input, option) =>
+  (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+  const onReset = () => {
+    form.resetFields();
+    handleModal();
+  };
+  const [file, setFile] = useState(null);
+  const MySwal = withReactContent(Swal);
+  const [fileUrl, setFileUrl] = useState("");
+
+  const handleUpload = (uploadFile) => {
+    setFileUrl(URL.createObjectURL(uploadFile));
+    return false;
+  };
   const getAllMaterial = () => {
     getMaterial({
       param: {
@@ -51,25 +61,15 @@ const Material = ({
         console.log(e);
       });
   };
-  const onReset = () => {
-    form.resetFields();
-    handleModal();
-  };
-  const MySwal = withReactContent(Swal);
-  useEffect(() => {
-    getAllMaterial();
-  }, []);
+ useEffect(() => {
+  getAllMaterial()
+ }, [])
   const onFinish = (values) => {
-    const t = values.users.map((item) => {
-        return {
-          id_product: id.data.id,
-          ...item,
-        };
-      });
-      
-      
     if (action === "Add") {
-      createMany(t)
+      createUseMaterial({
+        id_product: idProduct,
+        ...values
+      })
         .then((res) => {
           MySwal.fire({
             title: "Thêm mới thành công",
@@ -80,6 +80,7 @@ const Material = ({
             },
           }).then((result) => {
             getData();
+            form.resetFields();
             handleModal();
           });
         })
@@ -93,7 +94,10 @@ const Material = ({
           });
         });
     } else {
-      updateProduct(idEdit, values)
+      updateUseMaterial(idEdit, {
+        id_product : idProduct,
+        ...values
+      })
         .then((res) => {
           MySwal.fire({
             title: "Chỉnh sửa thành công",
@@ -121,31 +125,33 @@ const Material = ({
   };
 
   return (
-    <Form
-      form={form}
-      name="control-hooks"
-      onFinish={onFinish}
-      layout="vertical"
+    <Modal
+      open={isAdd}
+      toggle={handleModal}
+      onCancel={onReset}
+      contentClassName="pt-0"
+      autoFocus={false}
+      className="modal-xl"
+      footer={[]}
     >
-      
-        <Form.List name="users" style={{ marginTop: "15px" }}>
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                // <Space
-                //   key={key}
-                //   style={{
-                //     display: "flex",
-                //     marginBottom: 8,
-                //     width: "100%",
-                //   }}
-                //   align="baseline"
-                // >
-                  <Row gutter={15}>
+      <div className="" toggle={handleModal} tag="div">
+        <h2 className="modal-title">
+          {action === "Add" ? "Thêm mới nguyên liệu" : "Chỉnh sửa nguyên liệu"}
+        </h2>
+      </div>
+
+      <div className="flex-grow-1">
+        <Form
+          form={form}
+          name="control-hooks"
+          onFinish={onFinish}
+          layout="vertical"
+        >
+          <Row gutter={15}>
                     <Col span={12}>
                       <Form.Item
                         style={{ marginBottom: "4px" }}
-                        name={[name, "id_material"]}
+                        name="id_material"
                         label={
                           <span>
                             Tên nguyên liệu<span className="redColor">(*)</span>
@@ -168,14 +174,14 @@ const Material = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={11}>
+                    <Col span={12}>
                       <Form.Item
                         label={
                           <span>
                             Số lượng<span className="redColor">(*)</span>
                           </span>
                         }
-                        name={[name, "amount"]}
+                        name="amount"
                         rules={[
                           {
                             required: true,
@@ -191,44 +197,28 @@ const Material = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={1}>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                    </Col>
-                  </Row>
-              ))}
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  Thêm nguyên liệu
-                </Button>
-              </Form.Item>
-            </>
-          )}
-        </Form.List>
-     
-      <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          type="primary"
-          htmlType="submit"
-          className="addBtn"
-          style={{ marginRight: "20px", width: "94px" }}
-        >
-          Lưu
-        </Button>
-        <Button
-          htmlType="button"
-          className="addBtn"
-          onClick={onReset}
-          style={{ width: "94px" }}
-        >
-          Hủy
-        </Button>
-      </Form.Item>
-    </Form>
+          </Row>
+          <Form.Item style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="addBtn"
+              style={{ marginRight: "20px", width: "94px" }}
+            >
+              Lưu
+            </Button>
+            <Button
+              htmlType="button"
+              className="addBtn"
+              onClick={onReset}
+              style={{ width: "94px" }}
+            >
+              Hủy
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </Modal>
   );
 };
-export default Material;
+export default AddModal;

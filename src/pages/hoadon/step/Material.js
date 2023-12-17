@@ -5,18 +5,18 @@ import { Plus, X } from "react-feather";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 
-import useAction from "../../../../../src/redux/useActions";
+import useAction from "../../../../src/redux/useActions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateProduct,
-} from "../../../../../src/utils/services/productServices ";
+} from "../../../../src/utils/services/productServices ";
 import withReactContent from "sweetalert2-react-content";
 import { message, Upload } from "antd";
 import {
   createMaterial,
   getMaterial,
-} from "../../../../utils/services/material";
-import { createMany } from "../../../../utils/services/useMaterial";
+} from "../../../utils/services/material";
+import { createMany } from "../../../utils/services/useMaterial";
 const Material = ({
   step,
   setStep,
@@ -142,7 +142,7 @@ const Material = ({
                 //   align="baseline"
                 // >
                   <Row gutter={15}>
-                    <Col span={12}>
+                    <Col span={14}>
                       <Form.Item
                         style={{ marginBottom: "4px" }}
                         name={[name, "id_material"]}
@@ -168,8 +168,9 @@ const Material = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={11}>
+                    <Col span={8}>
                       <Form.Item
+                        style={{ marginBottom: "7px", display: "flex" }}
                         label={
                           <span>
                             Số lượng<span className="redColor">(*)</span>
@@ -195,6 +196,8 @@ const Material = ({
                     <MinusCircleOutlined onClick={() => remove(name)} />
                     </Col>
                   </Row>
+                  
+                // </Space>
               ))}
               <Form.Item>
                 <Button

@@ -1,8 +1,8 @@
 import Sider from "antd/es/layout/Sider";
 import { Image, Menu } from "antd";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-// import logo from '../../assets/logo.png'
-import logo from '../../assets/output-onlinejpgtools.png'
+
+import logo from '../../assets/snapedit_1702777474789.png'
 import { RouterLinks } from "../../const/RouterLinks";
 import {
   ReconciliationOutlined,
@@ -29,40 +29,6 @@ interface props {
 }
 const menuItems = [
   {
-    key: "qlttb",
-    label: "Báo Cáo",
-    icon: (
-      <HomeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
-    ),
-    children: [
-      {
-        key: RouterLinks.BAO_CAO_DOANH_THU,
-        label: "Báo cáo doanh thu",
-      },
-      {
-        key: RouterLinks.BAO_CAO_MAT_HANG,
-        label: "Báo cáo mặt hàng",
-      },
-      {
-        key: RouterLinks.BAO_CAO_KHO_HANG,
-        label: "Báo cáo kho hàng",
-      },
-      {
-        key: RouterLinks.BAO_CAO_TAI_CHINH,
-        label: "Báo cáo tài chính",
-      },
-      {
-        key: RouterLinks.KHUYEN_MAI,
-        label: "Báo cáo khuyễn mãi",
-      },
-      {
-        key: RouterLinks.BAO_CAO_NHAN_VIEN,
-        label: "Báo cáo nhân viên",
-      },
-    ],
-  },
-
-  {
     key: "muontra",
     label: "Mặt hàng",
     icon: (
@@ -73,10 +39,6 @@ const menuItems = [
         key: RouterLinks.DS_MAT_HANG,
         label: "Danh sách mặt hàng",
       },
-      // {
-      //   key: RouterLinks.THUC_DON,
-      //   label: "Thực đơn ",
-      // },
       {
         key: RouterLinks.DANH_MUC,
         label: "Danh mục",
@@ -91,17 +53,17 @@ const menuItems = [
       },
     ],
   },
-
   {
-    key: RouterLinks.DAT_BAN,
-    label: "Đặt bàn",
+    key: RouterLinks.BAN,
+    label: "Quản lý bàn",
     icon: (
       <TableOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
 
   },
+
   {
-    key: "Nhanvien",
+    key: RouterLinks.BAO_CAO_NHAN_VIEN,
     label: "Nhân viên",
     icon: (
       <UserOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
@@ -117,7 +79,7 @@ const menuItems = [
     children: [
       {
         key: RouterLinks.DANH_SACH_KHACH_HANG,
-        label:"Danh sách khách hàng"
+        label: "Danh sách khách hàng"
       }
     ]
 
@@ -149,20 +111,25 @@ const menuItems = [
         key: RouterLinks.KIEM_KE,
         label: "Kiểm kê kho",
       },
-      // {
-      //   key: RouterLinks.,
-      //   label: "Lịch sử kho",
-      // },
     ],
 
   },
   {
-    key: "Thuchi",
-    label: "Thu chi",
+    key: "HoaDon",
+    label: "Quản lý thanh toán",
     icon: (
       <MoneyCollectOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
-
+    children: [
+      {
+        key: RouterLinks.HOA_DON,
+        label: "Danh sách đơn đang chuẩn bị",
+      },
+      {
+        key: RouterLinks.COMBO,
+        label: "Thanh toán hoá đơn",
+      },
+    ],
   },
 ];
 const Sidebar = () => {
@@ -179,7 +146,7 @@ const Sidebar = () => {
       top: 0,
       bottom: 0,
     }} width={300} trigger={null}>
-      <Image src={logo} preview={false} style={{ padding: 5 }} />
+      <Image src={logo} preview={false} style={{ padding: 5, width: "200px", marginLeft: "34px" }} />
       <Menu
         selectedKeys={['/' + window.location.pathname.split("/")[1] + '/' + window.location.pathname.split("/")[2]]}
         theme="dark"
@@ -187,7 +154,6 @@ const Sidebar = () => {
         items={menuItems}
         onClick={onClick}
       >
-
         {menuItems.map((item) => {
           if (item.children) {
             return (

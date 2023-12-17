@@ -165,7 +165,7 @@ const OverViewPage = () => {
             setInfo(res.data)
             const temp = Array.isArray(res.data?.topProduct) && res?.data?.topProduct.length > 0 ? res?.data?.topProduct.map((item: any) => {
               return {
-                name: item.nameProduct ? item.nameProduct : item?.nameCombo ? item?.nameCombo : "",
+                name: item.product ? item.product?.name : item?.combo ? item?.combo?.name : "",
                 "Tổng tiền": item.totalPrice ? item.totalPrice : 0,
               }
               

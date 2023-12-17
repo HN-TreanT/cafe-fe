@@ -206,16 +206,12 @@ const TonKho = () => {
             render: (record) => (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                     {
-                        <>
                             <EditOutlined
                                 id={`tooltip_edit${record.ID}`}
                                 style={{ color: "#036CBF", cursor: 'pointer' }}
                                 onClick={(e) => handleEdit(record)}
                             />
-                            <UncontrolledTooltip placement="top" target={`tooltip_edit${record.ID}`}>
-                                Chỉnh sửa
-                            </UncontrolledTooltip></>
-
+                        
                     }
                     {
                         <Popconfirm
@@ -225,9 +221,7 @@ const TonKho = () => {
                             okText="Đồng ý"
                         >
                             <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
-                            <UncontrolledTooltip placement="top" target={`tooltip_delete${record.ID}`}>
-                                Xóa
-                            </UncontrolledTooltip>
+                         
                         </Popconfirm>
 
                     }

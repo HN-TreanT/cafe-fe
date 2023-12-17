@@ -6,7 +6,7 @@ const get = (params: any) => {
   return api.makeAuthRequest({
     url: `/api/v1/invoice`,
     method: "GET",
-    params: params
+    params
   });
 };
 

@@ -70,7 +70,14 @@ const menuItems = [
     ),
 
   },
+  {
+    key: RouterLinks.CA_LAM,
+    label: "Quản lý ca làm",
+    icon: (
+      <TableOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+    ),
 
+  },
   {
     key: RouterLinks.BAO_CAO_NHAN_VIEN,
     label: "Nhân viên",
@@ -134,10 +141,10 @@ const menuItems = [
         key: RouterLinks.HOA_DON,
         label: "Danh sách đơn đang chuẩn bị",
       },
-      {
-        key: RouterLinks.COMBO,
-        label: "Thanh toán hoá đơn",
-      },
+      // {
+      //   key: RouterLinks.THANH_TOAN_HOA_DON,
+      //   label: "Thanh toán hoá đơn",
+      // },
     ],
   },
 ];

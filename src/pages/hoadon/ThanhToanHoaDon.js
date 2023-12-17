@@ -32,7 +32,7 @@ import { createCustomer, getCustomer } from "../../utils/services/customer";
 import Employee from "../employee";
 import { tableServices } from "../../utils/services/tableServices";
 import { isE } from "@rc-component/mini-decimal/es/numberUtil";
-const HoaDon = () => {
+const ThanhToanHoaDon = () => {
   const [form] = Form.useForm();
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -174,43 +174,6 @@ const HoaDon = () => {
     searchStatus,
     searchTable,
   ]);
-
-  const handleEdit = (record) => {
-    setAction("Edit");
-    setIdEdit(record);
-    setIsAdd(true);
-  };
-
-  const handleDelete = (key) => {
-    invoiceServices
-      .deleteById(key)
-      .then((res) => {
-        MySwal.fire({
-          title: "Xóa sản phẩm thành công",
-          icon: "success",
-          customClass: {
-            confirmButton: "btn btn-success",
-          },
-        }).then((result) => {
-          if (currentPage === 1) {
-            getData(1, rowsPerPage);
-          } else {
-            setCurrentPage(1);
-          }
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: "Xóa sản phẩm thất bại",
-          icon: "error",
-          customClass: {
-            confirmButton: "btn btn-danger",
-          },
-        });
-        console.log(error);
-      });
-  };
-
   const columns = [
     {
       title: "STT",
@@ -275,53 +238,23 @@ const HoaDon = () => {
           return <span>{formattedDate}</span>;
         }
       },
+      {
+        title: "Thời gian thanh toán",
+        dataIndex: "time_pay",
+        // render: (text, record, index) => {
+        //   const dateObject = new Date(record.createdAt);
+        //   const formattedDate = `${dateObject.getDate().toString().padStart(2, '0')}/${(dateObject.getMonth() + 1).toString().padStart(2, '0')}/${dateObject.getFullYear()}`;
+      
+        //   return <span>{formattedDate}</span>;
+        // }
+      },
     {
         title: "Trạng thái",
         render: (text, record, index) => {
           return <span>{record.status ? "Đã hoàn thành" :"Đang thực hiện" }</span>;
         }
       },
-      
-    // {
-    //   title: "Thao tác",
-    //   width: 100,
-    //   align: "center",
-    //   render: (record) => (
-    //     <div style={{ display: "flex", justifyContent: "space-around" }}>
-    //       {
-    //         <>
-    //           <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
-    //             <EditOutlined
-    //               style={{ color: "#036CBF", marginRight: "10px" }}
-    //               onClick={() => handleEdit(record)}
-    //             />
-    //           </Tooltip>
-    //         </>
-    //       }
-    //       {
-    //         <Popconfirm
-    //           title="Bạn chắc chắn xóa?"
-    //           onConfirm={() => handleDelete(record.id)}
-    //           cancelText="Hủy"
-    //           okText="Đồng ý"
-    //         >
-    //           <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
-    //             <DeleteOutlined
-    //               style={{
-    //                 color: "red",
-    //                 cursor: "pointer",
-    //                 marginRight: "10px",
-    //               }}
-    //             />
-    //           </Tooltip>
-    //         </Popconfirm>
-    //       }
-    //     </div>
-    //   ),
-    // },
   ];
-  const showTotal = (count) => `Tổng số: ${count}`;
-
   return (
     <Card>
       <Breadcrumb
@@ -350,6 +283,7 @@ const HoaDon = () => {
               fontSize: "14px",
               height: "34px",
               display: "flex",
+              marginRight: '15px',
               alignItems: "center",
             }}
           >
@@ -380,7 +314,6 @@ const HoaDon = () => {
               height: "34px",
               display: "flex",
               alignItems: "center",
-              marginLeft: '15px'
             }}
           >
             Trạng thái
@@ -441,4 +374,4 @@ const HoaDon = () => {
       /> </Card>
   );
 };
-export default HoaDon;
+export default ThanhToanHoaDon;

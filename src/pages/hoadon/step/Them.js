@@ -9,7 +9,7 @@ const Them = ({ isAdd, action, getData, category, handleModal, idEdit }) => {
   const [id, setId] = useState();
   const steps = [
     {
-      title: 'Thông tin sản phẩm',
+      title: 'Thông tin nhân viên',
       content: <Thongtinchung step={current} setStep={setCurrent} setId={setId} isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit}/>,
     },
     action === "Add" ? {

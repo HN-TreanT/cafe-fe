@@ -120,7 +120,7 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
    useEffect(() => {
     dispatch(actions.TableFoodActions.loadData({
       page: currentPage,
-     size: 12,
+     size: 18,
      ...(search && {search: search}),
      ...(statusTable && {status: statusTable}),
      }))
@@ -210,7 +210,7 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
           </div>
         </Col>
         <Col span={24}>
-          <div style={{position:"relative"}} className="content-table-location">
+          <div className="content-table-location">
             <div className="list-table">
               <Row gutter={[10, 30]}>
                 {
@@ -274,7 +274,7 @@ const TableLocation: React.FC<props> = ({invoice_details, setInvoiceDetails}) =>
                 }
               </Row>
             </div>
-            <div style={{position:"absolute", bottom:"0"}} className="pagination-table-location">
+            <div  className="pagination-table-location">
               <Pagination
                 // onChange={handleChangePageTable}
                 // defaultCurrent={selectedPage ? selectedPage : 1}

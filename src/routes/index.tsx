@@ -21,6 +21,8 @@ import NhapKho from "../pages/kho/nhapkho/NhapKho";
 import KiemKe from "../pages/kho/KiemKe";
 import KhuyenMai from "../pages/khuyenmai/KhuyenMai";
 import Employee from "../pages/employee";
+import HoaDon from "../pages/hoadon/DanhSachHoaDon";
+import QuanLyDatBan from "../pages/ban/QuanLyBan";
 export const router = createBrowserRouter([
   {
     path: "login",
@@ -81,8 +83,8 @@ export const router = createBrowserRouter([
         element: <Combo />,
       },
       {
-        path: RouterLinks.DAT_BAN,
-        element: <DatBan />,
+        path: RouterLinks.BAN,
+        element: <QuanLyDatBan />,
       },
       {
         path: RouterLinks.KHO_HANG,
@@ -95,6 +97,10 @@ export const router = createBrowserRouter([
       {
         path: RouterLinks.KIEM_KE,
         element: <KiemKe />,
+      },
+      {
+        path: RouterLinks.HOA_DON,
+        element: <HoaDon />,
       },
       {
         path: RouterLinks.DANH_SACH_KHACH_HANG,

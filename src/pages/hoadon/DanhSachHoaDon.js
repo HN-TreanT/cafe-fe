@@ -10,10 +10,10 @@ import { Plus, X } from "react-feather"
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
 import ListMaterial from './ListMaterial'
-import {getProduct, createProduct, deleteProduct, updateProduct } from "../../../../src/utils/services/productServices "
-import { categoryServices } from "../../../../src/utils/services/categoryServices"
+import {getProduct, createProduct, deleteProduct, updateProduct } from "../../../src/utils/services/productServices "
+import { categoryServices } from "../../../src/utils/services/categoryServices"
 import withReactContent from "sweetalert2-react-content"
-const DanhSachSanPham = () => {
+const HoaDon = () => {
     const [form] = Form.useForm()
 
     const selected = useRef()
@@ -296,4 +296,4 @@ const DanhSachSanPham = () => {
 }
 const Them = React.lazy(() => import("./step/Them"))
 // const AddModal = React.lazy(() => import("./addModal"))
-export default DanhSachSanPham 
+export default HoaDon 

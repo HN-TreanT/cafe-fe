@@ -27,41 +27,7 @@ interface props {
   setCollapsed: any
 }
 const menuItems = [
-  {
-    key: "qlttb",
-    label: "Báo Cáo",
-    icon: (
-      <HomeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
-    ),
-    children: [
-      {
-        key: RouterLinks.BAO_CAO_DOANH_THU,
-        label: "Báo cáo doanh thu",
-      },
-      {
-        key: RouterLinks.BAO_CAO_MAT_HANG,
-        label: "Báo cáo mặt hàng",
-      },
-      {
-        key: RouterLinks.BAO_CAO_KHO_HANG,
-        label: "Báo cáo kho hàng",
-      },
-      {
-        key: RouterLinks.BAO_CAO_TAI_CHINH,
-        label: "Báo cáo tài chính",
-      },
-      {
-        key: RouterLinks.KHUYEN_MAI,
-        label: "Báo cáo khuyễn mãi",
-      },
-      {
-        key: RouterLinks.BAO_CAO_NHAN_VIEN,
-        label: "Báo cáo nhân viên",
-      },
-    ],
-  },
-
-  {
+ {
     key: "muontra",
     label: "Mặt hàng",
     icon: (
@@ -86,15 +52,15 @@ const menuItems = [
       },
     ],
   },
-
   {
-    key: RouterLinks.DAT_BAN,
-    label: "Đặt bàn",
+    key: RouterLinks.BAN,
+    label: "Quản lý bàn",
     icon: (
       <TableOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
 
   },
+  
   {
     key: RouterLinks.BAO_CAO_NHAN_VIEN,
     label: "Nhân viên",
@@ -144,20 +110,25 @@ const menuItems = [
         key: RouterLinks.KIEM_KE,
         label: "Kiểm kê kho",
       },
-      // {
-      //   key: RouterLinks.,
-      //   label: "Lịch sử kho",
-      // },
     ],
 
   },
   {
-    key: "Thuchi",
-    label: "Thu chi",
+    key: "HoaDon",
+    label: "Quản lý thanh toán",
     icon: (
       <MoneyCollectOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
-
+    children: [
+      {
+        key: RouterLinks.HOA_DON,
+        label: "Danh sách đơn đang chuẩn bị",
+      },
+      {
+        key: RouterLinks.COMBO,
+        label: "Thanh toán hoá đơn",
+      },
+    ],
   },
 ];
 const Sidebar = () => {

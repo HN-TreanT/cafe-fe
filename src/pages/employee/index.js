@@ -45,7 +45,7 @@ const Employee = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [idEdit, setIdEdit] = useState();
 
-  const [rowsPerPage, setRowsPerpage] = useState(10);
+  const [rowsPerPage, setRowsPerpage] = useState(2);
   const [action, setAction] = useState("Add");
 
   const [search, setSearch] = useState("");

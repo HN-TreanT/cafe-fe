@@ -5,6 +5,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+       
         .list-table{
             height: 100%;
             padding: 5px;
@@ -33,6 +34,7 @@
         }
         .pagination-table-location{
             align-self: center;
+           
            
         }
     }

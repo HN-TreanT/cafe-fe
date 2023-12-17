@@ -44,7 +44,7 @@ const AppHeader = () => {
       </div>
       <Dropdown overlay={menu} trigger={['click']}>
         <a className="ant-dropdown-link" style={{marginRight: '10px'}} onClick={(e) => e.preventDefault()}>
-          <UserOutlined style={{ fontSize: '25px', padding: '14px', marginRight: '-7px' }} />
+          <UserOutlined style={{ fontSize: '25px', padding: '14px', marginRight: '-7px', color: 'black' }} />
           <DownOutlined /> 
         </a>
       </Dropdown>

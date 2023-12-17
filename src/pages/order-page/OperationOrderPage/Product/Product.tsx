@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Menu, MenuProps, Pagination, Form, Input } from "antd";
-import { useSelector, useDispatch } from "react-redux";
-import useAction from "../../../../redux/useActions";
+import { Row, Col, Menu, MenuProps, Pagination, Form, Input } from "antd"
 import "./Product.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,10 +11,7 @@ import { getProduct } from "../../../../utils/services/productServices ";
 import { categoryServices } from "../../../../utils/services/categoryServices";
 import { comboServices } from "../../../../utils/services/comboServices";
 import { Spin } from "antd";
-let items: MenuProps["items"] = [
-  { label: "Tất cà mặt hàng", key: "allProduct" },
-  {label: "combo", key:"combo"}
-];
+
 interface props {
   invoice_details: any[],
   setInvoiceDetails: any,
@@ -31,24 +26,24 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
   const [categories, setCategoris] = useState([])
   const [name, setName] = useState<string>()
   const [idcategory, setIdCategory] = useState<any>()
-  const [combos, setCombos] = useState([])
 
 
   const getCombo = () => {
     setLoading(true)
       comboServices.get({
-        page: 1,
-        size : 6
+        page: currentPage,
+        size : 8
       }).then((res: any) => {
           if(res.status) {
            const temp =  res.data.data.map((item: any) => {
                return {
                 ...item,
                 isCombo: true,
-                url : item?.detail_combos[0]?.image ? item?.detail_combos[0]?.image : null
+                image : item?.detail_combos[0]?.image ? item?.detail_combos[0]?.image : null
                }
             })
            
+            
 
             setProducts(temp)
             setTotalPage(res.data.TotalPage)
@@ -62,7 +57,7 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
   const getDataProduct = () => {
     setLoading(true)
     getProduct({
-      page: 1,
+      page: currentPage,
       size : 8,
       ...(name && {name: name}),
       ...(idcategory && {id_category: idcategory}),
@@ -103,12 +98,16 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
     if (value?.key !== "combo") {
       
       if (value?.key === "allProduct") {
+        setCurrentPage(1)
         setIdCategory(undefined)
         getDataProduct()
       } else {
+         setCurrentPage(1)
         setIdCategory(value?.key)
       }
     } else {
+      setIdCategory("combo")
+      setCurrentPage(1)
       getCombo()
     }
     
@@ -120,7 +119,11 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
   }, [])
 
   useEffect(() => {
-     getDataProduct()
+     if(idcategory === "combo") {
+       getCombo()
+     } else {
+      getDataProduct()
+     }
   }, [name, currentPage, idcategory])
   
   return (
@@ -219,7 +222,7 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
                 onChange={(value) => setCurrentPage(value)}
                 current={currentPage}
                 total={totalPage}
-                pageSize={12}
+                pageSize={8}
               />
             </div>
           </div>

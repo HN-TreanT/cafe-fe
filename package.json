@@ -46,7 +46,8 @@
     "sweetalert2": "^11.9.0",
     "sweetalert2-react-content": "^5.0.7",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "socket.io-client": "^4.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

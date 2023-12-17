@@ -28,14 +28,20 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
       }))
     }, [actions.InvoiceActions, currentPage, dispatch])
 
-    const handleSelectedOrder = (id :any) => {
-      invoiceServices.getById(id).then((res: any) => {    
-        if(res.status) {
-          dispatch(actions.OrderActions.selectedOrder(res.data))
-        }
-      }).catch((err: any) => {
-        console.log(err)
-      })
+    // const handleSelectedOrder = (id :any) => {
+    //   invoiceServices.getById(id).then((res: any) => {    
+    //     if(res.status) {
+    //       dispatch(actions.OrderActions.selectedOrder(res.data))
+    //     }
+    //   }).catch((err: any) => {
+    //     console.log(err)
+    //   })
+        
+    // }
+
+      
+    const handleSelectedOrder = (data :any) => {
+      dispatch(actions.OrderActions.selectedOrder(data))
         
     }
     return   <div className="order">
@@ -76,7 +82,7 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
       {loading ? <Spin/> : Array.isArray(data) ? (
         data.map((item: any) => {
           return (
-            <Col onClick={() => handleSelectedOrder(item?.id)} key={item?.id} span={8}>
+            <Col onClick={() => handleSelectedOrder(item)} key={item?.id} span={8}>
               <ItemOrder
                 style={item?.id === selectedOrder?.id ? "click-item-order" : ""}
                 data={item}

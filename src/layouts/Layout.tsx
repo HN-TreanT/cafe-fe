@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -9,15 +9,21 @@ import { Navigate, Outlet, Route } from 'react-router-dom';
 import './Layout.scss'
 import { RouterLinks } from '../const/RouterLinks';
 import AppHeader from './Header';
+import { AppContext } from '../context/appContext';
 const { Content } = Layout;
 
 const App: React.FC = () => {
-
+  const {socket} = useContext(AppContext)
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role")
+  
+  useEffect(() => {
+    socket.disconnect();
+    socket.connect();
+  }, [socket])
   if (!token) {
     return <Navigate to={"/login"} />;
   }
@@ -28,6 +34,8 @@ const App: React.FC = () => {
   if(role === "M") {
     return <Navigate to={RouterLinks.CHEF_PAGE}/>
   }
+
+
   return (
     <Layout >
       <Sidebar />

@@ -26,6 +26,7 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
   const [categories, setCategoris] = useState([])
   const [name, setName] = useState<string>()
   const [idcategory, setIdCategory] = useState<any>()
+  const [count, setCount] = useState(0)
 
 
   const getCombo = () => {
@@ -43,10 +44,10 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
                }
             })
            
-            
+           
 
             setProducts(temp)
-            setTotalPage(res.data.TotalPage)
+            setCount(res.data.TotalPage)
           }
           setLoading(false)
       }).catch((err: any)=> {
@@ -72,7 +73,7 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
        })
        
        setProducts(temp) 
-        setTotalPage(res.data.count)
+        setCount(res.data.TotalPage)
       }
       setLoading(false)
     }).catch((err: any) => {
@@ -221,7 +222,7 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
               <Pagination
                 onChange={(value) => setCurrentPage(value)}
                 current={currentPage}
-                total={totalPage}
+                total={count}
                 pageSize={8}
               />
             </div>

@@ -23,6 +23,8 @@ import KhuyenMai from "../pages/khuyenmai/KhuyenMai";
 import Employee from "../pages/employee";
 import HoaDon from "../pages/hoadon/DanhSachHoaDon";
 import QuanLyDatBan from "../pages/ban/QuanLyBan";
+import WorkShift from "../pages/workshift/workshift";
+import ThanhToanHoaDon from "../pages/hoadon/ThanhToanHoaDon";
 export const router = createBrowserRouter([
   {
     path: "login",
@@ -87,6 +89,10 @@ export const router = createBrowserRouter([
         element: <QuanLyDatBan />,
       },
       {
+        path: RouterLinks.CA_LAM,
+        element: <WorkShift />,
+      },
+      {
         path: RouterLinks.KHO_HANG,
         element: <TonKho />,
       },
@@ -101,6 +107,10 @@ export const router = createBrowserRouter([
       {
         path: RouterLinks.HOA_DON,
         element: <HoaDon />,
+      },
+      {
+        path: RouterLinks.THANH_TOAN_HOA_DON,
+        element: <ThanhToanHoaDon />,
       },
       {
         path: RouterLinks.DANH_SACH_KHACH_HANG,

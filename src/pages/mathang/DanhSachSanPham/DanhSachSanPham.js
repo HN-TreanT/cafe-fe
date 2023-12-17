@@ -23,7 +23,7 @@ const DanhSachSanPham = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
 
-    const [rowsPerPage, setRowsPerpage] = useState(2)
+    const [rowsPerPage, setRowsPerpage] = useState(10)
     const [action, setAction] = useState('Add')
 
     const [category, setCategory] = useState([])
@@ -149,7 +149,15 @@ const DanhSachSanPham = () => {
         {
             title: "Giá Bán",
             dataIndex: "price",
-        },
+            render: (text, record, index) => {
+              const formattedPrice = new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND"
+              }).format(record.price);
+          
+              return <span>{formattedPrice}</span>;
+            }
+          },          
         {
             title: "Đơn vị tính",
             dataIndex: "unit",

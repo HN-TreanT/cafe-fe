@@ -19,11 +19,14 @@ const Login = () => {
     try {
       const res = await authServices.login(value);
       if (res.status) {
+        console.log("res.status", res.data.name)
         dispatch(actions.AuthActions.userInfo(res.data))
         localStorage.setItem("role", res.data.id_position)
         localStorage.setItem("username", res.data.TaiKhoan)
+        localStorage.setItem("name", res.data.name)
         localStorage.setItem("token", res.data.access_token)
         localStorage.setItem("refresh_token", res.data.refresh_token)
+        navigate(RouterLinks.HOME_PAGE)
         navigate(RouterLinks.TONG_QUAN)
       } else {
         message.error(res.message)
@@ -33,6 +36,8 @@ const Login = () => {
       message.error("Đăng nhập thất bại")
     }
   }
+  
+ 
   return <div className="login">
     {contextHolder}
     <Row>

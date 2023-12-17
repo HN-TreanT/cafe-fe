@@ -79,11 +79,13 @@ import {
      }
     }, [idEdit?.id])
     const onFinish = (values) => {
+      console.log(values)
       const formData = new FormData();
       formData.append("image", file);
       formData.append("name", values.name);
       formData.append("unit", values.unit);
       formData.append("price", values.price);
+      formData.append("description", values.description);
       formData.append("id_category", values.id_category);
   
       if (action === "Add") {

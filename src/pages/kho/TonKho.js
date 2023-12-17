@@ -27,7 +27,7 @@ const TonKho = () => {
 
     const [product, setProduct] = useState([])
 
-    const [rowsPerPage, setRowsPerpage] = useState(3)
+    const [rowsPerPage, setRowsPerpage] = useState(10)
     const [action, setAction] = useState('Add')
 
     const [search, setSearch] = useState("")

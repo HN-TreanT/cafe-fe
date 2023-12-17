@@ -43,7 +43,7 @@
     "redux-persist": "^6.0.0",
     "redux-saga": "^1.2.3",
     "sass": "^1.69.5",
-    "socket.io-client": "^4.4.1",
+    "socket.io-client": "^4.7.2",
     "styled-components": "^6.1.0",
     "sweetalert2": "^11.9.0",
     "sweetalert2-react-content": "^5.0.7",

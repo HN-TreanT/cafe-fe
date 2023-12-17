@@ -1,299 +1,518 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider,Tooltip } from "antd"
-import React, { useState, Fragment, useEffect, useRef } from "react"
 import {
-    Label,
-    Row,
-    Col,
-    UncontrolledTooltip,
-} from "reactstrap"
-import { Plus, X } from "react-feather"
-import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
-import Swal from "sweetalert2"
-import ListMaterial from './ListMaterial'
-import {getProduct, createProduct, deleteProduct, updateProduct } from "../../../src/utils/services/productServices "
-import { categoryServices } from "../../../src/utils/services/categoryServices"
-import withReactContent from "sweetalert2-react-content"
+  Table,
+  Input,
+  Card,
+  Modal,
+  Button,
+  Popconfirm,
+  Breadcrumb,
+  Form,
+  Select,
+  Divider,
+  Tooltip,
+  Row,
+  Col
+} from "antd";
+import React, { useState, Fragment, useEffect, useRef } from "react";
+import { Label, UncontrolledTooltip } from "reactstrap";
+import { Plus, X } from "react-feather";
+import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons";
+import Swal from "sweetalert2";
+import ListMaterial from "./ListMaterial";
+import {
+  getProduct,
+  createProduct,
+  deleteProduct,
+  updateProduct,
+} from "../../../src/utils/services/productServices ";
+import { categoryServices } from "../../../src/utils/services/categoryServices";
+import withReactContent from "sweetalert2-react-content";
+import { invoiceServices } from "../../utils/services/invoiceService";
+import { getEmployee } from "../../utils/services/employee";
+import { createCustomer, getCustomer } from "../../utils/services/customer";
+import Employee from "../employee";
+import { tableServices } from "../../utils/services/tableServices";
 const HoaDon = () => {
-    const [form] = Form.useForm()
+  const [form] = Form.useForm();
+  const filterOption = (input, option) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+  const selected = useRef();
+  const MySwal = withReactContent(Swal);
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [idEdit, setIdEdit] = useState();
 
-    const selected = useRef()
-    const MySwal = withReactContent(Swal)
-    const [data, setData] = useState([])
-    const [count, setCount] = useState(0)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [idEdit, setIdEdit] = useState()
+  const [rowsPerPage, setRowsPerpage] = useState(10);
+  const [action, setAction] = useState("Add");
 
-    const [rowsPerPage, setRowsPerpage] = useState(2)
-    const [action, setAction] = useState('Add')
+  const [category, setCategory] = useState([]);
+  const [search, setSearch] = useState("");
+  const [isAdd, setIsAdd] = useState(false);
+  //search
+  const [searchCustomer, setSearchCustomer] = useState();
+  const [searchEmployee, setSearchEmployee] = useState();
+  const [searchTable, setSearchTable] = useState();
+  const [searchStatus, setSearchStatus] = useState();
+  //
+  const [employee, setEmployee] = useState([]);
+  const [table, setTable] = useState([]);
+  const [customer, setCustomer] = useState([]);
+  const status = [
+    {
+      value: 0,
+      label: "Đang thực hiện",
+    },
+    {
+      value: 1,
+      label: "Đã hoàn thành",
+    },
+  ];
 
-    const [category, setCategory] = useState([])
-    const [search, setSearch] = useState("")
-    const [isAdd, setIsAdd] = useState(false)
-
-    const getData = () => {
-        getProduct({
-            params: {
-                page: currentPage,
-                limit: rowsPerPage,
-            },
-            name: search
-        })
-            .then((res) => {
-                const t = res.data.data.map((item) => {
-                    return {
-                        ...item,
-                        key: item.id
-                    }
-                })
-                setData(t)
-                setCount(res.count)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-    const handleModal = () => {
-        setIsAdd(false)
-    }
-   const getAllCategory = () => {
-    categoryServices.get({
-        params : {
-            page: 1,
-            limit: 100
+  const getData = () => {
+    invoiceServices
+      .get({
+        params: {
+          page: currentPage,
+          limit: rowsPerPage,
+          id_employee: searchEmployee,
+          name_customer: searchCustomer,
+          id_table: searchTable,
+          status: searchStatus,
         },
+      })
+      .then((res) => {
+        const t = res.data.data.map((item) => {
+          return {
+            ...item,
+            key: item.id,
+          };
+        });
+        setData(t);
+        setCount(res.count);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleModal = () => {
+    setIsAdd(false);
+  };
+  const getAllEmployee = () => {
+    getEmployee({
+      params: {
+        page: 1,
+        limit: 100,
+      },
     })
-    .then((res) => {
+      .then((res) => {
         const temps = res.data.data.map((item) => {
-            return {
-                value: item.id,
-                label: item.name
-            }
-        })
-        setCategory(temps)
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setEmployee(temps);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  const getAllTable = () => {
+    tableServices
+      .get({
+        params: {
+          page: 1,
+          limit: 100,
+        },
+      })
+      .then((res) => {
+        const temps = res.data.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setTable(temps);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  const getAllCustomer = () => {
+    getCustomer({
+      params: {
+        page: 1,
+        limit: 100,
+      },
     })
-    .catch((e) => {
-        console.log(e)
-    })
-   }
-    useEffect(() => {
-        getData()
-        getAllCategory()
-    }, [currentPage, rowsPerPage, search])
+      .then((res) => {
+        const temps = res.data.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setCustomer(temps);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  useEffect(() => {
+    getData();
+    getAllCustomer();
+    getAllEmployee();
+    getAllTable();
+  }, [
+    currentPage,
+    rowsPerPage,
+    searchCustomer,
+    searchEmployee,
+    searchStatus,
+    searchTable,
+  ]);
 
-    const handleEdit = (record) => {
-        setAction('Edit')
-        setIdEdit(record)
-        setIsAdd(true)
-    }
-   
-    const handleDelete = (key) => {
-        deleteProduct(key)
-            .then((res) => {
-                MySwal.fire({
-                    title: "Xóa sản phẩm thành công",
-                    icon: "success",
-                    customClass: {
-                        confirmButton: "btn btn-success",
-                    },
-                }).then((result) => {
-                    if (currentPage === 1) {
-                        getData(1, rowsPerPage)
-                    } else {
-                        setCurrentPage(1)
-                    }
-                })
-            })
-            .catch((error) => {
-                MySwal.fire({
-                    title: "Xóa sản phẩm thất bại",
-                    icon: "error",
-                    customClass: {
-                        confirmButton: "btn btn-danger",
-                    },
-                })
-                console.log(error)
-            })
-    }
-   
-    const columns = [
-        {
-            title: "STT",
-            dataIndex: "stt",
-            width: 30,
-            align: "center",
-            render: (text, record, index) => (
-                <span>{((currentPage - 1) * rowsPerPage) + index + 1}</span>
-            ),
-        },
-        {
-            title: "Ảnh",
-            dataIndex: "image",
-            width: 50,
-            height: 50,
-            render: (record, index) => (
-              <img src={record} alt={`Ảnh ${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
-            )
-        },
-        {
-            title: "Tên sản phẩm",
-            dataIndex: "name",
-        },
-        {
-            title: "Loại",
-            dataIndex: "id_category",
-            render: (text, record, index) => {
-                const temp = category.find((item) => item.value === record.id_category)
-                 return <span>{`${temp?.label ? temp.label : ""}`}</span>
-            }
-        },
-        {
-            title: "Giá Bán",
-            dataIndex: "price",
-        },
-        {
-            title: "Đơn vị tính",
-            dataIndex: "unit",
-        },
-        {
-            title: "Mô tả",
-            dataIndex: "description",
-        },
-        {
-            title: "Thao tác",
-            width: 100,
-            align: "center",
-            render: (record) => (
-                <div style={{ display: "flex", justifyContent: "space-around" }}>
-                    {
-                        <>
-                        <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
-                            <EditOutlined
-                            style={{ color: '#036CBF', marginRight: '10px' }}
-                            onClick={() => handleEdit(record)}
-                            />
-                        </Tooltip>
-                          </>
-                    }
-                    { 
-                       <Popconfirm
-                       title="Bạn chắc chắn xóa?"
-                       onConfirm={() => handleDelete(record.id)}
-                       cancelText="Hủy"
-                       okText="Đồng ý"
-                   >
-                    <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
-                        <DeleteOutlined
-                        style={{ color: "red", cursor: 'pointer', marginRight: '10px' }}
-                        />
-                        </Tooltip>
-                     
-                    </Popconfirm>
+  const handleEdit = (record) => {
+    setAction("Edit");
+    setIdEdit(record);
+    setIsAdd(true);
+  };
 
-                    }
+  const handleDelete = (key) => {
+    invoiceServices
+      .deleteById(key)
+      .then((res) => {
+        MySwal.fire({
+          title: "Xóa sản phẩm thành công",
+          icon: "success",
+          customClass: {
+            confirmButton: "btn btn-success",
+          },
+        }).then((result) => {
+          if (currentPage === 1) {
+            getData(1, rowsPerPage);
+          } else {
+            setCurrentPage(1);
+          }
+        });
+      })
+      .catch((error) => {
+        MySwal.fire({
+          title: "Xóa sản phẩm thất bại",
+          icon: "error",
+          customClass: {
+            confirmButton: "btn btn-danger",
+          },
+        });
+        console.log(error);
+      });
+  };
 
-                </div>
-            ),
-        },
-    ]
-    const showTotal = (count) => `Tổng số: ${count}`
-
-    return (
-        <Card>
-        <Breadcrumb
-          style={{ margin: "auto", marginLeft: 0 }}
-          items={[
-            {
-              title: "Mặt hàng",
-            },
-            {
-              title: (
-                <span style={{ fontWeight: "bold" }}>Danh sách mặt hàng</span>
-              ),
-            },
-          ]}
-        />
-
-              <Divider style={{ margin: "10px" }}></Divider>
-            <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
-                <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <Label
-                        className=""
-                        style={{
-                            width: "100px",
-                            fontSize: "14px",
-                            height: "35px",
-                            display: "flex",
-                            alignItems: "center",
-                        }}
-                    >
-                        Tìm kiếm
-                    </Label>
-                    <Input
-                        type="text"
-                        placeholder="Tìm kiếm"
-                        style={{ height: "35px" }}
-                        onChange={(e) => {
-                            if (e.target.value === "") {
-                                setSearch("")
-                            }
-                        }}
-                        onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                                setSearch(e.target.value)
-                                setCurrentPage(1)
-                            }
-                        }}
-                    />
-                </Col>
-                <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
-                    {
-                         <Button
-                            style={{backgroundColor: "#036CBF"}}
-                            onClick={(e) => {
-                            setAction('Add')
-                            setIsAdd(true)
-                        }}
-                            type="primary"
-                        >
-                            Thêm mới
-                        </Button>
-                    }
-
-                </Col>
-            </Row>
-            <Table
-                columns={columns}
-                dataSource={data}
-                bordered
-                expandable={{
-                    expandedRowRender: (record) => {
-                      return <ListMaterial type="Add" record={record} category={category} getProduct={getData}/>
-                    },
-                    rowExpandable: (record) => record.name !== "Not Expandable",
+  const columns = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      width: 30,
+      align: "center",
+      render: (text, record, index) => (
+        <span>{(currentPage - 1) * rowsPerPage + index + 1}</span>
+      ),
+    },
+    {
+        title: "Nhân viên",
+        dataIndex: "id_employee",
+        render: (text, record, index) => {
+          return (
+            <span>{record?.employee?.name }</span>
+          );
+        }
+      },
+    {
+      title: "Khách hàng",
+      dataIndex: "id_customer",
+      render: (text, record, index) => {
+        return (
+          <span>{record?.customer?.name ? record?.customer?.name : "Khách vãng lai"}</span>
+        );
+      }
+    },
+    {
+        title: "Bàn",
+        render: (text, record, index) => {
+          const table1 = record?.tablefood_invoices?.map((item) => item.id_table);
+          const filteredTables = table?.filter((item) => table1?.includes(item.value));
+      
+          // Extract 'label' property and join into a string
+          const labelsString = filteredTables.map((item) => item.label).join(', ');
+      
+          console.log("labelsString", labelsString);
+      
+          return (
+            <span>{labelsString ? labelsString : "Gọi mang về"}</span>
+          );
+        }
+      },      
+      {
+        title: "Khuyến mãi",
+        dataIndex: "id_promotion",
+        render: (text, record, index) => {
+          return (
+            <span>{record?.promotion?.name || "Không sử dụng"}</span>
+          );
+        }
+      },
+    {
+      title: "Thành tiền",
+      dataIndex: "price",
+    },
+    {
+        title: "Ngày gọi món",
+        dataIndex: "createdAt",
+        render: (text, record, index) => {
+          const dateObject = new Date(record.createdAt);
+          const formattedDate = `${dateObject.getDate().toString().padStart(2, '0')}/${(dateObject.getMonth() + 1).toString().padStart(2, '0')}/${dateObject.getFullYear()}`;
+      
+          return <span>{formattedDate}</span>;
+        }
+      },
+    {
+        title: "Trạng thái",
+        render: (text, record, index) => {
+          return <span>{record.status ? "Đã hoàn thành" :"Đang thực hiện" }</span>;
+        }
+      },
+      
+    {
+      title: "Thao tác",
+      width: 100,
+      align: "center",
+      render: (record) => (
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          {
+            <>
+              <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
+                <EditOutlined
+                  style={{ color: "#036CBF", marginRight: "10px" }}
+                  onClick={() => handleEdit(record)}
+                />
+              </Tooltip>
+            </>
+          }
+          {
+            <Popconfirm
+              title="Bạn chắc chắn xóa?"
+              onConfirm={() => handleDelete(record.id)}
+              cancelText="Hủy"
+              okText="Đồng ý"
+            >
+              <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                <DeleteOutlined
+                  style={{
+                    color: "red",
+                    cursor: "pointer",
+                    marginRight: "10px",
                   }}
-                pagination={{
-                  current: currentPage,
-                  pageSize: rowsPerPage,
-                  defaultPageSize: rowsPerPage,
-                  showSizeChanger: true,
-                  pageSizeOptions: ["10", "20", "30", '100'],
-                  total: count,
-                  locale: { items_per_page: "/ trang" },
-                  showTotal: (total, range) => <span>Tổng số: {total}</span>,
-                  onShowSizeChange: (current, pageSize) => {
-                      setCurrentPage(current)
-                      setRowsPerpage(pageSize)
-                  },
-                  onChange: (pageNumber) => {
-                      setCurrentPage(pageNumber)
-                  }
+                />
+              </Tooltip>
+            </Popconfirm>
+          }
+        </div>
+      ),
+    },
+  ];
+  const showTotal = (count) => `Tổng số: ${count}`;
+
+  return (
+    <Card>
+      <Breadcrumb
+        style={{ margin: "auto", marginLeft: 0 }}
+        items={[
+          {
+            title: "Quản lý thanh toán",
+          },
+          {
+            title: (
+              <span style={{ fontWeight: "bold" }}>
+                Danh sách đơn hàng đang chuẩn bị
+              </span>
+            ),
+          },
+        ]}
+      />
+
+      <Divider style={{ margin: "10px" }}></Divider>
+      <Row>
+        <Col span={7} className="gutter-row" style={{display: 'flex',  marginRight: '15px'}}>
+          <Label
+            className=""
+            style={{
+              width: "173px",
+              fontSize: "14px",
+              height: "35px",
+              display: "flex",
+              alignItems: "center",
+            //   marginRight: '15px'
+            }}
+          >
+            Tên khách hàng
+          </Label>
+          <Input
+            type="text"
+            placeholder="Tìm kiếm"
+            style={{ height: "35px" }}
+            onChange={(e) => {
+              if (e.target.value === "") {
+                setSearchCustomer("");
+              }
+            }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                setSearchCustomer(e.target.value);
+                setCurrentPage(1);
+              }
+            }}
+          />
+        </Col>
+        <Col span={6} className="gutter-row" style={{display: 'flex'}}>
+          <Label
+            className=""
+            style={{
+              width: "80px",
+              fontSize: "14px",
+              height: "34px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            Nhân viên
+          </Label>
+          <div style={{ width: "290px" }}>
+            <Select
+              onChange={(e) => {
+                setSearchEmployee(e);
+                setCurrentPage(1);
               }}
-            />
-            <Them isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit}/>
-           {/* <AddModal isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit} /> */}
-                 </Card>
-    )
-}
-const Them = React.lazy(() => import("./step/Them"))
+              showSearch
+              allowClear
+              filterOption={filterOption}
+              options={employee}
+              style={{ width: "290px" }}
+              placeholder="Chọn nhân viên"
+              onKeyPress={(e) => {}}
+            ></Select>
+          </div>
+        </Col>
+      </Row>
+      <Row style={{marginTop: '20px'}}>
+        <Col span={7} className="gutter-row" style={{display: 'flex',  marginRight: '15px'}}>
+          <Label
+            className=""
+            style={{
+              width: "120px",
+              fontSize: "14px",
+              height: "34px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            Bàn
+          </Label>
+          <div style={{ width: "290px" }}>
+            <Select
+              onChange={(e) => {
+                setSearchTable(e);
+                setCurrentPage(1);
+              }}
+              showSearch
+              allowClear
+              filterOption={filterOption}
+              options={table}
+              style={{ width: "290px" }}
+              placeholder="Chọn bàn"
+              onKeyPress={(e) => {}}
+            ></Select>
+          </div>
+        </Col>
+        <Col span={6} className="gutter-row"  style={{display: 'flex'}}>
+          <Label
+            className=""
+            style={{
+              width: "80px",
+              fontSize: "14px",
+              height: "34px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            Trạng thái
+          </Label>
+          <div style={{ width: "290px" }}>
+            <Select
+              onChange={(e) => {
+                setSearchStatus(e);
+                setCurrentPage(1);
+              }}
+              showSearch
+              allowClear
+              filterOption={filterOption}
+              options={status}
+              style={{ width: "290px" }}
+              placeholder="Chọn trạng thái"
+              onKeyPress={(e) => {}}
+            ></Select>
+          </div>
+        </Col>
+        <Col span={8} className="gutter-row"></Col>
+        <Col span={2} className="gutter-row">
+          {
+            <Button
+              style={{ backgroundColor: "#036CBF" }}
+              onClick={(e) => {
+                setAction("Add");
+                setIsAdd(true);
+              }}
+              type="primary"
+            >
+              Thêm mới
+            </Button>
+          }
+        </Col>
+      </Row>
+      <Table
+        columns={columns}
+        dataSource={data}
+        bordered
+        pagination={{
+          current: currentPage,
+          pageSize: rowsPerPage,
+          defaultPageSize: rowsPerPage,
+          showSizeChanger: true,
+          pageSizeOptions: ["10", "20", "30", "100"],
+          total: count,
+          locale: { items_per_page: "/ trang" },
+          showTotal: (total, range) => <span>Tổng số: {total}</span>,
+          onShowSizeChange: (current, pageSize) => {
+            setCurrentPage(current);
+            setRowsPerpage(pageSize);
+          },
+          onChange: (pageNumber) => {
+            setCurrentPage(pageNumber);
+          },
+        }}
+      />
+      <Them
+        isAdd={isAdd}
+        action={action}
+        getData={getData}
+        category={category}
+        handleModal={handleModal}
+        idEdit={idEdit}
+      />
+      {/* <AddModal isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit} /> */}
+    </Card>
+  );
+};
+const Them = React.lazy(() => import("./step/Them"));
 // const AddModal = React.lazy(() => import("./addModal"))
-export default HoaDon 
+export default HoaDon;

@@ -77,7 +77,7 @@ import {
        console.log("idedit", idEdit)
       form.setFieldValue(idEdit)
      }
-    }, [idEdit.id])
+    }, [idEdit?.id])
     const onFinish = (values) => {
       const formData = new FormData();
       formData.append("image", file);

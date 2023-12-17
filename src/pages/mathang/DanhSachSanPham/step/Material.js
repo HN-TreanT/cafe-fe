@@ -142,7 +142,7 @@ const Material = ({
                 //   align="baseline"
                 // >
                   <Row gutter={15}>
-                    <Col span={14}>
+                    <Col span={12}>
                       <Form.Item
                         style={{ marginBottom: "4px" }}
                         name={[name, "id_material"]}
@@ -168,9 +168,8 @@ const Material = ({
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={11}>
                       <Form.Item
-                        style={{ marginBottom: "7px", display: "flex" }}
                         label={
                           <span>
                             Số lượng<span className="redColor">(*)</span>
@@ -196,8 +195,6 @@ const Material = ({
                     <MinusCircleOutlined onClick={() => remove(name)} />
                     </Col>
                   </Row>
-                  
-                // </Space>
               ))}
               <Form.Item>
                 <Button

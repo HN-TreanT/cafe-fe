@@ -39,7 +39,7 @@ const {invoice_details, setInvoiceDetails, hanldeSetInvoiceDetails} = props
                return {
                 ...item,
                 isCombo: true,
-                image : item?.detail_combos[0]?.image ? item?.detail_combos[0]?.image : null
+                image : item?.detail_combos[0]?.product?.image ? item?.detail_combos[0]?.product?.image : null
                }
             })
            

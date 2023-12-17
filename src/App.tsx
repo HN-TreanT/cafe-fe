@@ -25,6 +25,7 @@ import OrderPage from './pages/order-page';
 import ChefPage from './pages/chef-page';
 import QuanLyDatBan from './pages/ban/QuanLyBan';
 import { AppContext, socket } from './context/appContext';
+import OverViewPage from './pages/home/overview-page';
 function App() {
   return (
     <Provider store={store}>
@@ -38,6 +39,7 @@ function App() {
                   <Route path={RouterLinks.LOGIN} element={<Login />} />
                   <Route path={RouterLinks.REGISTER} element={<Register />} />
                   <Route path={RouterLinks.HOME_PAGE} element={<Layout />}>
+                     <Route path={RouterLinks.TONG_QUAN} element={<Suspense fallback={null}><OverViewPage /></Suspense>} />
                     <Route path={RouterLinks.COMBO} element={<Suspense fallback={null}><Combo /></Suspense>} />
                     <Route path={RouterLinks.DANH_MUC} element={<Suspense fallback={null}><DanhMucHang /></Suspense>} />
                     <Route path={RouterLinks.BAN} element={<Suspense fallback={null}><QuanLyDatBan /></Suspense>} />
@@ -48,7 +50,7 @@ function App() {
                     <Route path={RouterLinks.NHAP_KHO} element={<Suspense fallback={null}><NhapKho /></Suspense>} />
                     <Route path={RouterLinks.HOA_DON} element={<Suspense fallback={null}><HoaDon /></Suspense>} />
                     <Route path={RouterLinks.DANH_SACH_KHACH_HANG} element={<Suspense fallback={null}><DanhSachKhachHang /></Suspense>} />
-
+                   
                     <Route path={RouterLinks.BAO_CAO_NHAN_VIEN} element={<Suspense fallback={null}><Employee /></Suspense>} />
 
                   </Route>

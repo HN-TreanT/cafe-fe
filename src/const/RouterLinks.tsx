@@ -8,7 +8,7 @@ export const RouterLinks = {
   BAO_CAO_TAI_CHINH: "/baocao/taichinh",
   BAO_CAO_NHAN_VIEN: "/baocao/nhanvien",
   MAT_HANG: "/mathang/danh_sach_mat_hang",
-  DS_MAT_HANG: "mathang/danhsachmathang",
+  DS_MAT_HANG: "/mathang/danhsachmathang",
   THUC_DON: "/mathang/thucdon",
   DANH_MUC: "/mathang/danhmuc",
   LUA_CHON: "/mathang/luachon",

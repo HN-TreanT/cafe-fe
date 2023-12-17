@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import { Row, Col, Button, Select, Form, message } from "antd";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,8 +9,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ItemOrderDetail from "./ItemOrderDetail/ItemOrderDetail";
 import { tableServices } from "../../../../utils/services/tableServices";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppContext } from "../../../../context/appContext";
+import useAction from "../../../../redux/useActions";
 
 interface props {
   customers: any[],
@@ -21,9 +22,12 @@ interface props {
 
 
 const ContentOrderDetail = (props: props) => {
+  const actions = useAction()
+  const dispatch = useDispatch()
   const [form] = Form.useForm()
   const { invoice_details, setInvoiceDetails} = props
   const [messageApi, contextHolder] = message.useMessage();
+  const {socket} = useContext(AppContext)
   const [tables, setTables] = useState([])
   const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
   const getTable = (status: any) => {
@@ -67,6 +71,28 @@ const ContentOrderDetail = (props: props) => {
       console.log(err)
     })
   }
+
+  const handleAnnouce = (id_invoice: any) => {
+    socket.emit("announce", {
+      id_invoice: id_invoice
+    })
+  }
+
+  socket.off("announce_success").on("announce_success", function (data: any) {
+    if(data?.message === "success") {
+        dispatch(actions.InvoiceActions.loadData({
+          page: 1,
+          size: 6,  
+          thanh_toan: "chua",
+          status: 0
+        }))
+        message.success("Thông báo thành công")
+    } else {
+        message.error("Thông báo thất bại")
+    }
+ })
+
+  
  
   useEffect(() => {
    if(selectedOrder?.id) {
@@ -150,7 +176,7 @@ const ContentOrderDetail = (props: props) => {
                   <Button
                     type="primary"
                     className="button-controler-order"
-                    
+                    onClick={() => handleAnnouce(selectedOrder?.id)}
                   >
                     <FontAwesomeIcon className="icon-button" icon={faBellConcierge} />
                     <span className="title-button">Thông báo hoàn thành</span>

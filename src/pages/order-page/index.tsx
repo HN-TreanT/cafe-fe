@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Col, MenuProps, Row, Dropdown, message } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons"
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import OrderDetail from "./OrderDetail";
 import OperationOrderPage from './OperationOrderPage'
 import useAction from "../../redux/useActions";
 import { invoiceServices } from "../../utils/services/invoiceService";
-
+import { AppContext } from "../../context/appContext";
 import "./OrderPage.scss";
 import { RouterLinks } from "../../const/RouterLinks";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,17 @@ const OrderPage: React.FC = () => {
  const actions = useAction()
  const dispatch = useDispatch()
  const navigate = useNavigate()
+ const {socket} = useContext(AppContext)
+ socket.off("announce_success").on("announce_success", function (data: any) {
+  if(data?.message === "success") {
+    message.success(`Yêu cầu mã #${data?.id_invoice} hoàn thành` )
+    dispatch(actions.InvoiceActions.loadData({
+      page: 1,
+      size: 6,  
+      thanh_toan: "chua"
+    }))
+} 
+ })
   const [messageApi, contextHolder] = message.useMessage();
   const handlLogout = () => {
     localStorage.clear()
@@ -92,6 +103,8 @@ const OrderPage: React.FC = () => {
      })
     
   }
+
+
  
   useEffect(() => {
    const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {

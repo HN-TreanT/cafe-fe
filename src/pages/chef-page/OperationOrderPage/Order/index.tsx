@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Image, Pagination, Select, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faFileInvoiceDollar} from "@fortawesome/free-solid-svg-icons"
@@ -7,7 +7,7 @@ import emptyOrder from '../../../../assets/empty-bill.svg'
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
 import { invoiceServices } from "../../../../utils/services/invoiceService";
-import './Order.scss'
+import './Order.scss';
 interface props {
     invoice_details: any[],
     setInvoiceDetails: any,
@@ -29,14 +29,21 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
       }))
     }, [actions.InvoiceActions, currentPage, dispatch])
 
-    const handleSelectedOrder = (id :any) => {
-      invoiceServices.getById(id).then((res: any) => {    
-        if(res.status) {
-          dispatch(actions.OrderActions.selectedOrder(res.data))
-        }
-      }).catch((err: any) => {
-        console.log(err)
-      })
+    // const handleSelectedOrder = (id :any) => {
+    //   invoiceServices.getById(id).then((res: any) => {    
+    //     if(res.status) {
+    //       dispatch(actions.OrderActions.selectedOrder(res.data))
+    //     }
+    //   }).catch((err: any) => {
+    //     console.log(err)
+    //   })
+        
+    // }
+
+  
+    
+    const handleSelectedOrder = (data :any) => {
+      dispatch(actions.OrderActions.selectedOrder(data))
         
     }
     return   <div className="order">
@@ -77,7 +84,7 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
       {loading ? <Spin/> : Array.isArray(data) ? (
         data.map((item: any) => {
           return (
-            <Col onClick={() => handleSelectedOrder(item?.id)} key={item?.id} span={8}>
+            <Col onClick={() => handleSelectedOrder(item)} key={item?.id} span={8}>
               <ItemOrder
                 style={item?.id === selectedOrder?.id ? "click-item-order" : ""}
                 data={item}

@@ -23,7 +23,7 @@ const DanhSachSanPham = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
 
-    const [rowsPerPage, setRowsPerpage] = useState(10)
+    const [rowsPerPage, setRowsPerpage] = useState(2)
     const [action, setAction] = useState('Add')
 
     const [category, setCategory] = useState([])
@@ -81,9 +81,8 @@ const DanhSachSanPham = () => {
     }, [currentPage, rowsPerPage, search])
 
     const handleEdit = (record) => {
-        form.setFieldsValue(record);
         setAction('Edit')
-        setIdEdit(record.id)
+        setIdEdit(record)
         setIsAdd(true)
     }
    

@@ -7,9 +7,8 @@ import {
 import { Plus, X } from "react-feather"
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
-import { categoryServices } from "../../../../src/utils/services/categoryServices"
 import withReactContent from "sweetalert2-react-content"
-import { deleteUseMaterial } from "../../../utils/services/useMaterial"
+import { deleteUseMaterial } from "../../utils/services/useMaterial"
 const ListMaterial = ({record, getProduct}) => {
     const [form] = Form.useForm()
 

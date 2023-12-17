@@ -14,12 +14,12 @@ import {
   } from "@ant-design/icons";
   import Swal from "sweetalert2";
   
-  import useAction from "../../../../../src/redux/useActions";
+  import useAction from "../../../../src/redux/useActions";
   import { useDispatch, useSelector } from "react-redux";
   import {
     createProduct,
     updateProduct,
-  } from "../../../../../src/utils/services/productServices ";
+  } from "../../../utils/services/productServices "
   import withReactContent from "sweetalert2-react-content";
   import { message, Upload } from "antd";
   const Thongtinchung = ({
@@ -77,7 +77,7 @@ import {
        console.log("idedit", idEdit)
       form.setFieldValue(idEdit)
      }
-    }, [idEdit?.id])
+    }, [idEdit.id])
     const onFinish = (values) => {
       const formData = new FormData();
       formData.append("image", file);

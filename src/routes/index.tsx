@@ -9,7 +9,7 @@ import Mathang from "../pages/baocao/MatHang";
 import Khohang from "../pages/baocao/KhoHang";
 import TaiChinh from "../pages/baocao/TaiChinh";
 import DanhSachHang from "../pages/mathang/danhmuc/DanhMucHang";
-import DanhSachSanPham from "../pages/mathang/DanhSachSanPham";
+import DanhSachSanPham from "../pages/mathang/DanhSachSanPham/DanhSachSanPham";
 import ThucDon from "../pages/mathang/ThucDon";
 import DanhMuc from "../pages/mathang/danhmuc/DanhMucHang";
 import LuaChon from "../pages/mathang/LuaChon";
@@ -20,7 +20,9 @@ import TonKho from "../pages/kho/TonKho";
 import NhapKho from "../pages/kho/nhapkho/NhapKho";
 import KiemKe from "../pages/kho/KiemKe";
 import KhuyenMai from "../pages/khuyenmai/KhuyenMai";
-import NhanVien from "../pages/baocao/nhanvien/NhanVien";
+import Employee from "../pages/employee";
+import HoaDon from "../pages/hoadon/DanhSachHoaDon";
+import QuanLyDatBan from "../pages/ban/QuanLyBan";
 export const router = createBrowserRouter([
   {
     path: "login",
@@ -53,7 +55,7 @@ export const router = createBrowserRouter([
       },
       {
         path: RouterLinks.BAO_CAO_NHAN_VIEN,
-        element: <NhanVien />,
+        element: <Employee />,
       },
       // {
       //   path: RouterLinks.MAT_HANG,
@@ -81,8 +83,8 @@ export const router = createBrowserRouter([
         element: <Combo />,
       },
       {
-        path: RouterLinks.DAT_BAN,
-        element: <DatBan />,
+        path: RouterLinks.BAN,
+        element: <QuanLyDatBan />,
       },
       {
         path: RouterLinks.KHO_HANG,
@@ -95,6 +97,10 @@ export const router = createBrowserRouter([
       {
         path: RouterLinks.KIEM_KE,
         element: <KiemKe />,
+      },
+      {
+        path: RouterLinks.HOA_DON,
+        element: <HoaDon />,
       },
       {
         path: RouterLinks.DANH_SACH_KHACH_HANG,

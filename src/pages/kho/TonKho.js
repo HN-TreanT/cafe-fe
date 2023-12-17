@@ -9,7 +9,7 @@ import {
 import moment from 'moment'
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
-import {getMaterial, createMaterial, deleteMaterial, updateMaterial } from "../../utils/services/material"
+import { getMaterial, createMaterial, deleteMaterial, updateMaterial } from "../../utils/services/material"
 import { toDateString } from "../../utils/dateString"
 import withReactContent from "sweetalert2-react-content"
 import dayjs from 'dayjs'
@@ -17,7 +17,7 @@ import dayjs from 'dayjs'
 const TonKho = () => {
     // const ability = useContext(AbilityContext)
     const [form] = Form.useForm()
-    
+
     const selected = useRef()
     const MySwal = withReactContent(Swal)
     const [data, setData] = useState([])
@@ -36,9 +36,9 @@ const TonKho = () => {
     const getData = () => {
         getMaterial({
             // params: {
-                page: currentPage,
-                limit: rowsPerPage,
-                ...(search && search !== "" && { search }),
+            page: currentPage,
+            limit: rowsPerPage,
+            ...(search && search !== "" && { search }),
             //  },
         })
             .then((res) => {
@@ -50,7 +50,7 @@ const TonKho = () => {
             })
     }
 
-   
+
     useEffect(() => {
         getData()
     }, [currentPage, rowsPerPage, search])
@@ -66,7 +66,7 @@ const TonKho = () => {
             amount: record.amount,
             unit: record.unit,
             description: record.description,
-            expriation_date : record.expriation_date? dayjs(record.expriation_date ) : null ,
+            expriation_date: record.expriation_date ? dayjs(record.expriation_date) : null,
         })
         setAction('Edit')
         setIsAdd(true)
@@ -189,7 +189,7 @@ const TonKho = () => {
             render: (text, record, index) => {
                 console.log("ex", record.expriation_date)
                 const formattedDate = moment(record.expriation_date).format("DD-MM-YYYY");
-                return(
+                return (
                     <span>{formattedDate}</span>
                 )
             }
@@ -219,16 +219,16 @@ const TonKho = () => {
                     }
                     {
                         <Popconfirm
-                        title="Bạn chắc chắn xóa?"
-                        onConfirm={() => handleDelete(record.id)}
-                        cancelText="Hủy"
-                        okText="Đồng ý"
-                    >
-                        <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
-                        <UncontrolledTooltip placement="top" target={`tooltip_delete${record.ID}`}>
-                            Xóa
-                        </UncontrolledTooltip>
-                    </Popconfirm>
+                            title="Bạn chắc chắn xóa?"
+                            onConfirm={() => handleDelete(record.id)}
+                            cancelText="Hủy"
+                            okText="Đồng ý"
+                        >
+                            <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
+                            <UncontrolledTooltip placement="top" target={`tooltip_delete${record.ID}`}>
+                                Xóa
+                            </UncontrolledTooltip>
+                        </Popconfirm>
 
                     }
 
@@ -238,25 +238,25 @@ const TonKho = () => {
     ]
     return (
         <Card
-           
+
         >
-          <Breadcrumb
-                style={{ margin: "auto",marginBottom:"14px", marginLeft: 0 }}
+            <Breadcrumb
+                style={{ margin: "auto", marginBottom: "14px", marginLeft: 0 }}
                 items={[
                     {
                         title: "Quản lý kho hàng",
                     },
                     {
-                        
+
                         title: (
                             <span style={{ fontWeight: "bold" }}>Danh sách các nguyên liệu còn trong kho </span>
                         ),
-                    
+
                     },
                 ]}
             />
             <Divider style={{ margin: "10px" }}></Divider>
-            <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
+            <Row style={{ justifyContent: "space-between", display: "flex", marginBottom: '10px' }}>
                 <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
                     <Label
                         className=""
@@ -268,7 +268,7 @@ const TonKho = () => {
                             alignItems: "center",
                         }}
                     >
-                        Tìm kiếm 
+                        Tìm kiếm
                     </Label>
                     <Input
                         type="text"
@@ -289,11 +289,11 @@ const TonKho = () => {
                 </Col>
                 <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
-                         <Button
+                        <Button
                             onClick={(e) => {
-                            setAction('Add')
-                            setIsAdd(true)
-                        }}
+                                setAction('Add')
+                                setIsAdd(true)
+                            }}
                             type="primary"
                         >
                             Thêm mới
@@ -307,22 +307,22 @@ const TonKho = () => {
                 dataSource={data}
                 bordered
                 pagination={{
-                  current: currentPage,
-                  pageSize: rowsPerPage,
-                  defaultPageSize: rowsPerPage,
-                  showSizeChanger: true,
-                  pageSizeOptions: ["10", "20", "30", '100'],
-                  total: count,
-                  locale: { items_per_page: "/ trang" },
-                  showTotal: (total, range) => <span>Tổng số: {total}</span>,
-                  onShowSizeChange: (current, pageSize) => {
-                      setCurrentPage(current)
-                      setRowsPerpage(pageSize)
-                  },
-                  onChange: (pageNumber) => {
-                      setCurrentPage(pageNumber)
-                  }
-              }}
+                    current: currentPage,
+                    pageSize: rowsPerPage,
+                    defaultPageSize: rowsPerPage,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["10", "20", "30", '100'],
+                    total: count,
+                    locale: { items_per_page: "/ trang" },
+                    showTotal: (total, range) => <span>Tổng số: {total}</span>,
+                    onShowSizeChange: (current, pageSize) => {
+                        setCurrentPage(current)
+                        setRowsPerpage(pageSize)
+                    },
+                    onChange: (pageNumber) => {
+                        setCurrentPage(pageNumber)
+                    }
+                }}
             />
             <Modal
                 open={isAdd}
@@ -332,17 +332,17 @@ const TonKho = () => {
                 autoFocus={false}
                 className="modal-md"
                 footer={[]}
-                    >
+            >
                 <div
                     className=""
                     toggle={handleModal}
                     tag="div"
                 >
-                     <h2 className="modal-title">{
+                    <h2 className="modal-title">{
                         action === 'Add' ? "Thêm mới nguyên liệu " : "Chỉnh sửa nguyên liệu "
                     } </h2>
                 </div>
-                
+
                 <div className="flex-grow-1">
                     <Form
                         form={form}
@@ -378,11 +378,11 @@ const TonKho = () => {
                                     name="amount"
                                     label="Số lượng"
                                     rules={[
-                                      {
-                                          required: true,
-                                          message: 'Vui lòng nhập số lượng'
-                                      },
-                                  ]}
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng nhập số lượng'
+                                        },
+                                    ]}
                                 >
                                     <Input placeholder='Nhập số lượng ' />
                                 </Form.Item>
@@ -403,7 +403,7 @@ const TonKho = () => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder='Nhập đơn vị tính'/>
+                                    <Input placeholder='Nhập đơn vị tính' />
                                 </Form.Item>
                             </div>
                             <div className=' col col-12'>
@@ -424,7 +424,7 @@ const TonKho = () => {
                                             height: " 34px"
                                         }}
                                         placeholder="Ngày hết hạn"
-                                        />
+                                    />
                                 </Form.Item>
                             </div>
                             <div className=' col col-12'>
@@ -442,7 +442,7 @@ const TonKho = () => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder='Nhập mô tả'/>
+                                    <Input placeholder='Nhập mô tả' />
                                 </Form.Item>
                             </div>
                         </Row>
@@ -459,7 +459,7 @@ const TonKho = () => {
                     </Form>
                 </div>
             </Modal>
-                 </Card>
+        </Card>
     )
 }
 export default TonKho 

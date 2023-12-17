@@ -9,8 +9,8 @@ import {
 import { Plus, X } from "react-feather"
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
-import {getPromotion, createPromotion, deletePromotion, updatePromotion } from "../../utils/services/promotion"
-import {getProduct} from "../../utils/services/productServices "
+import { getPromotion, createPromotion, deletePromotion, updatePromotion } from "../../utils/services/promotion"
+import { getProduct } from "../../utils/services/productServices "
 import withReactContent from "sweetalert2-react-content"
 
 // import { AbilityContext } from '@src/utility/context/Can'
@@ -54,25 +54,25 @@ const Promotion = () => {
     }
 
     const getProducts = () => {
-     getProduct({
-        params: {
-            page: currentPage,
-            limit: rowsPerPage,
-            // ...(search && search !== "" && { search }),
-        },
-    })
-      .then(res => {
-        const data = res.data.data.map((item) => {
-          return {
-            value: item.id,
-            label: item.name
-          }
+        getProduct({
+            params: {
+                page: currentPage,
+                limit: rowsPerPage,
+                // ...(search && search !== "" && { search }),
+            },
         })
-        setProduct(data)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+            .then(res => {
+                const data = res.data.data.map((item) => {
+                    return {
+                        value: item.id,
+                        label: item.name
+                    }
+                })
+                setProduct(data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
     useEffect(() => {
         getData()
@@ -101,7 +101,9 @@ const Promotion = () => {
         if (action === 'Add') {
             createPromotion({
                 name: values.name,
-                id_product: values.id_product
+                id_product: values.id_product,
+                condition: values.condition,
+                discount: values.discount
             })
                 .then((res) => {
                     MySwal.fire({
@@ -161,7 +163,7 @@ const Promotion = () => {
         }
     }
 
-   
+
     const handleDelete = (key) => {
         deletePromotion(key)
             .then((res) => {
@@ -208,11 +210,11 @@ const Promotion = () => {
             title: "Sản phẩm áp dụng",
             dataIndex: "id_product",
             render: (text, record, index) => {
-              const matchedSchoolYear = product.find(item => item.value === record.id_product)
-              return (
-                  <span>{`${matchedSchoolYear?.label ? matchedSchoolYear.label : ""}`}</span>
-              )
-          }
+                const matchedSchoolYear = product.find(item => item.value === record.id_product)
+                return (
+                    <span>{`${matchedSchoolYear?.label ? matchedSchoolYear.label : ""}`}</span>
+                )
+            }
         },
         {
             title: "Điều kiện áp dụng",
@@ -232,30 +234,30 @@ const Promotion = () => {
             align: "center",
             render: (record) => (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
-                     {
+                    {
                         <>
-                        <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
-                            <EditOutlined
-                            style={{ color: '#036CBF', marginRight: '10px' }}
-                            onClick={() => handleEdit(record)}
-                            />
-                        </Tooltip>
-                          </>
+                            <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
+                                <EditOutlined
+                                    style={{ color: '#036CBF', marginRight: '10px' }}
+                                    onClick={() => handleEdit(record)}
+                                />
+                            </Tooltip>
+                        </>
                     }
-                    { 
-                       <Popconfirm
-                       title="Bạn chắc chắn xóa?"
-                       onConfirm={() => handleDelete(record.id)}
-                       cancelText="Hủy"
-                       okText="Đồng ý"
-                   >
-                    <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
-                        <DeleteOutlined
-                        style={{ color: "red", cursor: 'pointer', marginRight: '10px' }}
-                        />
-                        </Tooltip>
-                     
-                    </Popconfirm>
+                    {
+                        <Popconfirm
+                            title="Bạn chắc chắn xóa?"
+                            onConfirm={() => handleDelete(record.id)}
+                            cancelText="Hủy"
+                            okText="Đồng ý"
+                        >
+                            <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                                <DeleteOutlined
+                                    style={{ color: "red", cursor: 'pointer', marginRight: '10px' }}
+                                />
+                            </Tooltip>
+
+                        </Popconfirm>
 
                     }
                 </div>
@@ -266,10 +268,10 @@ const Promotion = () => {
 
     return (
         <Card
-           
+
         >
-          <Breadcrumb
-                style={{ margin: "auto",marginBottom:"14px", marginLeft: 0 }}
+            <Breadcrumb
+                style={{ margin: "auto", marginBottom: "14px", marginLeft: 0 }}
                 items={[
                     {
                         title: (
@@ -278,8 +280,8 @@ const Promotion = () => {
                     },
                 ]}
             />
-              <Divider style={{ margin: "10px" }}></Divider>
-            <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
+            <Divider style={{ margin: "10px" }}></Divider>
+            <Row style={{ justifyContent: "space-between", display: "flex", marginBottom: '10px' }}>
                 <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
                     <Label
                         className=""
@@ -312,11 +314,11 @@ const Promotion = () => {
                 </Col>
                 <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
-                         <Button
+                        <Button
                             onClick={(e) => {
-                            setAction('Add')
-                            setIsAdd(true)
-                        }}
+                                setAction('Add')
+                                setIsAdd(true)
+                            }}
                             type="primary"
                         >
                             Thêm mới
@@ -330,22 +332,22 @@ const Promotion = () => {
                 dataSource={data}
                 bordered
                 pagination={{
-                  current: currentPage,
-                  pageSize: rowsPerPage,
-                  defaultPageSize: rowsPerPage,
-                  showSizeChanger: true,
-                  pageSizeOptions: ["10", "20", "30", '100'],
-                  total: count,
-                  locale: { items_per_page: "/ trang" },
-                  showTotal: (total, range) => <span>Tổng số: {total}</span>,
-                  onShowSizeChange: (current, pageSize) => {
-                      setCurrentPage(current)
-                      setRowsPerpage(pageSize)
-                  },
-                  onChange: (pageNumber) => {
-                      setCurrentPage(pageNumber)
-                  }
-              }}
+                    current: currentPage,
+                    pageSize: rowsPerPage,
+                    defaultPageSize: rowsPerPage,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["10", "20", "30", '100'],
+                    total: count,
+                    locale: { items_per_page: "/ trang" },
+                    showTotal: (total, range) => <span>Tổng số: {total}</span>,
+                    onShowSizeChange: (current, pageSize) => {
+                        setCurrentPage(current)
+                        setRowsPerpage(pageSize)
+                    },
+                    onChange: (pageNumber) => {
+                        setCurrentPage(pageNumber)
+                    }
+                }}
             />
             <Modal
                 open={isAdd}
@@ -355,17 +357,17 @@ const Promotion = () => {
                 autoFocus={false}
                 className="modal-md"
                 footer={[]}
-                    >
+            >
                 <div
                     className=""
                     toggle={handleModal}
                     tag="div"
                 >
-                     <h2 className="modal-title">{
+                    <h2 className="modal-title">{
                         action === 'Add' ? "Thêm mới khuyến mãi" : "Chỉnh sửa khuyến mãi"
                     } </h2>
                 </div>
-                
+
                 <div className="flex-grow-1">
                     <Form
                         form={form}
@@ -401,16 +403,16 @@ const Promotion = () => {
                                     name="id_product"
                                     label="Sản phẩm áp dụng"
                                     rules={[
-                                      {
-                                          required: true,
-                                          message: 'Chọn sản phẩm áp dụng'
-                                      },
-                                  ]}
+                                        {
+                                            required: true,
+                                            message: 'Chọn sản phẩm áp dụng'
+                                        },
+                                    ]}
                                 >
-                                     <Select allowClear 
-                                         options={product} style={{width:"100%"}}  placeholder="Chọn sản phẩm"  onKeyPress={(e) => {
-                                      }}
-                                  ></Select> 
+                                    <Select allowClear
+                                        options={product} style={{ width: "100%" }} placeholder="Chọn sản phẩm" onKeyPress={(e) => {
+                                        }}
+                                    ></Select>
                                 </Form.Item>
 
                             </div>
@@ -429,7 +431,7 @@ const Promotion = () => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder='Nhập điều kiện áp dụng' type="number"/>
+                                    <Input placeholder='Nhập điều kiện áp dụng' type="number" />
                                 </Form.Item>
                             </div>
                             <div className=' col col-12'>
@@ -447,7 +449,7 @@ const Promotion = () => {
                                         },
                                     ]}
                                 >
-                                    <Input placeholder='Nhập giảm giá'  type="number"/>
+                                    <Input placeholder='Nhập giảm giá' type="number" />
                                 </Form.Item>
                             </div>
                         </Row>
@@ -464,7 +466,7 @@ const Promotion = () => {
                     </Form>
                 </div>
             </Modal>
-                 </Card>
+        </Card>
     )
 }
 export default Promotion 

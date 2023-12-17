@@ -46,7 +46,7 @@ const Combo = () => {
     comboServices.get({
       page: currentPage,
       size: rowsPerPage,
-      ...(search && search !== " " && { name: search })
+      ...(search && search !== " " && { search })
     }).then((res) => {
       if (res.status) {
         const t = res.data.data.map((item: any) => {
@@ -177,8 +177,8 @@ const Combo = () => {
     </Row>
     <Row>
       <Col span={6}>
-        <Space direction="vertical" style={{ width: "100%" }}>
-          <Typography.Text>Tên combo</Typography.Text>
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start" }}>
+          <label style={{ marginBottom: "4px" }}>Tìm kiếm</label>
           <Input
             type="text"
             placeholder="Tìm kiếm"
@@ -195,7 +195,7 @@ const Combo = () => {
               }
             }}
           />
-        </Space>
+        </div>
       </Col>
       <Divider style={{ margin: "10px" }}></Divider>
     </Row>

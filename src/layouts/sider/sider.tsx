@@ -38,6 +38,23 @@ const menuItems = [
 
   },
   {
+    key: "hoadon",
+    label: "Quản lý hóa đơn",
+    icon: (
+      <MoneyCollectOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+    ),
+    children: [
+      {
+        key: RouterLinks.HOA_DON,
+        label: "Danh sách hóa đơn",
+      },
+      // {
+      //   key: RouterLinks.THANH_TOAN_HOA_DON,
+      //   label: "Thanh toán hoá đơn",
+      // },
+    ],
+  },
+  {
     key: "mathang",
     label: "Mặt hàng",
     icon: (
@@ -130,23 +147,7 @@ const menuItems = [
     ],
 
   },
-  {
-    key: "hoadon",
-    label: "Quản lý thanh toán",
-    icon: (
-      <MoneyCollectOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
-    ),
-    children: [
-      {
-        key: RouterLinks.HOA_DON,
-        label: "Danh sách đơn đang chuẩn bị",
-      },
-      // {
-      //   key: RouterLinks.THANH_TOAN_HOA_DON,
-      //   label: "Thanh toán hoá đơn",
-      // },
-    ],
-  },
+ 
 ];
 const Sidebar = () => {
   const navigate = useNavigate();

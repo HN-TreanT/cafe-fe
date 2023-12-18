@@ -26,7 +26,7 @@ const ModalSplitOrder = (props: Props) => {
     const [form] = Form.useForm()
     const { curData, open, handleModal, id_invoice_old } = props
     const [inputValues, setInputValues] = useState<any>({});
-
+    const userInfo = useSelector((state: any) => state.auth.user_info)
     const [dataSource, setDataSource] = useState<any>([])
     const [tables, setTables] = useState([])
     const getTable = () => {
@@ -109,6 +109,7 @@ const ModalSplitOrder = (props: Props) => {
             }
             const dataCreateNewOrder  = {
                 ...values,
+                id_employee: userInfo?.id ? userInfo?.id : null,
                 lst_invoice_detail: new_invoice_detail
             }
 

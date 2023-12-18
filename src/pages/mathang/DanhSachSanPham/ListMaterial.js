@@ -90,6 +90,7 @@ const ListMaterial = ({record, getProduct}) => {
         },
         {
             title: "Tên nguyên liệu",
+            align: "center",
             render: (text, record, index) => {
                 return(`${record.material.name}`)
             }
@@ -97,15 +98,18 @@ const ListMaterial = ({record, getProduct}) => {
         {
             title: "Số lượng sử dụng",
             dataIndex: "amount",
+            align: "center",
         },
         {
             title: "Số lượng trong kho",
+            align: "center",
             render: (text, record, index) => {
                 return(`${record.material.amount}`)
             }
         },
         {
             title: "Đơn vị tính",
+            align: "center",
             render: (text, record, index) => {
                 return(`${record.material.unit}`)
             }

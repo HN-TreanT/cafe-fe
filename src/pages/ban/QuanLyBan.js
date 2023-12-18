@@ -19,7 +19,7 @@ import withReactContent from "sweetalert2-react-content"
 
 const QuanLyDatBan = () => {
     const [form] = Form.useForm()
-
+    const [loading, setLoading] = useState(false)
     const selected = useRef()
     const MySwal = withReactContent(Swal)
     const [data, setData] = useState([])
@@ -46,6 +46,7 @@ const QuanLyDatBan = () => {
         },
     ]
     const getData = () => {
+        setLoading(true)
         tableServices.get({
             params: {
                 page: currentPage,
@@ -57,9 +58,13 @@ const QuanLyDatBan = () => {
             .then((res) => {
                 setData(res.data.data)
                 setCount(res.count)
+                setLoading(false)
+
             })
             .catch((err) => {
                 console.log(err)
+        setLoading(false)
+
             })
     }
 
@@ -177,10 +182,12 @@ const QuanLyDatBan = () => {
         {
             title: "Tên bàn",
             dataIndex: "name",
+            align: "center",
         },
         {
             title: "Trạng thái",
             dataIndex: "status",
+            align: "center",
             render: (text, record, index) => (
                 <span>{(record.status ? "Đang sử dụng" : "Còn trống")}</span>
             )
@@ -285,6 +292,7 @@ const QuanLyDatBan = () => {
                 </Col>
             </Row>
             <Table
+                loading={loading}
                 columns={columns}
                 dataSource={data}
                 bordered

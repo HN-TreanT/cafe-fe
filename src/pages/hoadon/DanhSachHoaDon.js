@@ -1,61 +1,34 @@
 import {
   Table,
-  Input,
   Card,
-  Modal,
-  Button,
-  Popconfirm,
   Breadcrumb,
-  Form,
   Select,
   Divider,
   Tag ,
   Row,
   Col,
 } from "antd";
-import React, { useState, Fragment, useEffect, useRef } from "react";
-import { Label, UncontrolledTooltip } from "reactstrap";
-import { Plus, X } from "react-feather";
-import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons";
-import Swal from "sweetalert2";
-import {
-  getProduct,
-  createProduct,
-  deleteProduct,
-  updateProduct,
-} from "../../../src/utils/services/productServices ";
-import { categoryServices } from "../../../src/utils/services/categoryServices";
-import withReactContent from "sweetalert2-react-content";
+import React, { useState, useEffect } from "react";
+import { Label } from "reactstrap";
 import { invoiceServices } from "../../utils/services/invoiceService";
-import { getEmployee } from "../../utils/services/employee";
-import { createCustomer, getCustomer } from "../../utils/services/customer";
-import { tableServices } from "../../utils/services/tableServices";
 import moment from "moment";
 import InvoiceDetail from "./InvoiceDetail";
+import {getEmployee} from "../../utils/services/employee"
+import { render } from "react-dom";
+import { convertPrice } from "../../utils/helper/convertPrice";
 const HoaDon = () => {
-  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false)
   const filterOption = (input, option) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-  const selected = useRef();
-  const MySwal = withReactContent(Swal);
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [idEdit, setIdEdit] = useState();
-
+  
   const [rowsPerPage, setRowsPerpage] = useState(10);
-
-  const [isAdd, setIsAdd] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
+   const [employee, setEmployee] = useState([])
   //search
-  const [searchCustomer, setSearchCustomer] = useState();
   const [searchEmployee, setSearchEmployee] = useState();
-  const [searchTable, setSearchTable] = useState();
   const [searchStatus, setSearchStatus] = useState();
-  //
-  const [employee, setEmployee] = useState([]);
-  const [table, setTable] = useState([]);
-  const [customer, setCustomer] = useState([]);
   const status = [
     {
       value: 0,
@@ -68,6 +41,7 @@ const HoaDon = () => {
   ];
 
   const getData = () => {
+    setLoading(true)
     invoiceServices
       .get({
         params: {
@@ -75,8 +49,6 @@ const HoaDon = () => {
           limit: rowsPerPage,
         },
         id_employee: searchEmployee,
-        name_customer: searchCustomer,
-        id_table: searchTable,
         status: searchStatus,
       })
       .then((res) => {
@@ -88,9 +60,11 @@ const HoaDon = () => {
         });
         setData(t);
         setCount(res.count);
+        setLoading(false)
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false)
       });
   };
   const getAllEmployee = () => {
@@ -113,60 +87,57 @@ const HoaDon = () => {
         console.log(e);
       });
   };
-  const getAllTable = () => {
-    tableServices
-      .get({
-        params: {
-          page: 1,
-          limit: 100,
-        },
-      })
-      .then((res) => {
-        const temps = res.data.data.map((item) => {
-          return {
-            value: item.id,
-            label: item.name,
-          };
-        });
-        setTable(temps);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-  const getAllCustomer = () => {
-    getCustomer({
-      params: {
-        page: 1,
-        limit: 100,
-      },
-    })
-      .then((res) => {
-        const temps = res.data.data.map((item) => {
-          return {
-            value: item.id,
-            label: item.name,
-          };
-        });
-        setCustomer(temps);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+  // const getAllTable = () => {
+  //   tableServices
+  //     .get({
+  //       params: {
+  //         page: 1,
+  //         limit: 100,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       const temps = res.data.data.map((item) => {
+  //         return {
+  //           value: item.id,
+  //           label: item.name,
+  //         };
+  //       });
+  //       setTable(temps);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     });
+  // };
+  // const getAllCustomer = () => {
+  //   getCustomer({
+  //     params: {
+  //       page: 1,
+  //       limit: 100,
+  //     },
+  //   })
+  //     .then((res) => {
+  //       const temps = res.data.data.map((item) => {
+  //         return {
+  //           value: item.id,
+  //           label: item.name,
+  //         };
+  //       });
+  //       setCustomer(temps);
+  //     })
+  //     .catch((e) => {
+  //       console.log(e);
+  //     });
+  // };
+
+   useEffect(() => {
+    // getAllCustomer();
+     getAllEmployee();
+    // getAllTable();
+   }, [])
   useEffect(() => {
     getData();
-    getAllCustomer();
-    getAllEmployee();
-    getAllTable();
-  }, [
-    currentPage,
-    rowsPerPage,
-    searchCustomer,
-    searchEmployee,
-    searchStatus,
-    searchTable,
-  ]);
+  
+  }, [ currentPage,rowsPerPage, searchEmployee,searchStatus]);
   const columns = [
     {
       title: "STT",
@@ -178,15 +149,17 @@ const HoaDon = () => {
       ),
     },
     {
-      title: "Nhân viên",
-      dataIndex: "id_employee",
-      render: (text, record, index) => {
-        return <span>{record?.employee?.name}</span>;
-      },
+      title: "Bàn",
+      align: "center",
+      dataIndex:"tablefood_invoices",
+      render : (value) => Array.isArray(value) ? `Bàn ${value.map((item) => item.id_table).join(",")}` : ""
+    
     },
+   
     {
       title: "Khách hàng",
       dataIndex: "id_customer",
+      align: "center",
       render: (text, record, index) => {
         return (
           <span>
@@ -195,50 +168,30 @@ const HoaDon = () => {
         );
       },
     },
-    {
-      title: "Bàn",
-      render: (text, record, index) => {
-        const table1 = record?.tablefood_invoices?.map((item) => item.id_table);
-        const filteredTables = table?.filter((item) =>
-          table1?.includes(item.value)
-        );
-
-        // Extract 'label' property and join into a string
-        const labelsString = filteredTables
-          .map((item) => item.label)
-          .join(", ");
-        return <span>{labelsString ? labelsString : "Gọi mang về"}</span>;
-      },
-    },
-    {
-      title: "Khuyến mãi",
-      dataIndex: "id_promotion",
-      render: (text, record, index) => {
-        return <span>{record?.promotion?.name || "Không sử dụng"}</span>;
-      },
-    },
+    
+    // {
+    //   title: "Khuyến mãi",
+    //   dataIndex: "id_promotion",
+    //   align: "center",
+    //   render: (text, record, index) => {
+    //     return <span>{record?.promotion?.name || "Không sử dụng"}</span>;
+    //   },
+    // },
     {
       title: "Thành tiền",
       dataIndex: "price",
+      align: "center",
+      render: (value) => convertPrice(value)
     },
-    {
-      title: "Ngày gọi món",
-      dataIndex: "createdAt",
-      render: (text, record, index) => {
-        const dateObject = new Date(record.createdAt);
-        const formattedDate = `${dateObject
-          .getDate()
-          .toString()
-          .padStart(2, "0")}/${(dateObject.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}/${dateObject.getFullYear()}`;
-
-        return <span>{formattedDate}</span>;
-      },
-    },
+    // {
+    //   title: "Ngày gọi món",
+    //   dataIndex: "createdAt",
+    //   render: (text, record, index) => moment(text).format("DD/MM/YYYY")
+    // },
     {
       title: "Thời gian thanh toán",
       dataIndex: "time_pay",
+      align: "center",
       render: (text, record, index) => {
         const momentTime = moment(record.time_pay);
         const formattedTime = momentTime.format("HH:mm:ss DD/MM/YYYY");
@@ -247,7 +200,16 @@ const HoaDon = () => {
       }
     },
     {
+      title: "Nhân viên phụ trách",
+      dataIndex: "id_employee",
+      align: "center",
+      render: (text, record, index) => {
+        return <span>{record?.employee?.name}</span>;
+      },
+    },
+    {
       title: "Trạng thái",
+      align: "center",
       render: (text, record, index) => {
         return (
           <Tag color={record.status ? "green" : "blue"}>
@@ -274,25 +236,18 @@ const HoaDon = () => {
         ]}
       />
       <Divider style={{ margin: "10px" }}></Divider>
-      <Row style={{ marginTop: "20px" }}>
+      <Row gutter={15} style={{marginBottom:"10px"}}>
         <Col
           span={6}
-          className="gutter-row"
-          style={{ display: "flex", marginBottom: "15px" }}
+         
+          style={{textAlign:"start"}}
         >
-          <Label
-            className=""
-            style={{
-              width: "80px",
-              fontSize: "14px",
-              height: "34px",
-              display: "flex",
-              alignItems: "center",
-            }}
+          <div
+           
           >
             Nhân viên
-          </Label>
-          <div style={{ width: "290px" }}>
+          </div>
+          <div style={{ width: "100%" }}>
             <Select
               onChange={(e) => {
                 setSearchEmployee(e);
@@ -302,27 +257,20 @@ const HoaDon = () => {
               allowClear
               filterOption={filterOption}
               options={employee}
-              style={{ width: "290px" }}
+              style={{ width: "100%" }}
               placeholder="Chọn nhân viên"
               onKeyPress={(e) => {}}
             ></Select>
           </div>
         </Col>
-        <Col span={6} className="gutter-row" style={{ display: "flex" }}>
-          <Label
-            className=""
-            style={{
-              width: "80px",
-              fontSize: "14px",
-              height: "34px",
-              display: "flex",
-              alignItems: "center",
-              marginLeft: "15px",
-            }}
+        <Col span={6}  style={{ textAlign:"start" }}>
+
+          <div
+         
           >
             Trạng thái
-          </Label>
-          <div style={{ width: "290px" }}>
+          </div>
+          <div style={{ width: "100%" }}>
             <Select
               onChange={(e) => {
                 setSearchStatus(e);
@@ -332,16 +280,17 @@ const HoaDon = () => {
               allowClear
               filterOption={filterOption}
               options={status}
-              style={{ width: "290px" }}
+              style={{ width: "100%" }}
               placeholder="Chọn trạng thái"
               onKeyPress={(e) => {}}
             ></Select>
           </div>
         </Col>
-        <Col span={8} className="gutter-row"></Col>
+        <Col span={8} ></Col>
        
       </Row>
       <Table
+       loading={loading}
         columns={columns}
         dataSource={data}
         bordered

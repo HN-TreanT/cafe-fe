@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Row, Col, Button, Select, Input, DatePicker } from "antd";
 import { message } from "antd";
-import { ShipmentServices } from "../../../../utils/services/shipment";
+import { ShipmentServices } from "../../../../utils/services/shipmentDetail";
 
 const { Option } = Select;
 

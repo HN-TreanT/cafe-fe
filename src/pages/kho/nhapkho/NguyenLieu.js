@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Row, Table, Divider, Popconfirm, Button } from "antd"
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { ShipmentServices } from "../../../utils/services/shipment";
+import { ShipmentServices } from "../../../utils/services/shipmentDetail";
 import dayjs from "dayjs";
 import { message } from "antd";
 

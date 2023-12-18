@@ -8,11 +8,8 @@ import Doanhthu from "../pages/baocao/Doanhthu";
 import Mathang from "../pages/baocao/MatHang";
 import Khohang from "../pages/baocao/KhoHang";
 import TaiChinh from "../pages/baocao/TaiChinh";
-import DanhSachHang from "../pages/mathang/danhmuc/DanhMucHang";
 import DanhSachSanPham from "../pages/mathang/DanhSachSanPham/DanhSachSanPham";
-import ThucDon from "../pages/mathang/ThucDon";
 import DanhMuc from "../pages/mathang/danhmuc/DanhMucHang";
-import LuaChon from "../pages/mathang/LuaChon";
 import Combo from "../pages/mathang/combo/Combo";
 import DatBan from "../pages/datban/DatBan";
 import DanhSachKhachHang from "../pages/khachhang/danhsachkhachhang";
@@ -69,16 +66,8 @@ export const router = createBrowserRouter([
         element: <DanhSachSanPham />,
       },
       {
-        path: RouterLinks.THUC_DON,
-        element: <ThucDon />,
-      },
-      {
         path: RouterLinks.DANH_MUC,
         element: <DanhMuc />,
-      },
-      {
-        path: RouterLinks.LUA_CHON,
-        element: <LuaChon />,
       },
       {
         path: RouterLinks.COMBO,

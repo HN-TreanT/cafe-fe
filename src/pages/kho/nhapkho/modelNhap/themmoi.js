@@ -7,7 +7,7 @@ import { theme } from 'antd';
 import { nhanvienServices } from "../../../../utils/services/nhanvienService";
 import { supplierServices } from "../../../../utils/services/supplier";
 import { materialService } from "../../../../utils/services/materialService";
-import { ShipmentServices } from "../../../../utils/services/shipment";
+import { ShipmentServices } from "../../../../utils/services/shipmentDetail";
 import { detail_shipmentServices } from "../../../../utils/services/detail_shipment";
 const FormItem = Form.Item
 

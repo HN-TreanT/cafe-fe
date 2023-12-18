@@ -161,7 +161,7 @@ const AddModal = ({
                         name="id_material"
                         label={
                           <span>
-                            Tên nguyên liệu<span className="redColor">(*)</span>
+                            Tên nguyên liệu
                           </span>
                         }
                         rules={[
@@ -185,7 +185,7 @@ const AddModal = ({
                       <Form.Item
                         label={
                           <span>
-                            Số lượng<span className="redColor">(*)</span>
+                            Số lượng
                           </span>
                         }
                         name="amount"

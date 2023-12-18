@@ -41,8 +41,8 @@ const Login = () => {
   return <div className="login">
     {contextHolder}
     <Row>
-      <Col style={{ height: "100vh" }} span={14}>
-        <img src={loginBack} className="login-background" alt="htht" />
+      <Col span={16}>
+        <img src={loginBack} className="login-background" alt="htht" style={{width: '90%'}} />
       </Col>
       <Col style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }} span={8}>
         <img src={Logo} className="logo-login" alt="htht" height={200} />

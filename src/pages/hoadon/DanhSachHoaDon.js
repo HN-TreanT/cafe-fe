@@ -44,10 +44,7 @@ const HoaDon = () => {
   const [idEdit, setIdEdit] = useState();
 
   const [rowsPerPage, setRowsPerpage] = useState(10);
-  const [action, setAction] = useState("Add");
 
-  const [category, setCategory] = useState([]);
-  const [search, setSearch] = useState("");
   const [isAdd, setIsAdd] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   //search
@@ -95,9 +92,6 @@ const HoaDon = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
-  const handleModal = () => {
-    setIsAdd(false);
   };
   const getAllEmployee = () => {
     getEmployee({
@@ -173,43 +167,6 @@ const HoaDon = () => {
     searchStatus,
     searchTable,
   ]);
-
-  const handleEdit = (record) => {
-    setAction("Edit");
-    setIdEdit(record);
-    setIsAdd(true);
-  };
-
-  const handleDelete = (key) => {
-    invoiceServices
-      .deleteById(key)
-      .then((res) => {
-        MySwal.fire({
-          title: "Xóa sản phẩm thành công",
-          icon: "success",
-          customClass: {
-            confirmButton: "btn btn-success",
-          },
-        }).then((result) => {
-          if (currentPage === 1) {
-            getData(1, rowsPerPage);
-          } else {
-            setCurrentPage(1);
-          }
-        });
-      })
-      .catch((error) => {
-        MySwal.fire({
-          title: "Xóa sản phẩm thất bại",
-          icon: "error",
-          customClass: {
-            confirmButton: "btn btn-danger",
-          },
-        });
-        console.log(error);
-      });
-  };
-
   const columns = [
     {
       title: "STT",

@@ -74,10 +74,23 @@ import {
   
     useEffect(() => {
       if(action === 'Edit') {
-       console.log("idedit", idEdit)
-      form.setFieldValue(idEdit)
+       
+      // form.setFieldValue(idEdit)
+      form.setFieldsValue({
+        name : idEdit?.name ?  idEdit?.name : "",
+        id_category : idEdit?.id_category ?  idEdit?.id_category : "",
+        price : idEdit?.price ?  idEdit?.price : "",
+        description : idEdit?.description ?  idEdit?.description : "",
+        unit : idEdit?.unit ?  idEdit?.unit : "",
+        
+      })
+
+      setFileUrl(idEdit?.image)
+
      }
-    }, [idEdit?.id])
+    form.setFieldValue(idEdit)
+  
+    }, [idEdit?.id, action])
     const onFinish = (values) => {
       console.log(values)
       const formData = new FormData();
@@ -203,14 +216,14 @@ import {
                       required: true,
                       message: "Vui lòng nhập giá bán",
                     },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject("Không hợp lệ");
-                        }
-                        return Promise.resolve();
-                      },
-                    },
+                    // {
+                    //   validator: (rule, value) => {
+                    //     if (value && value.trim() === "") {
+                    //       return Promise.reject("Không hợp lệ");
+                    //     }
+                    //     return Promise.resolve();
+                    //   },
+                    // },
                   ]}
                 >
                   <Input placeholder="Nhập giá bán" />
@@ -226,14 +239,14 @@ import {
                       required: true,
                       message: "Vui lòng nhập đơn vị tính",
                     },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject("Không hợp lệ");
-                        }
-                        return Promise.resolve();
-                      },
-                    },
+                    // {
+                    //   validator: (rule, value) => {
+                    //     if (value && value.trim() === "") {
+                    //       return Promise.reject("Không hợp lệ");
+                    //     }
+                    //     return Promise.resolve();
+                    //   },
+                    // },
                   ]}
                 >
                   <Input placeholder="Nhập đơn vị tính" />

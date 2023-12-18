@@ -37,7 +37,7 @@ import { getWorkShift } from "../../utils/services/workShift";
 const Employee = () => {
   // const ability = useContext(AbilityContext)
   const [form] = Form.useForm();
-
+  const [loading, setLoading] = useState(false)
   const selected = useRef();
   const MySwal = withReactContent(Swal);
   const [data, setData] = useState([]);
@@ -71,6 +71,7 @@ const Employee = () => {
     setWorkshiftEm(value)
   };
   const getData = () => {
+    setLoading(true)
     getEmployee({
       page: currentPage,
       size: rowsPerPage,
@@ -85,9 +86,11 @@ const Employee = () => {
         });
         setData(t);
         setCount(res.count);
+        setLoading(false)
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false)
       });
   };
   const getAllPosition = () => {
@@ -257,8 +260,8 @@ const getAllWorkshift = () => {
       title: "Ngày sinh",
       dataIndex: "birthday",
       render: (text, record, index) => {
-        const birthdayDate = moment(record.birthday);
-        return birthdayDate.format("DD/MM/YYYY");
+        const birthdayDate = record.birthday ? moment(record.birthday).format("DD/MM/YYYY") : "";
+        return birthdayDate;
       },
     },
     {
@@ -398,6 +401,7 @@ const getAllWorkshift = () => {
         </Col>
       </Row>
       <Table
+        loading={loading}
         columns={columns}
         dataSource={data}
         bordered

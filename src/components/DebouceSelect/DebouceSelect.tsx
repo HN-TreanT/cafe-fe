@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { debounce } from 'lodash';
 import { Select, Spin } from 'antd';
 import type { SelectProps } from 'antd/es/select';
+import { UserMinus } from 'react-feather';
 
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
@@ -49,6 +50,7 @@ function DebounceSelect<
 
   return (
     <Select
+  
       allowClear
       showSearch
       placeholder={placeholder}

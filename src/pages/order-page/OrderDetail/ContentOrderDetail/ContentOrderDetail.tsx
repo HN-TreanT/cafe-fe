@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Row, Col, Button, Modal, Tooltip, Select, Form, message } from "antd";
+import { Row, Col, Button, Modal, Tooltip, Select, Form, message, Space } from "antd";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,7 +9,8 @@ import {
   faBan,
   faFolderMinus,
   faDownLeftAndUpRightToCenter,
-  faArrowsLeftRightToLine
+  faArrowsLeftRightToLine,
+  faPlusCircle
 
 } from "@fortawesome/free-solid-svg-icons";
 import ItemOrderDetail from "./ItemOrderDetail/ItemOrderDetail";
@@ -21,6 +22,7 @@ import { invoiceServices } from "../../../../utils/services/invoiceService";
 import useAction from "../../../../redux/useActions";
 import DrawerPayment from "./DrawerPayment/DrawerPayment";
 import DebounceSelect from "../../../../components/DebouceSelect/DebouceSelect";
+
 interface UserValue {
   value: any,
   label: any
@@ -52,25 +54,54 @@ interface props {
   invoice_details: any[],
   setInvoiceDetails: any,
   handleSaveOrder: any,
+  setCustomer: any
 }
 
 
 
 const ContentOrderDetail = (props: props) => {
   const [form] = Form.useForm()
-  const {customers, invoice_details, setInvoiceDetails, handleSaveOrder} = props
+  const {customers, invoice_details, setInvoiceDetails, handleSaveOrder, setCustomer} = props
   const [messageApi, contextHolder] = message.useMessage();
 
   const [openModalCombine, setOpenModalCombine] = useState(false)
   const [openModalSplit, setOpenModalSplit] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
+  const [openModalCustomer, setOpenModalAddCustomer] = useState(false)
   const [isOpenModalCancleOrder, setIsOpenCancleOrder] = useState(false);
   const [tables, setTables] = useState([])
   const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
   const userInfo = useSelector((state: any) => state.auth.user_info)
   const dispatch = useDispatch()
   const actions = useAction()
+  const handleCreateCustomer = (id_customer:any) => {
+    console.log(id_customer)
+    getCustomer({
+      page: 1, 
+      size : 100
+    }).then((res: any) => {
+        if(res.status) {
+             if (Array.isArray(res.data.data)) {
+              const temp = res.data.data.map((item: any) => {
+                return {
+                  value: item?.id,
+                  label: `${item?.name} - ${item.phone_number}`,
+                }
+              })
+              setCustomer(temp)
+              form.setFieldValue("id_customer", id_customer)
+             }
+            
+        }
+    } ).catch((err: any) => {
+      console.log(err)
+    })
 
+  }
+
+  const hanldeCustomer = () => {
+      setOpenModalAddCustomer(false)
+  }
   const handleModalSplit = () => {
     setOpenModalSplit(false)
   }
@@ -211,7 +242,7 @@ const ContentOrderDetail = (props: props) => {
      })
      
      const dataSubmit = {
-       id_employee: userInfo?.id_employee ? userInfo?.id_employee : null,
+       id_employee: userInfo?.id ? userInfo?.id : null,
        id_customer: selectedOrder?.id_customer ? selectedOrder?.id_customer : null,
        id_promotion: selectedOrder?.id_promotion ? selectedOrder?.id_promotion : null,
        ...value,
@@ -339,7 +370,7 @@ const ContentOrderDetail = (props: props) => {
       <Form onFinish={onFinish} style={{marginTop:"10px"}} form={form}>
         <div className="top-content-order-detail">
         
-          <Row gutter={[15, 0]}>
+          <Row align={"middle"}  gutter={[15, 0]}>
            
               <Col span={12}>
                 <Form.Item
@@ -358,14 +389,20 @@ const ContentOrderDetail = (props: props) => {
                       value:"khach_vang_lai",
                       label: "Khách vãng lai"
                   }, ...customers]} allowClear showSearch /> */}
-                   <DebounceSelect style={{width:"100%", marginRight:"5px"}} placeholder="Chọn khách hàng" initOption={[{
-                      value:"khach_vang_lai",
-                      label: "Khách vãng lai"
-                  }, ...customers]} fetchOptions={fetchCustomer} />
+                  {/* <Space   > */}
+                    <DebounceSelect style={{width:"210px", marginRight:"5px"}} placeholder="Chọn khách hàng" initOption={[{
+                        value:"khach_vang_lai",
+                        label: "Khách vãng lai"
+                    }, ...customers]} fetchOptions={fetchCustomer} />
+                     <FontAwesomeIcon  onClick={() => setOpenModalAddCustomer(true)} style={{color:"rgba(0, 0, 0, 0.174)", cursor:"pointer", fontSize:"1rem"}} icon={faPlusCircle}/>
+                  {/* </Space> */}
+                 
                 
               </Form.Item>
+              
             
             </Col>
+            
           </Row>
         
         </div>
@@ -459,11 +496,13 @@ const ContentOrderDetail = (props: props) => {
     </div>
     <ModalCombineOrder id_invoice_old={selectedOrder?.id}  open={openModalCombine} handleModal={handleMOdalCombine} curData={invoice_details}/>
     <ModalSplitOrder id_invoice_old={selectedOrder?.id}  open={openModalSplit} handleModal={handleModalSplit} curData={invoice_details}/>
+    <ModalAddCustomer open={openModalCustomer} handleModal={hanldeCustomer} formParent={form} handleCreateCustomer={handleCreateCustomer}/>
 
     </Fragment>
   );
 };
 const ModalCombineOrder = React.lazy(() => import("./ModalCombineOrder/ModalCombineOrder"))
 const ModalSplitOrder = React.lazy(() => import("./ModalSplitOrder"))
+const ModalAddCustomer = React.lazy(() => import("./ModalAddCustomer"))
 // const ModalChangeTable = React.lazy(() => import("./ModalChangeTable/ModalChangeTable"))
 export default ContentOrderDetail;

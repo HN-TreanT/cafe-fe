@@ -11,17 +11,20 @@ import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
 import ListMaterial from './ListMaterial'
 import {getProduct, createProduct, deleteProduct, updateProduct } from "../../../../src/utils/services/productServices "
+
 import { categoryServices } from "../../../../src/utils/services/categoryServices"
 import withReactContent from "sweetalert2-react-content"
 const DanhSachSanPham = () => {
     const [form] = Form.useForm()
 
+    const [loading, setLoading] = useState(false)
     const selected = useRef()
     const MySwal = withReactContent(Swal)
     const [data, setData] = useState([])
     const [count, setCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
+    const [searchCategory, setValueSearchCategory] = useState()
 
     const [rowsPerPage, setRowsPerpage] = useState(10)
     const [action, setAction] = useState('Add')
@@ -31,12 +34,14 @@ const DanhSachSanPham = () => {
     const [isAdd, setIsAdd] = useState(false)
 
     const getData = () => {
+        setLoading(true)
         getProduct({
             params: {
                 page: currentPage,
                 limit: rowsPerPage,
             },
-            name: search
+            name: search,
+            ...(searchCategory && {id_category: searchCategory})
         })
             .then((res) => {
                 const t = res.data.data.map((item) => {
@@ -47,9 +52,11 @@ const DanhSachSanPham = () => {
                 })
                 setData(t)
                 setCount(res.count)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
+                setLoading(false)
             })
     }
     const handleModal = () => {
@@ -78,7 +85,7 @@ const DanhSachSanPham = () => {
     useEffect(() => {
         getData()
         getAllCategory()
-    }, [currentPage, rowsPerPage, search])
+    }, [currentPage, rowsPerPage, search, searchCategory])
 
     const handleEdit = (record) => {
         setAction('Edit')
@@ -137,10 +144,12 @@ const DanhSachSanPham = () => {
         {
             title: "Tên sản phẩm",
             dataIndex: "name",
+            align: "center",
         },
         {
             title: "Loại",
             dataIndex: "id_category",
+            align: "center",
             render: (text, record, index) => {
                 const temp = category.find((item) => item.value === record.id_category)
                  return <span>{`${temp?.label ? temp.label : ""}`}</span>
@@ -149,6 +158,7 @@ const DanhSachSanPham = () => {
         {
             title: "Giá Bán",
             dataIndex: "price",
+            align: "center",
             render: (text, record, index) => {
               const formattedPrice = new Intl.NumberFormat("vi-VN", {
                 style: "currency",
@@ -161,10 +171,12 @@ const DanhSachSanPham = () => {
         {
             title: "Đơn vị tính",
             dataIndex: "unit",
+            align: "center",
         },
         {
             title: "Mô tả",
             dataIndex: "description",
+            align: "center",
         },
         {
             title: "Thao tác",
@@ -223,11 +235,12 @@ const DanhSachSanPham = () => {
 
               <Divider style={{ margin: "10px" }}></Divider>
             <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
-                <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Col sm="8" style={{ display: "flex", justifyContent: "flex-end" }}>
+
                     <Label
                         className=""
                         style={{
-                            width: "100px",
+                            width: "160px",
                             fontSize: "14px",
                             height: "35px",
                             display: "flex",
@@ -239,7 +252,7 @@ const DanhSachSanPham = () => {
                     <Input
                         type="text"
                         placeholder="Tìm kiếm"
-                        style={{ height: "35px" }}
+                       
                         onChange={(e) => {
                             if (e.target.value === "") {
                                 setSearch("")
@@ -252,8 +265,34 @@ const DanhSachSanPham = () => {
                             }
                         }}
                     />
-                </Col>
-                <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
+                       
+                    <Label
+                        className=""
+                        style={{
+                            width: "150px",
+                            marginLeft:"10px",
+                            fontSize: "14px",
+                            height: "35px",
+                            display: "flex",
+                            alignItems: "center",
+                        }}
+                    >
+                        Loại
+                    </Label>
+                    <Select
+                        options={category}
+                        onChange={(value) => setValueSearchCategory(value)}
+                        style={{width:"100%", textAlign:"start"}}
+                        placeholder="Loại"
+                        allowClear
+                        showSearch
+                        filterOption={(input, option) =>
+                            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())}
+                    />
+                
+                  </Col>
+             
+                <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
                          <Button
                             style={{backgroundColor: "#036CBF"}}
@@ -270,6 +309,7 @@ const DanhSachSanPham = () => {
                 </Col>
             </Row>
             <Table
+               loading={loading}
                 columns={columns}
                 dataSource={data}
                 bordered

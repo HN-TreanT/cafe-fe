@@ -344,7 +344,6 @@ const WorkShift = (record) => {
                 >
                   <TimePicker
                     size="large"
-                    defaultValue={moment("00:00:00", "HH:mm:ss")}
                     style={{
                       width: "100%",
                       height: " 34px",
@@ -368,7 +367,6 @@ const WorkShift = (record) => {
                 >
                   <TimePicker
                     size="large"
-                    defaultValue={moment("00:00:00", "HH:mm:ss")}
                     style={{
                       width: "100%",
                       height: " 34px",

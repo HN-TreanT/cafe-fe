@@ -74,6 +74,7 @@ import {
   
     useEffect(() => {
       if(action === 'Edit') {
+
        
       // form.setFieldValue(idEdit)
       form.setFieldsValue({
@@ -88,11 +89,9 @@ import {
       setFileUrl(idEdit?.image)
 
      }
-    form.setFieldValue(idEdit)
   
     }, [idEdit?.id, action])
     const onFinish = (values) => {
-      console.log(values)
       const formData = new FormData();
       formData.append("image", file);
       formData.append("name", values.name);

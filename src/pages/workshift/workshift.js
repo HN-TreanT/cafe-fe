@@ -347,12 +347,11 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
                   >
                     <TimePicker
                       size="large"
-                      defaultValue={moment("00:00:00", "HH:mm:ss")}
                       style={{
                         width: "100%",
                         height: " 34px",
                       }}
-                      placeholder="Thời gian kết thúc"
+                      placeholder="CHọn t hời gian kết thúc"
                       format={"HH:mm:ss"}
                     />
                   </Form.Item>
@@ -371,12 +370,12 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
                   >
                     <TimePicker
                       size="large"
-                      defaultValue={moment("00:00:00", "HH:mm:ss")}
+                      // defaultValue={moment("00:00:00", "HH:mm:ss")}
                       style={{
                         width: "100%",
                         height: " 34px",
                       }}
-                      placeholder="Thời gian kết thúc"
+                      placeholder="Chọn thời gian kết thúc"
                       format={"HH:mm:ss"}
                     />
                   </Form.Item>

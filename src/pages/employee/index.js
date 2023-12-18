@@ -13,7 +13,7 @@ import {
   DatePicker,
   Breadcrumb,
   Divider,
-  TimePicker
+  TimePicker,
 } from "antd";
 import { useState, Fragment, useEffect, useRef } from "react";
 import { Label, ModalHeader, ModalBody } from "reactstrap";
@@ -53,22 +53,22 @@ const Employee = () => {
 
   const [search, setSearch] = useState("");
   const [isAdd, setIsAdd] = useState(false);
-  
+
   const filterOption = (input, option) =>
-  (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
   const gender = [
     {
-        value: 1,
-        label: 'Nữ'
+      value: 1,
+      label: "Nữ",
     },
     {
-        value: 0,
-        label: 'Nam'
-    }
-  ]
+      value: 0,
+      label: "Nam",
+    },
+  ];
   const handleChange = (value) => {
-    console.log("value", value)
-    setWorkshiftEm(value)
+    console.log("value", value);
+    setWorkshiftEm(value);
   };
   const getData = () => {
     getEmployee({
@@ -91,39 +91,39 @@ const Employee = () => {
       });
   };
   const getAllPosition = () => {
-  getPosition()
-    .then((res) => {
-      const t = res.data.map((item) => {
-        return {
-          value: item.id,
-          label: item.name,
-        };
+    getPosition()
+      .then((res) => {
+        const t = res.data.map((item) => {
+          return {
+            value: item.id,
+            label: item.name,
+          };
+        });
+        setPosition(t);
+      })
+      .catch((e) => {
+        console.log(e);
       });
-      setPosition(t);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-};
-const getAllWorkshift = () => {
-  getWorkShift()
-    .then((res) => {
-      const t = res.data.data.map((item) => {
-        return {
-          value: item.id,
-          label: `(${item.arrival_time} -> ${item.end_time})`,
-        };
+  };
+  const getAllWorkshift = () => {
+    getWorkShift()
+      .then((res) => {
+        const t = res.data.data.map((item) => {
+          return {
+            value: item.id,
+            label: `(${item.arrival_time} -> ${item.end_time})`,
+          };
+        });
+        setWorkshift(t);
+      })
+      .catch((e) => {
+        console.log(e);
       });
-      setWorkshift(t);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-};
+  };
   useEffect(() => {
     getData();
     getAllPosition();
-    getAllWorkshift()
+    getAllWorkshift();
   }, [currentPage, rowsPerPage, search]);
 
   const handleModal = () => {
@@ -134,25 +134,25 @@ const getAllWorkshift = () => {
     <X className="cursor-pointer" size={15} onClick={handleModal} />
   );
   const handleEdit = (record) => {
-    console.log(record)
+    console.log(record);
     form.setFieldsValue({
-        ...record,
-        birthday: dayjs(record.birthday),
-    })
+      ...record,
+      birthday: dayjs(record.birthday),
+    });
     setAction("Edit");
     setIsAdd(true);
-    setIdEdit(record.id);
+    setIdEdit(record);
   };
   const onReset = () => {
     form.resetFields();
     handleModal();
   };
   const onFinish = (values) => {
-    console.log("fdsfd",values)
+    console.log("fdsfd", values);
     if (action === "Add") {
       createEmployee({
         ...values,
-        employee_worshift: workshiftEm
+        employee_worshift: workshiftEm,
       })
         .then((res) => {
           MySwal.fire({
@@ -178,7 +178,11 @@ const getAllWorkshift = () => {
           });
         });
     } else {
-      updateEmployee(idEdit, values)
+      updateEmployee(idEdit?.id, {
+        ...values,
+        password: idEdit.password,
+        employee_workshifts: workshiftEm
+      })
         .then((res) => {
           MySwal.fire({
             title: "Chỉnh sửa thành công",
@@ -266,9 +270,9 @@ const getAllWorkshift = () => {
       dataIndex: "gender",
       align: "center",
       render: (text, record, index) => {
-        const temp = gender.find((item) => item.value === record.gender)
+        const temp = gender.find((item) => item.value === record.gender);
 
-        return (`${temp?.label }`)
+        return `${temp?.label}`;
       },
     },
     {
@@ -331,17 +335,19 @@ const getAllWorkshift = () => {
 
   return (
     <Card>
-        <Breadcrumb
-          style={{ margin: "auto", marginLeft: 0 }}
-          items={[
-            {
-              title: (
-                <span style={{ fontWeight: "bold", paddingBottom: '15px' }}>Danh sách nhân viên</span>
-              ),
-            },
-          ]}
-        />
-         <Divider style={{ margin: "10px" }}></Divider>
+      <Breadcrumb
+        style={{ margin: "auto", marginLeft: 0 }}
+        items={[
+          {
+            title: (
+              <span style={{ fontWeight: "bold", paddingBottom: "15px" }}>
+                Danh sách nhân viên
+              </span>
+            ),
+          },
+        ]}
+      />
+      <Divider style={{ margin: "10px" }}></Divider>
       <Row
         style={{
           justifyContent: "space-between",
@@ -389,7 +395,7 @@ const getAllWorkshift = () => {
               type="primary"
               style={{
                 padding: 6,
-                backgroundColor: '#036CBF'
+                backgroundColor: "#036CBF",
               }}
             >
               Thêm mới
@@ -436,286 +442,289 @@ const getAllWorkshift = () => {
         footer={null}
       >
         <Card
-        title={action === "Add" ? "Thêm mới thông tin nhân viên" : "Chỉnh sửa thông tin nhân viên"}
-        style={{ backgroundColor: "white", width: "100%", height: "100%", fontSize: '21px' }}
-      >
+          title={
+            action === "Add"
+              ? "Thêm mới thông tin nhân viên"
+              : "Chỉnh sửa thông tin nhân viên"
+          }
+          style={{
+            backgroundColor: "white",
+            width: "100%",
+            height: "100%",
+            fontSize: "21px",
+          }}
+        >
+          <div className="flex-grow-1">
+            <Form
+              form={form}
+              name="control-hooks"
+              onFinish={onFinish}
+              layout="vertical"
+            >
+              <Row gutter={15}>
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="name"
+                    label="Họ và tên"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập họ và tên",
+                      },
+                      {
+                        validator: (rule, value) => {
+                          if (value && value.trim() === "") {
+                            return Promise.reject("Không hợp lệ");
+                          }
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập họ và tên" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="username"
+                    label="Tên đăng nhập"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập tên đăng nhập",
+                      },
+                      {
+                        validator: (rule, value) => {
+                          if (value && value.trim() === "") {
+                            return Promise.reject("Không hợp lệ");
+                          }
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập tên đăng nhập" />
+                  </Form.Item>
+                </Col>
+                {action === "Add" ? (
+                  <Col span={12}>
+                    <Form.Item
+                      style={{ marginBottom: "4px" }}
+                      name="password"
+                      label="Mật khẩu"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Nhập mật khẩu",
+                        },
+                        {
+                          validator: (rule, value) => {
+                            if (value && value.trim() === "") {
+                              return Promise.reject("Không hợp lệ");
+                            }
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Nhập mật khẩu" />
+                    </Form.Item>
+                  </Col>
+                ) : (
+                  <span></span>
+                )}
 
-        <div className="flex-grow-1">
-          <Form
-            form={form}
-            name="control-hooks"
-            onFinish={onFinish}
-            layout="vertical"
-          >
-             <Row gutter={15}>
-             <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="name"
-                  label="Họ và tên"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập họ và tên",
-                    },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không hợp lệ"
-                          );
-                        }
-                        return Promise.resolve();
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="gender"
+                    label="Giới tính"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập giới tính",
                       },
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập họ và tên" />
-                </Form.Item>
-              </Col>
-             <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="username"
-                  label="Tên đăng nhập"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập tên đăng nhập",
-                    },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không hợp lệ"
-                          );
-                        }
-                        return Promise.resolve();
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      allowClear
+                      filterOption={filterOption}
+                      options={gender}
+                      style={{ width: "100%" }}
+                      placeholder="Chọn giới tính"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="birthday"
+                    label="Ngày sinh"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập ngày sinh",
                       },
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập tên đăng nhập" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="password"
-                  label="Mật khẩu"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập mật khẩu",
-                    },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không hợp lệ"
-                          );
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập mật khẩu" />
-                </Form.Item>
-              </Col>
-             
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="gender"
-                  label="Giới tính"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập giới tính",
-                    },
-                  ]}
-                >
-                   <Select
-                          showSearch
-                          allowClear
-                          filterOption={filterOption}
-                          options={gender}
-                          style={{  width:"100%" }}
-                          placeholder="Chọn giới tính"
-                        />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="birthday"
-                  label="Ngày sinh"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập ngày sinh",
-                    },
-                  ]}
-                >
-                  <DatePicker
-                                size='large'
-                                style={{
-                                    width: "100%",
-                                    height: " 34px"
-                                }}
-                                placeholder="Ngày sinh"
-                                format="DD/MM/YYYY"
-                                />
+                    ]}
+                  >
+                    <DatePicker
+                      size="large"
+                      style={{
+                        width: "100%",
+                        height: " 34px",
+                      }}
+                      placeholder="Ngày sinh"
+                      format="DD/MM/YYYY"
+                    />
+                  </Form.Item>
+                </Col>
 
-                </Form.Item>
-              </Col>
-          
-             <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="address"
-                  label="Địa chỉ"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập địa chỉ",
-                    },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không hợp lệ"
-                          );
-                        }
-                        return Promise.resolve();
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="address"
+                    label="Địa chỉ"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập địa chỉ",
                       },
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập địa chỉ" />
-                </Form.Item>
-              </Col>  
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="phone_number"
-                  label="Số điện thoại"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập số điện thoại",
-                    },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không hợp lệ"
-                          );
-                        }
-                        return Promise.resolve();
+                      {
+                        validator: (rule, value) => {
+                          if (value && value.trim() === "") {
+                            return Promise.reject("Không hợp lệ");
+                          }
+                          return Promise.resolve();
+                        },
                       },
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập số điện thoại" type="number"/>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="email"
-                  label="Email"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập email",
-                    },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không hợp lệ"
-                          );
-                        }
-                        return Promise.resolve();
+                    ]}
+                  >
+                    <Input placeholder="Nhập địa chỉ" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="phone_number"
+                    label="Số điện thoại"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập số điện thoại",
                       },
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập email" type="email"/>
-                </Form.Item>
-              </Col>
-             
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="id_position"
-                  label="Vị trí"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Chọn vị trí",
-                    },
-                  ]}
-                >
-                 
-                   <Select
-                          showSearch
-                          allowClear
-                          filterOption={filterOption}
-                          options={position}
-                          style={{  width:"100%" }}
-                          placeholder="Chọn vị trí"
-                        />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  // name="id_position"
-                  label="Ca làm"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Chọn ca làm",
-                    },
-                  ]}
-                >
-                 
-                   <Select
-                    onChange={handleChange}
-                     mode="multiple"
-                          showSearch
-                          allowClear
-                          filterOption={filterOption}
-                          options={workshift}
-                          style={{  width:"100%" }}
-                          placeholder="Chọn ca làm"
-                        />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Form.Item style={{ display: "flex", justifyContent: "center", paddingTop: '12px' }}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="addBtn"
-                style={{ marginRight: "20px", width: "94px" }}
+                      {
+                        validator: (rule, value) => {
+                          if (value && value.trim() === "") {
+                            return Promise.reject("Không hợp lệ");
+                          }
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập số điện thoại" type="number" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="email"
+                    label="Email"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập email",
+                      },
+                      {
+                        validator: (rule, value) => {
+                          if (value && value.trim() === "") {
+                            return Promise.reject("Không hợp lệ");
+                          }
+                          return Promise.resolve();
+                        },
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Nhập email" type="email" />
+                  </Form.Item>
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="id_position"
+                    label="Vị trí"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Chọn vị trí",
+                      },
+                    ]}
+                  >
+                    <Select
+                      showSearch
+                      allowClear
+                      filterOption={filterOption}
+                      options={position}
+                      style={{ width: "100%" }}
+                      placeholder="Chọn vị trí"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    // name="id_position"
+                    label="Ca làm"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Chọn ca làm",
+                      },
+                    ]}
+                  >
+                    <Select
+                      onChange={handleChange}
+                      mode="multiple"
+                      showSearch
+                      allowClear
+                      filterOption={filterOption}
+                      options={workshift}
+                      style={{ width: "100%" }}
+                      placeholder="Chọn ca làm"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Form.Item
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingTop: "12px",
+                }}
               >
-                Lưu
-              </Button>
-              <Button
-                htmlType="button"
-                className="addBtn"
-                onClick={onReset}
-                style={{ width: "94px" }}
-              >
-                Hủy
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="addBtn"
+                  style={{ marginRight: "20px", width: "94px" }}
+                >
+                  Lưu
+                </Button>
+                <Button
+                  htmlType="button"
+                  className="addBtn"
+                  onClick={onReset}
+                  style={{ width: "94px" }}
+                >
+                  Hủy
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
         </Card>
       </Modal>
     </Card>

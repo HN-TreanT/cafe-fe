@@ -132,25 +132,12 @@ const Material = ({
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
-                // <Space
-                //   key={key}
-                //   style={{
-                //     display: "flex",
-                //     marginBottom: 8,
-                //     width: "100%",
-                //   }}
-                //   align="baseline"
-                // >
                   <Row gutter={15}>
                     <Col span={12}>
                       <Form.Item
                         style={{ marginBottom: "4px" }}
                         name={[name, "id_material"]}
-                        label={
-                          <span>
-                            Tên nguyên liệu<span className="redColor">(*)</span>
-                          </span>
-                        }
+                        label="Tên nguyên liệu"
                         rules={[
                           {
                             required: true,
@@ -172,7 +159,7 @@ const Material = ({
                       <Form.Item
                         label={
                           <span>
-                            Số lượng<span className="redColor">(*)</span>
+                            Số lượng
                           </span>
                         }
                         name={[name, "amount"]}

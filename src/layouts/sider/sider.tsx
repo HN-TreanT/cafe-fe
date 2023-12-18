@@ -9,7 +9,7 @@ import {
   HomeOutlined,
   InboxOutlined,
   UsergroupAddOutlined,
-  ShopOutlined,
+  FieldTimeOutlined,
   CoffeeOutlined,
   MoneyCollectOutlined,
   TableOutlined,
@@ -74,7 +74,7 @@ const menuItems = [
     key: RouterLinks.CA_LAM,
     label: "Quản lý ca làm",
     icon: (
-      <TableOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+      <FieldTimeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
 
   },

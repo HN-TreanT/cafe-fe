@@ -31,6 +31,7 @@ const QuanLyDatBan = () => {
     const [action, setAction] = useState('Add')
 
     const [search, setSearch] = useState("")
+    const [searchStatus, setSearchStatus] = useState("")
     const [isAdd, setIsAdd] = useState(false)
     const filterOption = (input, option) =>
   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
@@ -49,8 +50,9 @@ const QuanLyDatBan = () => {
             params: {
                 page: currentPage,
                 limit: rowsPerPage,
-                ...(search && search !== "" && { search }),
             },
+            search : search,
+            status : searchStatus
         })
             .then((res) => {
                 setData(res.data.data)
@@ -63,7 +65,7 @@ const QuanLyDatBan = () => {
 
     useEffect(() => {
         getData()
-    }, [currentPage, rowsPerPage, search])
+    }, [currentPage, rowsPerPage, search, searchStatus])
 
 
     const handleModal = () => {

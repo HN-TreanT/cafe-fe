@@ -86,9 +86,14 @@ import { createShipment, updateShipment } from "../../../../utils/services/shipm
     useEffect(() => {
       if(action === 'Edit') {
        console.log("idedit", idEdit)
-      form.setFieldValue(idEdit)
+      form.setFieldValue({
+        id_employee: idEdit?.id_employee ? idEdit?.id_employee : "",
+        id_supplier: idEdit?.id_supplier ? idEdit?.id_supplier : "",
+        price: idEdit?.price
+      })
      }
-    }, [idEdit?.id])
+     form.setFieldValue(idEdit)
+    }, [idEdit?.id, action])
     useEffect(() => {
       getAllSuplier()
       getAllEmployee()

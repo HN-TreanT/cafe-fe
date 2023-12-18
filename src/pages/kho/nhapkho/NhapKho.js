@@ -280,10 +280,8 @@ const NhapKho = () => {
               }}
             />
             <Them isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit}/>
-           {/* <AddModal isAdd={isAdd} action={action} getData={getData} category={category} handleModal={handleModal} idEdit={idEdit} /> */}
-                 </Card>
+               </Card>
     )
 }
 const Them = React.lazy(() => import("./step/Them"))
-// const AddModal = React.lazy(() => import("./addModal"))
 export default NhapKho 

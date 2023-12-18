@@ -146,9 +146,6 @@ const NguyenLieu = ({ nl }) => {
             />
 
         </Row>
-        {/* <ModalLSTTB ma_ttb={ttb?.Ma_TTB} tinhtrangTTbs={tinhtragnTTbs} curData={curData} open={openModalAdd} handleModal={hanldeModalAdd} action="Add" getData={getData} />
-    <ModalLSTTB ma_ttb={ttb?.Ma_TTB} tinhtrangTTbs={tinhtragnTTbs} curData={curData} open={openModalEdit} handleModal={handleModalEdit} action="Edit"  getData={getData}/> */}
-    </div>;
+         </div>;
 };
-// const ModalLSTTB = React.lazy(() => import("./ModalLSTT"))
 export default NguyenLieu;

@@ -74,12 +74,10 @@ import {
   
     useEffect(() => {
       if(action === 'Edit') {
-       console.log("idedit", idEdit)
       form.setFieldValue(idEdit)
      }
     }, [idEdit?.id])
     const onFinish = (values) => {
-      console.log(values)
       const formData = new FormData();
       formData.append("image", file);
       formData.append("name", values.name);

@@ -1,9 +1,9 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider, Tooltip } from "antd"
+import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider, Tooltip,  Row,
+    Col, } from "antd"
 import { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
-    Row,
-    Col,
+   
     UncontrolledTooltip,
 } from "reactstrap"
 import { Plus, X } from "react-feather"
@@ -27,6 +27,7 @@ const DanhSachKhachHang = () => {
     const [count, setCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
+    const [loading, setLoading] = useState(false)
 
     const [product, setProduct] = useState([])
 
@@ -42,6 +43,7 @@ const DanhSachKhachHang = () => {
       ]
 
     const getData = () => { 
+        setLoading(true)
         getCustomer({
                 page: currentPage,
                 limit: rowsPerPage,
@@ -50,9 +52,11 @@ const DanhSachKhachHang = () => {
             .then((res) => {
                 setData(res.data.data)
                 setCount(res.count)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
+                setLoading(false)
             })
     }
     useEffect(() => {
@@ -203,12 +207,12 @@ const DanhSachKhachHang = () => {
             width: "20%",
             align: "center",
         },
-        {
-            title: "Điểm",
-            dataIndex: "point",
-            width: "20%",
-            align: "center",
-        },
+        // {
+        //     title: "Điểm",
+        //     dataIndex: "point",
+        //     width: "20%",
+        //     align: "center",
+        // },
         {
             title: "Thao tác",
             width: 100,
@@ -309,6 +313,7 @@ const DanhSachKhachHang = () => {
                 </Col>
             </Row>
             <Table
+               loading={loading}
                 columns={columns}
                 dataSource={data}
                 bordered
@@ -355,8 +360,8 @@ const DanhSachKhachHang = () => {
                         name="control-hooks"
                         onFinish={onFinish}
                         layout="vertical"
-                    ><Row>
-                            <div className=' col col-12'>
+                    ><Row gutter={15}>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
                                     name="name"
                                     label="Tên khách hàng"
@@ -377,8 +382,8 @@ const DanhSachKhachHang = () => {
                                 >
                                     <Input placeholder='Nhập tên khách hàng' />
                                 </Form.Item>
-                            </div>
-                            <div className=' col col-6'>
+                            </Col>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
                                     name="gender"
                                     label="Giới tính"
@@ -396,8 +401,8 @@ const DanhSachKhachHang = () => {
                                         </Select>
                                 </Form.Item>
 
-                            </div>
-                            <div className=' col col-6'>
+                            </Col>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
                                     name="phone_number"
                                     label="Số điện thoại"
@@ -411,8 +416,8 @@ const DanhSachKhachHang = () => {
                                     <Input placeholder='Nhập số điện thoại' />
                                 </Form.Item>
 
-                            </div>
-                            <div className=' col col-12'>
+                            </Col>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
                                     name="email"
                                     label="Email"
@@ -426,8 +431,8 @@ const DanhSachKhachHang = () => {
                                     <Input placeholder='Nhập email' />
                                 </Form.Item>
 
-                            </div>
-                            <div className=' col col-12'>
+                            </Col>
+                            {/* <div className=' col col-12'>
                                 <Form.Item style={{ marginBottom: '4px' }}
                                     name="point"
                                     label="Điểm tích luỹ"
@@ -435,7 +440,7 @@ const DanhSachKhachHang = () => {
                                 >
                                     <Input placeholder='Nhập điểm tích luỹ' type="number"/>
                                 </Form.Item>
-                            </div>
+                            </div> */}
                             
                         </Row>
                         <Form.Item style={{ display: 'flex', justifyContent: 'center', marginTop:'15px'}}>

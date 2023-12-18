@@ -69,7 +69,7 @@ const OrderDetail: React.FC<props> = (props) => {
         onChange={onChange}
         items={[
           { label: `Yêu cầu ${name_order}`, 
-          children: <ContentOrderDetail invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} customers={customer} handleSaveOrder={handleSaveOrder} />,
+          children: <ContentOrderDetail setCustomer={setCustomer} invoice_details={invoice_details} setInvoiceDetails={setInvoiceDetails} customers={customer} handleSaveOrder={handleSaveOrder} />,
          key: "1" },
         ]}
         onEdit={onEdit}

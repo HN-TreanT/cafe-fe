@@ -30,7 +30,7 @@ import {
 import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from "../../utils/services/workShift";
   const WorkShift = () => {
     const [form] = Form.useForm();
-  
+    const [loading, setLoading] = useState(false)
     const selected = useRef();
     const MySwal = withReactContent(Swal);
     const [data, setData] = useState([]);
@@ -46,6 +46,7 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
     const [isAdd, setIsAdd] = useState(false);
    
     const getData = () => {
+      setLoading(true)
         getWorkShift()
         .then((res) => {
             const t = res.data.data.map((item) => {
@@ -56,9 +57,11 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
             });
             setData(t);
             setCount(res.count);
+            setLoading(false)
           })
           .catch((err) => {
             console.log(err);
+            setLoading(false)
           });
       };
     useEffect(() => {
@@ -193,6 +196,7 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
       {
         title: "Thời gian bắt đầu ca làm",
         dataIndex: "condition",
+        align: "center",
         render: (text, record, index) => {
           const t = record.arrival_time;
           return `${t}`;
@@ -202,6 +206,7 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
       {
         title: "Thời gian kết thúc ca làm",
         dataIndex: "condition",
+        align: "center",
         render: (text, record, index) => {
           const t = record.end_time;
           return `${t}`;
@@ -283,6 +288,7 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
           </Col>
         </Row>
         <Table
+          loading={loading}
           columns={columns}
           dataSource={data}
           bordered

@@ -24,6 +24,7 @@ const Promotion = () => {
     const selected = useRef()
     const MySwal = withReactContent(Swal)
     const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
     const [count, setCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
@@ -37,6 +38,7 @@ const Promotion = () => {
     const [isAdd, setIsAdd] = useState(false)
 
     const getData = () => {
+        setLoading(true)
         getPromotion({
             params: {
                 page: currentPage,
@@ -47,9 +49,11 @@ const Promotion = () => {
             .then((res) => {
                 setData(res.data.data)
                 setCount(res.count)
+                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
+                setLoading(false)
             })
     }
 
@@ -328,6 +332,7 @@ const Promotion = () => {
                 </Col>
             </Row>
             <Table
+                loading={loading}
                 columns={columns}
                 dataSource={data}
                 bordered

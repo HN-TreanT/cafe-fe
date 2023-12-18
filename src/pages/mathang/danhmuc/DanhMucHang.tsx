@@ -13,7 +13,7 @@ interface DataType {
     name: string;
 }
 const DanhMucHang = () => {
-    const loading = useSelector((state: any) => state.state.loadingState)
+    const [loading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [rowsPerPage, setRowsPerpage] = useState(9)
     const [search, setSearch] = useState<string>('')
@@ -25,6 +25,7 @@ const DanhMucHang = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
     const getData = () => {
+        setLoading(true)
         categoryServices.get({
             page: currentPage,
             size: rowsPerPage,
@@ -34,8 +35,10 @@ const DanhMucHang = () => {
                 setCount(res.data.TotalPage)
                 setData(res.data.data)
             }
+            setLoading(false)
         }).catch((err: any) => {
             console.log(err)
+            setLoading(false)
         })
     }
 

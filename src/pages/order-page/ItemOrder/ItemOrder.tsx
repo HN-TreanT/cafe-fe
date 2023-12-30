@@ -6,7 +6,7 @@ import { DollarCircleFilled } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../redux/useActions";
 import "./ItemOrder.scss";
-import { Col, Row, Tag, Typography } from "antd";
+import { Checkbox, Col, Row, Tag, Typography } from "antd";
 import { convertPrice } from "../../../utils/helper/convertPrice";
 const ItemOrder: React.FC<any> = ({ style, data }) => {
   const actions = useAction();
@@ -34,7 +34,7 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
   return (
     <div  className={`card-item-order ${style}`}>
       <div className="title-item-order">
-        <div style={{ marginLeft: "15px" }}>
+        <div style={{ marginLeft: "15px", display:"flex", alignItems:'center' }}>
           <FontAwesomeIcon
             style={{
               padding: "5px",
@@ -43,7 +43,12 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
             }}
             icon={faBellConcierge}
           />
-          <span style={{ paddingLeft: "50px", fontWeight: "600" }}>MTA Coffee</span>
+          <span style={{ paddingLeft: "50px", fontWeight: "600" }}>MTA Coffee        
+        {/* {
+          data?.time_pay ? <Tag color="green">Đã thanh toán</Tag> : <Tag color="red">Chưa thanh toán</Tag>
+        } */}
+         </span>
+         <Checkbox  checked={data?.time_pay ? true : false} style={{marginLeft:"auto", marginRight:"5px"}}/>
         </div>
       </div>
       <div className="content-item-order">
@@ -51,7 +56,10 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
                  {
                   Array.isArray(data?.tablefood_invoices) ? data.tablefood_invoices.map((item: any) => item?.id_table).join(",") : ""
                  }
+               
         </div>
+     
+        
         <div className="side-bar-item-order">
           <div className="time-countcustomer">
             <Row gutter={[10, 10]}>
@@ -80,12 +88,18 @@ const ItemOrder: React.FC<any> = ({ style, data }) => {
               </Col>
             </Row>
           </div>
-          <div className="price-item-order">
-              
+          <div className="price-item-order">             
               {
-                data?.status === 1 ? <Tag color="green">Hoàn thành</Tag> : <Tag color="orange">Đang thực hiện</Tag>
+                data?.status === 1 ? <Tag color="green">Hoàn thành</Tag> : data?.status === 2 ? <Tag color="red">Đã hủy</Tag> 
+                : <Tag color="orange">Đang thực hiện</Tag>
               }
           </div>
+          {/* <div className="price-item-order">             
+              {
+                data?.status === 1 ? <Tag color="green">Hoàn thành</Tag> : data?.status === 2 ? <Tag color="red">Đã hủy</Tag> 
+                : <Tag color="orange">Đang thực hiện</Tag>
+              }
+          </div> */}
         </div>
       </div>
     </div>

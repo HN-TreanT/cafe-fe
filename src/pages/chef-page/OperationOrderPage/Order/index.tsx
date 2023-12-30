@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Row, Col, Image, Pagination, Select, Spin } from "antd";
+import { Row, Col, Image, Pagination, Select, Spin, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faFileInvoiceDollar} from "@fortawesome/free-solid-svg-icons"
 import ItemOrder from "../../ItemOrder/ItemOrder";
 import emptyOrder from '../../../../assets/empty-bill.svg'
 import { useDispatch, useSelector } from "react-redux";
 import useAction from "../../../../redux/useActions";
-import { invoiceServices } from "../../../../utils/services/invoiceService";
+import { AppContext } from "../../../../context/appContext";
 import './Order.scss';
 interface props {
     invoice_details: any[],
@@ -15,7 +15,9 @@ interface props {
 
 const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
   const dispatch = useDispatch()
+  const {socket} = useContext(AppContext)
   const actions = useAction()
+  const [messageApi, contextHolder] = message.useMessage();
   const loading = useSelector((state:any) => state.state.loadingState)
   const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
     const {data, TotalPage} = useSelector((state: any) => state.invoice.invoices) 
@@ -24,21 +26,23 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
        dispatch(actions.InvoiceActions.loadData({
         page: currentPage,
         size: 6,  
-        thanh_toan: "chua",
-        status: 0
+        //thanh_toan: "chua",
+        status: [0]
       }))
     }, [actions.InvoiceActions, currentPage, dispatch])
 
-    // const handleSelectedOrder = (id :any) => {
-    //   invoiceServices.getById(id).then((res: any) => {    
-    //     if(res.status) {
-    //       dispatch(actions.OrderActions.selectedOrder(res.data))
-    //     }
-    //   }).catch((err: any) => {
-    //     console.log(err)
-    //   })
-        
-    // }
+      
+    socket.off("change_order_success").on("change_order_success", function (data: any) {
+      if (data?.status) {
+        dispatch(actions.InvoiceActions.loadData({
+          page: currentPage,
+          size: 6,  
+          //thanh_toan: "chua",
+          status: [0]
+        }))
+        message.warning(`Bàn ${data?.table} thay đổi`)
+      }
+    })
 
   
     
@@ -47,6 +51,7 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
         
     }
     return   <div className="order">
+      {contextHolder}
     <Row  gutter={[15, 0]}>
       <Col span={19}>
          

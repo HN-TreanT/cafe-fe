@@ -7,9 +7,16 @@ function* saga_loadData() {
     try {
         let _params: Promise<any> = yield select((state: any) => state.invoice.params)
         let params: any = _params
+        const nowDate = new Date()
+        const yesterdayDate = new Date()
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1)
         yield put(stateActions.action.loadingState(true))
         let _response: Promise<any> = yield invoiceServices.get({
-            ...params
+            ...params,
+             time_start: yesterdayDate,
+            time_end: nowDate,
+           ...(params?.status ? params?.status : { status: [0, 1],}),
+            createdAt: "DESC"
         })
         let response: any = _response
         if (response.status) {

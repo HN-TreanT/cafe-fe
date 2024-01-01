@@ -38,6 +38,10 @@ const HoaDon = () => {
       value: 1,
       label: "Đã hoàn thành",
     },
+    {
+      value: 2,
+      label: "Đơn hủy",
+    },
   ];
 
   const getData = () => {
@@ -212,8 +216,8 @@ const HoaDon = () => {
       align: "center",
       render: (text, record, index) => {
         return (
-          <Tag color={record.status ? "green" : "blue"}>
-            {record.status ? "Đã hoàn thành" : "Đang thực hiện"}
+          <Tag color={record.status === 1 ?  "green"  : record.status === 2 ? "red" :  "blue"}>
+            {record.status === 1 ? "Đã hoàn thành" : record.status === 2 ? "Đã hủy": "Đang thực hiện"}
           </Tag>
         );
       },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Image, Pagination, Select, Spin } from "antd";
+import { Row, Col, Image, Pagination, Select, Spin, Checkbox } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faFileInvoiceDollar} from "@fortawesome/free-solid-svg-icons"
 import ItemOrder from "../../ItemOrder/ItemOrder";
@@ -17,6 +17,7 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
   const dispatch = useDispatch()
   const actions = useAction()
   const loading = useSelector((state:any) => state.state.loadingState)
+  const [timePay, setTimePay] = useState<any>()
   const selectedOrder = useSelector((state:any) => state.order.selectedOrder)
     const {data, TotalPage} = useSelector((state: any) => state.invoice.invoices) 
     const [currentPage, setCurrentPage] = useState(1)
@@ -24,20 +25,10 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
        dispatch(actions.InvoiceActions.loadData({
         page: currentPage,
         size: 6,  
-        thanh_toan: "chua"
+        ...(timePay && {thanh_toan: timePay})
+      
       }))
-    }, [actions.InvoiceActions, currentPage, dispatch])
-
-    // const handleSelectedOrder = (id :any) => {
-    //   invoiceServices.getById(id).then((res: any) => {    
-    //     if(res.status) {
-    //       dispatch(actions.OrderActions.selectedOrder(res.data))
-    //     }
-    //   }).catch((err: any) => {
-    //     console.log(err)
-    //   })
-        
-    // }
+    }, [actions.InvoiceActions, currentPage, dispatch, timePay])
 
       
     const handleSelectedOrder = (data :any) => {
@@ -46,11 +37,44 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
     }
     return   <div className="order">
     <Row  gutter={[15, 0]}>
-      <Col span={19}>
-         
+      <Col span={9} style={{padding:"1.2rem"}}>
+         <Select style={{width:"100%"}} allowClear onChange={(value: any) => setTimePay(value) } options={[
+            {
+              value:"thanhtoan",
+              label:"Đã thanh toán"
+            }, 
+            {
+              value:"chua", 
+              label:"Chưa thanh toán"
+            }, 
+          ]} placeholder="Chọn trạng thái"/>
       </Col>
+      <Col span={5}>
+          
+      </Col>
+      <Col style={{display:"flex", alignItems:"center", justifyContent:"space-around"}} span={10}>
+          <div style={{ color: "#1677ff",}}>Đã thanh toán <Checkbox checked/></div>
+          <div>Chưa thanh toán <Checkbox checked={false}/></div>
+          <div>
+                <FontAwesomeIcon
+                style={{
+                  paddingRight: "10px",
+                  fontSize: "1.1rem",
+                  color: "#1677ff",
+                }}
+                icon={faFileInvoiceDollar}
+              />
+              <span>{`Yêu cầu(${
+              //    orders?.TotalPage ? orders.TotalPage : 0
+              TotalPage
+              })`}</span>
+          </div>
+      </Col>
+      {/* <Col style={{padding:"1.1rem"}} span={4}>Đã thanh toán <Checkbox checked/></Col>
+      <Col style={{padding:"1.1rem"}} span={5}>Chưa thanh toán <Checkbox checked={false}/></Col>
+       
 
-      <Col style={{padding:"1.2rem"}} span={5}>
+      <Col style={{padding:"1.2rem"}} span={4}>
         <FontAwesomeIcon
           style={{
             paddingRight: "10px",
@@ -59,11 +83,11 @@ const Order: React.FC<props> = ({invoice_details, setInvoiceDetails}) => {
           }}
           icon={faFileInvoiceDollar}
         />
-        <span>{`Chờ thanh toán(${
+        <span>{`Yêu cầu(${
         //    orders?.TotalPage ? orders.TotalPage : 0
         TotalPage
         })`}</span>
-      </Col>
+      </Col> */}
       <Col span={24}>
         <div
           style={{

@@ -122,7 +122,7 @@ const ModalSplitOrder = (props: Props) => {
                dispatch(actions.InvoiceActions.loadData({
                 page: 1,
                 size: 6,  
-                thanh_toan: "chua"
+                //thanh_toan: "chua"
                 }))
                dispatch(actions.TableFoodActions.loadData({
                     page: 1,

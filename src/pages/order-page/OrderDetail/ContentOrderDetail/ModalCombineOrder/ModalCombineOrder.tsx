@@ -126,7 +126,7 @@ const ModalCombineOrder = (props: Props) => {
                   dispatch(actions.InvoiceActions.loadData({
                     page: 1,
                     size: 6,  
-                    thanh_toan: "chua"
+                    //thanh_toan: "chua"
                   }))
                   handleModal()
                   form.resetFields()

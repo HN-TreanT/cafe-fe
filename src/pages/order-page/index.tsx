@@ -21,7 +21,7 @@ const OrderPage: React.FC = () => {
     dispatch(actions.InvoiceActions.loadData({
       page: 1,
       size: 6,  
-      thanh_toan: "chua"
+      //thanh_toan: "chua"
     }))
 } 
  })

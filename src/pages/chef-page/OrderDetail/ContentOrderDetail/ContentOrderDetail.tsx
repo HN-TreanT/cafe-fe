@@ -83,8 +83,8 @@ const ContentOrderDetail = (props: props) => {
         dispatch(actions.InvoiceActions.loadData({
           page: 1,
           size: 6,  
-          thanh_toan: "chua",
-          status: 0
+          //thanh_toan: "chua",
+          status: [0]
         }))
         message.success("Thông báo thành công")
     } else {

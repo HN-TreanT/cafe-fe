@@ -98,7 +98,7 @@ const DrawerPayment: React.FC<Props> = ({ visible, setVisible, invoice_tables })
              dispatch(actions.InvoiceActions.loadData({
               page: 1,
               size: 6,  
-              thanh_toan: "chua"
+              //thanh_toan: "chua"
              }))       
              dispatch(actions.OrderActions.selectedOrder(
               {

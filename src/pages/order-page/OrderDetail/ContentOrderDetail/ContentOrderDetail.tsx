@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import { Row, Col, Button, Modal, Tooltip, Select, Form, message, Space } from "antd";
 import "./ContentOrderDetail.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +10,8 @@ import {
   faFolderMinus,
   faDownLeftAndUpRightToCenter,
   faArrowsLeftRightToLine,
-  faPlusCircle
+  faPlusCircle,
+  faPlusMinus
 
 } from "@fortawesome/free-solid-svg-icons";
 import ItemOrderDetail from "./ItemOrderDetail/ItemOrderDetail";
@@ -22,7 +23,7 @@ import { invoiceServices } from "../../../../utils/services/invoiceService";
 import useAction from "../../../../redux/useActions";
 import DrawerPayment from "./DrawerPayment/DrawerPayment";
 import DebounceSelect from "../../../../components/DebouceSelect/DebouceSelect";
-
+import { AppContext } from "../../../../context/appContext";
 interface UserValue {
   value: any,
   label: any
@@ -60,10 +61,11 @@ interface props {
 
 
 const ContentOrderDetail = (props: props) => {
+  const {socket} = useContext(AppContext)
   const [form] = Form.useForm()
   const {customers, invoice_details, setInvoiceDetails, handleSaveOrder, setCustomer} = props
   const [messageApi, contextHolder] = message.useMessage();
-
+  
   const [openModalCombine, setOpenModalCombine] = useState(false)
   const [openModalSplit, setOpenModalSplit] = useState(false)
   const [openDrawer, setOpenDrawer] = useState(false)
@@ -183,7 +185,7 @@ const ContentOrderDetail = (props: props) => {
         const mapIdTables = Array.isArray(selectedOrder?.tablefood_invoices) ? selectedOrder?.tablefood_invoices.map((item: any) => {
           return item?.id_table
           } ) :  []
-         invoiceServices.deleteById(id).then(async (res: any) => {
+         invoiceServices.update(id, {status: 2}).then(async (res: any) => {
             if(res.status) {
                   await Promise.all(mapIdTables.map( async (item: any) => {
                     tableServices.update(item, {status: 0}).then((res: any) => {
@@ -198,7 +200,7 @@ const ContentOrderDetail = (props: props) => {
                    dispatch(actions.InvoiceActions.loadData({
                     page: 1,
                     size: 6,  
-                    thanh_toan: "chua"
+                    //thanh_toan: "chua"
                    }))
                    dispatch(actions.OrderActions.selectedOrder({
                     invoice_details: [
@@ -262,6 +264,12 @@ const ContentOrderDetail = (props: props) => {
          }))
          invoiceServices.update(selectedOrder?.id, dataSubmit).then(async (res: any) => {
             if (res.status) {
+                 socket.emit("change_order", {
+                  status: true,
+                  id_invoice: selectedOrder?.id,
+                  table: dataSubmit?.id_tables ? dataSubmit?.id_tables.join(",") : ""
+                 })
+                 ///
                  message.success("Chỉnh sửa thành công")
                 invoiceServices.getById(res.data.id).then((res: any) => {
                       if(res.status) {
@@ -284,7 +292,7 @@ const ContentOrderDetail = (props: props) => {
                         dispatch(actions.InvoiceActions.loadData({
                           page: 1,
                           size: 6,  
-                          thanh_toan: "chua"
+                          //thanh_toan: "chua"
                         }))
                       }
                 }).catch ((err: any) => {
@@ -305,12 +313,12 @@ const ContentOrderDetail = (props: props) => {
                       dispatch(actions.OrderActions.selectedOrder(res.data))
                       dispatch(actions.TableFoodActions.loadData({
                         page: 1,
-                       size: 12,
+                       size: 18,
                        }))
                        dispatch(actions.InvoiceActions.loadData({
                         page: 1,
                         size: 6,  
-                        thanh_toan: "chua"
+                        //thanh_toan: "chua"
                        }))
                        
                    
@@ -334,6 +342,10 @@ const ContentOrderDetail = (props: props) => {
 
   const handleClickSplit = () => {
     setOpenModalSplit(true)
+  }
+
+  const handleThemMon = () => {
+      
   }
   
   return (
@@ -441,6 +453,12 @@ const ContentOrderDetail = (props: props) => {
                 <FontAwesomeIcon className="icon-control-table" icon={faDownLeftAndUpRightToCenter} />
                 <span  className="title-controle-table">Ghép đơn</span>
               </div>
+              {
+                selectedOrder?.status === 1 ? <div onClick={() => handleThemMon()} className="control-table" style={{marginRight:"10px"}}>
+                <FontAwesomeIcon className="icon-control-table" icon={faPlusCircle} />
+                <span  className="title-controle-table">Thêm món</span>
+              </div> : ""
+              }
               {/* <div onClick={() => handleChangeTable()} className="control-table">
                 <FontAwesomeIcon className="icon-control-table" icon={faRightLeft} />
                 <span  className="title-controle-table">Chuyển bàn</span>
@@ -458,6 +476,7 @@ const ContentOrderDetail = (props: props) => {
               <Row gutter={[20, 10]}>
                 <Col span={8}>
                   <Button
+                    disabled={selectedOrder?.status === 1 ? true : false}
                     onClick={() => setIsOpenCancleOrder(true)}
                     danger
                     className="button-controler-order"
@@ -478,9 +497,11 @@ const ContentOrderDetail = (props: props) => {
                 </Col>
                 <Col span={8}>
                   <Button
-                    style={{ color: "white", backgroundColor: "#28B44F" }}
-                    className="button-controler-order"
+                    //  style={{ color: "white", backgroundColor: "#28B44F" }}
+                    className="button-controler-order class-button-payment"
                     onClick={() => setOpenDrawer(true)}
+                     disabled={selectedOrder?.time_pay ? true : false}
+                                      
                   >
                     <FontAwesomeIcon className="icon-button" icon={faMoneyBill1Wave} />
                     <span className="title-button">Thanh toán</span>

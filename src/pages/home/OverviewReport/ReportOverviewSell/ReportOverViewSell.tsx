@@ -33,7 +33,7 @@ export const ReportOverviewSell: React.FC<any> = ({ data }) => {
             return (
               <React.Fragment key={index}>
                 <Col span={12}>
-                  <div className="title-item">{dt.nameProduct ? dt.nameProduct : dt?.nameCombo ? dt?.nameCombo : ""}</div>
+                  <div className="title-item">{dt.product ? dt?.product.name : dt?.combo.name ? dt?.combo.name : ""}</div>
                 </Col>
                 <Col span={6}>
                   <div className="title-item">{dt?.totalAmout ? dt?.totalAmout : 0}</div>

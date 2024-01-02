@@ -104,18 +104,18 @@ const menuItems = [
 
   },
   {
-    key: "khachhang",
-    label: "Khách hàng",
+    key: RouterLinks.DANH_SACH_KHACH_HANG,
+    label: "Danh sách khách hàng",
     icon: (
       <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
-    children: [
-      {
-        key: RouterLinks.DANH_SACH_KHACH_HANG,
-        label: "Danh sách khách hàng"
-      }
-    ]
-
+  },
+  {
+    key: RouterLinks.DANH_SACH_NHA_CC,
+    label: "Danh sách nhà cung cấp",
+    icon: (
+      <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+    ),
   },
   {
     key: RouterLinks.KHUYEN_MAI,

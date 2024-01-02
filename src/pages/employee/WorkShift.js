@@ -27,7 +27,9 @@ import { getProduct } from "../../utils/services/productServices ";
 import withReactContent from "sweetalert2-react-content";
 import moment from "moment";
 import dayjs from "dayjs";
-const WorkShift = (record) => {
+import { updateEmployee } from "../../utils/services/employee";
+import { updateWorkShift } from "../../utils/services/workShift";
+const WorkShift = ({record, workshift}) => {
   const [form] = Form.useForm();
 
   const selected = useRef();
@@ -37,7 +39,6 @@ const WorkShift = (record) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [idEdit, setIdEdit] = useState();
 
-  const [product, setProduct] = useState([]);
 
   const [rowsPerPage, setRowsPerpage] = useState(10);
   const [action, setAction] = useState("Add");
@@ -46,7 +47,7 @@ const WorkShift = (record) => {
   const [isAdd, setIsAdd] = useState(false);
 
   useEffect(() => {
-    setData(record?.record.employee_workshifts);
+    setData(record?.employee_workshifts);
   }, [currentPage, rowsPerPage, search]);
 
   const handleModal = () => {
@@ -54,10 +55,7 @@ const WorkShift = (record) => {
     // setIsEdit(false)
   };
   const handleEdit = (record) => {
-    form.setFieldsValue({
-      arrival_time: dayjs(`${record.arrival_time}`, "HH:mm:ss"),
-      end_time: dayjs(`${record.end_time}`, "HH:mm:ss"),
-    });
+    form.setFieldsValue(record);
     setAction("Edit");
     setIsAdd(true);
     setIdEdit(record.id);
@@ -68,9 +66,9 @@ const WorkShift = (record) => {
   };
   const onFinish = (values) => {
     if (action === "Add") {
-      createPromotion({
-        name: values.name,
-        id_product: values.id_product,
+      updateEmployee(record.id, {
+        ...record,
+        employee_worshift: values.employee_worshift
       })
         .then((res) => {
           MySwal.fire({
@@ -95,7 +93,7 @@ const WorkShift = (record) => {
           });
         });
     } else {
-      updatePromotion(idEdit, values)
+      updateWorkShift(idEdit, values)
         .then((res) => {
           MySwal.fire({
             title: "Chỉnh sửa thành công",
@@ -279,6 +277,9 @@ const WorkShift = (record) => {
                 setIsAdd(true);
               }}
               type="primary"
+              style={{
+                backgroundColor: "#036CBF",
+              }}
             >
               Thêm mới
             </Button>
@@ -330,52 +331,28 @@ const WorkShift = (record) => {
             layout="vertical"
           >
             <Row>
-            <div className=" col col-12">
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="arrival_time"
-                  label="Thời gian kết thúc"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập thời gian kết thúc",
-                    },
-                  ]}
-                >
-                  <TimePicker
-                    size="large"
-                    style={{
-                      width: "100%",
-                      height: " 34px",
-                    }}
-                    placeholder="Thời gian kết thúc"
-                    format={"HH:mm:ss"}
-                  />
-                </Form.Item>
-              </div>
-              <div className=" col col-12">
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="end_time"
-                  label="Thời gian kết thúc"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập thời gian kết thúc",
-                    },
-                  ]}
-                >
-                  <TimePicker
-                    size="large"
-                    style={{
-                      width: "100%",
-                      height: " 34px",
-                    }}
-                    placeholder="Thời gian kết thúc"
-                    format={"HH:mm:ss"}
-                  />
-                </Form.Item>
-              </div>
+            <Col span={12}>
+                  <Form.Item
+                    style={{ marginBottom: "4px" }}
+                    name="employee_worshift"
+                    label="Ca làm"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Chọn ca làm",
+                      },
+                    ]}
+                  >
+                    <Select
+                      mode="multiple"
+                      showSearch
+                      allowClear
+                      options={workshift}
+                      style={{ width: "100%" }}
+                      placeholder="Chọn ca làm"
+                    />
+                  </Form.Item>
+                </Col>
             </Row>
             <Form.Item style={{ display: "flex", justifyContent: "center", paddingTop: '15px' }}>
               <Button

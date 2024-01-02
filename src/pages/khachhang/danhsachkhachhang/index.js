@@ -27,7 +27,6 @@ const DanhSachKhachHang = () => {
     const [count, setCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [idEdit, setIdEdit] = useState()
-    const [loading, setLoading] = useState(false)
 
     const [product, setProduct] = useState([])
 
@@ -43,7 +42,6 @@ const DanhSachKhachHang = () => {
       ]
 
     const getData = () => { 
-        setLoading(true)
         getCustomer({
                 page: currentPage,
                 limit: rowsPerPage,
@@ -52,11 +50,9 @@ const DanhSachKhachHang = () => {
             .then((res) => {
                 setData(res.data.data)
                 setCount(res.count)
-                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
-                setLoading(false)
             })
     }
     useEffect(() => {
@@ -153,11 +149,7 @@ const DanhSachKhachHang = () => {
                         confirmButton: "btn btn-success",
                     },
                 }).then((result) => {
-                    if (currentPage === 1) {
-                        getData(1, rowsPerPage)
-                    } else {
-                        setCurrentPage(1)
-                    }
+                    getData()
                 })
             })
             .catch((error) => {
@@ -313,7 +305,6 @@ const DanhSachKhachHang = () => {
                 </Col>
             </Row>
             <Table
-               loading={loading}
                 columns={columns}
                 dataSource={data}
                 bordered

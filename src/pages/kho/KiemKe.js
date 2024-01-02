@@ -171,19 +171,11 @@ const KiemKe = () => {
         }
 
     }
-    const callEdit = (data) => {
-        const dataSubmit = {
-            ...selected.current,
-            ...data,
-        }
-    }
-
-   
     const handleDelete = (key) => {
         deleteDeChInventory(key)
             .then((res) => {
                 MySwal.fire({
-                    title: "Xóalịch sử tồn kho thành công",
+                    title: "Xóa lịch sử tồn kho thành công",
                     icon: "success",
                     customClass: {
                         confirmButton: "btn btn-success",
@@ -263,14 +255,11 @@ const KiemKe = () => {
             render: (record) => (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                     {
-                  
                             <EditOutlined
                                 id={`tooltip_edit${record.ID}`}
                                 style={{ color: "#036CBF", cursor: 'pointer' }}
                                 onClick={(e) => handleEdit(record)}
                             />
-                           
-
                     }
                     {
                         <Popconfirm
@@ -347,6 +336,9 @@ const KiemKe = () => {
                             setIsAdd(true)
                         }}
                             type="primary"
+                            style={{
+                                backgroundColor: "#036CBF",
+                              }}
                         >
                             Thêm mới
                         </Button>

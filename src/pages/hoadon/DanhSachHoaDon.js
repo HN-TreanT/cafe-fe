@@ -187,11 +187,6 @@ const HoaDon = () => {
       align: "center",
       render: (value) => convertPrice(value)
     },
-    // {
-    //   title: "Ngày gọi món",
-    //   dataIndex: "createdAt",
-    //   render: (text, record, index) => moment(text).format("DD/MM/YYYY")
-    // },
     {
       title: "Thời gian thanh toán",
       dataIndex: "time_pay",

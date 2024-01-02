@@ -36,6 +36,7 @@ import {
   
     const onReset = () => {
       form.resetFields();
+      setFileUrl("")
       handleModal();
     };
     const [file, setFile] = useState(null);
@@ -74,9 +75,6 @@ import {
   
     useEffect(() => {
       if(action === 'Edit') {
-
-       
-      // form.setFieldValue(idEdit)
       form.setFieldsValue({
         name : idEdit?.name ?  idEdit?.name : "",
         id_category : idEdit?.id_category ?  idEdit?.id_category : "",
@@ -85,11 +83,8 @@ import {
         unit : idEdit?.unit ?  idEdit?.unit : "",
         
       })
-
       setFileUrl(idEdit?.image)
-
      }
-  
     }, [idEdit?.id, action])
     const onFinish = (values) => {
       const formData = new FormData();

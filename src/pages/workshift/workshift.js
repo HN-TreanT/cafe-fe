@@ -351,7 +351,7 @@ import { createWorkShift, deleteWorkShift, getWorkShift, updateWorkShift } from 
                         width: "100%",
                         height: " 34px",
                       }}
-                      placeholder="CHọn t hời gian kết thúc"
+                      placeholder="Chọn thời gian bắt đầu"
                       format={"HH:mm:ss"}
                     />
                   </Form.Item>

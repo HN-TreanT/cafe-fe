@@ -7,6 +7,7 @@ import { ColumnProps } from "antd/es/table";
 import dayjs from "dayjs";
 import { message } from "antd";
 import { comboServices } from "../../../utils/services/comboServices";
+import { Label} from "reactstrap"
 import { getProduct } from "../../../utils/services/productServices ";
 import SanPham from "./SanPham";
 interface DataType {
@@ -162,9 +163,47 @@ const Combo = () => {
           },
         ]}
       />
+    
+      <Divider style={{ margin: "10px" }}></Divider>
+    </Row>
+   <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
+   <Col span={6} style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Label
+                        className=""
+                        style={{
+                            width: "100px",
+                            fontSize: "14px",
+                            height: "35px",
+                            display: "flex",
+                            alignItems: "center",
+                        }}
+                    >
+                        Tìm kiếm
+                    </Label>
+                    <Input
+                        type="text"
+                        placeholder="Tìm kiếm"
+                        style={{ height: "35px" }}
+                        onChange={(e) => {
+                            if (e.target.value === "") {
+                                setSearch("")
+                            }
+                        }}
+                        onKeyPress={(e: any) => {
+                          if (e.key === "Enter") {
+                            setSearch(e.target?.value)
+                            setCurrentPage(1)
+                          }
+                        }}
+                    />
+                </Col>
+      <Col span={6} style={{display: "flex", justifyContent: "flex-end"}}>
       <Button
         type="primary"
-        style={{ marginLeft: "auto", width: 100 }}
+        style={{
+          padding: 6,
+          backgroundColor: '#036CBF'
+      }}
         className="blue-button"
         onClick={() => {
           setOpenModalAdd(true)
@@ -173,29 +212,6 @@ const Combo = () => {
       >
         Thêm mới
       </Button>
-      <Divider style={{ margin: "10px" }}></Divider>
-    </Row>
-    <Row>
-      <Col span={6}>
-        <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "flex-start" }}>
-          <label style={{ marginBottom: "4px" }}>Tìm kiếm</label>
-          <Input
-            type="text"
-            placeholder="Tìm kiếm"
-            style={{ height: "34px" }}
-            onChange={(e) => {
-              if (e.target.value === "") {
-                setSearch('')
-              }
-            }}
-            onKeyPress={(e: any) => {
-              if (e.key === "Enter") {
-                setSearch(e.target?.value)
-                setCurrentPage(1)
-              }
-            }}
-          />
-        </div>
       </Col>
       <Divider style={{ margin: "10px" }}></Divider>
     </Row>

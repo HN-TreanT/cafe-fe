@@ -24,6 +24,7 @@ export const RouterLinks = {
   THANH_TOAN_HOA_DON: "/hoadon/thanhtoanhoadon",
   KHUYEN_MAI: "/qlkhuyenmai/khuyenmai",
   DANH_SACH_KHACH_HANG: "/khachhang/danhsachkhachhang",
+  DANH_SACH_NHA_CC: "/khachhang/danhsachnhacc",
   ORDER_PAGE: "/order-page",
   CHEF_PAGE:"/chef-page",
 };

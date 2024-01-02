@@ -105,7 +105,7 @@ const menuItems = [
   },
   {
     key: "khachhang",
-    label: "Khách hàng",
+    label: "Quản lý người",
     icon: (
       <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
@@ -113,6 +113,10 @@ const menuItems = [
       {
         key: RouterLinks.DANH_SACH_KHACH_HANG,
         label: "Danh sách khách hàng"
+      },
+      {
+        key: RouterLinks.DANH_SACH_NHA_CC,
+        label: "Danh sách nhà cung cấp"
       }
     ]
 

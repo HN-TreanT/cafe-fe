@@ -15,6 +15,7 @@ import DanhMucHang from './pages/mathang/danhmuc/DanhMucHang';
 import DanhSachSanPham from './pages/mathang/DanhSachSanPham/DanhSachSanPham';
 import KhuyenMai from './pages/khuyenmai/KhuyenMai';
 import DanhSachKhachHang from './pages/khachhang/danhsachkhachhang';
+import DanhSachNhaCC from './pages/khachhang/danhsachnhacc';
 import TonKho from './pages/kho/TonKho';
 import NhapKho from './pages/kho/nhapkho/NhapKho';
 import KiemKe from './pages/kho/KiemKe';
@@ -53,6 +54,7 @@ function App() {
                     <Route path={RouterLinks.NHAP_KHO} element={<Suspense fallback={null}><NhapKho /></Suspense>} />
                     <Route path={RouterLinks.HOA_DON} element={<Suspense fallback={null}><HoaDon /></Suspense>} />
                     <Route path={RouterLinks.DANH_SACH_KHACH_HANG} element={<Suspense fallback={null}><DanhSachKhachHang /></Suspense>} />
+                    <Route path={RouterLinks.DANH_SACH_NHA_CC} element={<Suspense fallback={null}><DanhSachNhaCC/></Suspense>} />
                     <Route path={RouterLinks.THANH_TOAN_HOA_DON} element={<Suspense fallback={null}><ThanhToanHoaDon /></Suspense>} />
                  
                     <Route path={RouterLinks.BAO_CAO_NHAN_VIEN} element={<Suspense fallback={null}><Employee /></Suspense>} />

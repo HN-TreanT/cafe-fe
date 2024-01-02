@@ -67,7 +67,6 @@ const Employee = () => {
     },
   ];
   const handleChange = (value) => {
-    console.log("value", value);
     setWorkshiftEm(value);
   };
   const getData = () => {
@@ -151,7 +150,6 @@ const Employee = () => {
     handleModal();
   };
   const onFinish = (values) => {
-    console.log("fdsfd", values);
     if (action === "Add") {
       createEmployee({
         ...values,
@@ -210,12 +208,6 @@ const Employee = () => {
           });
         });
     }
-  };
-  const callEdit = (data) => {
-    const dataSubmit = {
-      ...selected.current,
-      ...data,
-    };
   };
 
   const handleDelete = (key) => {
@@ -413,7 +405,7 @@ const Employee = () => {
         bordered
         expandable={{
           expandedRowRender: (record) => {
-            return <WorkShift type="Add" record={record} />;
+            return <WorkShift type="Add" record={record} workshift={workshift}/>;
           },
           rowExpandable: (record) => record.name !== "Not Expandable",
         }}

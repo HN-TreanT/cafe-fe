@@ -1,20 +1,23 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, DatePicker, Divider } from "antd"
+import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider, Tooltip,  Row,
+    Col, } from "antd"
 import { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
-    Row,
-    Col,
+   
     UncontrolledTooltip,
 } from "reactstrap"
-import moment from 'moment'
+import { Plus, X } from "react-feather"
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons"
 import Swal from "sweetalert2"
-import { getMaterial, createMaterial, deleteMaterial, updateMaterial } from "../../utils/services/material"
-import { toDateString } from "../../utils/dateString"
+import {supplierServices} from "../../../utils/services/supplier"
 import withReactContent from "sweetalert2-react-content"
-import dayjs from 'dayjs'
+import { react } from "@babel/types"
 
-const TonKho = () => {
+// import { AbilityContext } from '@src/utility/context/Can'
+
+
+
+const DanhSachNhaCC = () => {
     // const ability = useContext(AbilityContext)
     const [form] = Form.useForm()
 
@@ -33,13 +36,16 @@ const TonKho = () => {
     const [search, setSearch] = useState("")
     const [isAdd, setIsAdd] = useState(false)
 
-    const getData = () => {
-        getMaterial({
-            // params: {
-            page: currentPage,
-            limit: rowsPerPage,
-            ...(search && search !== "" && { search }),
-            //  },
+    const gender = [
+        { value: 1, label: 'Nữ' },
+        { value: 0, label: 'Nam' }
+      ]
+
+    const getData = () => { 
+        supplierServices.get({
+                page: currentPage,
+                limit: rowsPerPage,
+                ...(search && search !== "" && { search }),
         })
             .then((res) => {
                 setData(res.data.data)
@@ -49,8 +55,6 @@ const TonKho = () => {
                 console.log(err)
             })
     }
-
-
     useEffect(() => {
         getData()
     }, [currentPage, rowsPerPage, search])
@@ -58,16 +62,10 @@ const TonKho = () => {
 
     const handleModal = () => {
         setIsAdd(false)
+        // setIsEdit(false)
     }
     const handleEdit = (record) => {
-        form.setFieldsValue({
-            id: record.id,
-            name: record.name,
-            amount: record.amount,
-            unit: record.unit,
-            description: record.description,
-            expriation_date: record.expriation_date ? dayjs(record.expriation_date) : null,
-        })
+        form.setFieldsValue(record)
         setAction('Edit')
         setIsAdd(true)
         setIdEdit(record.id)
@@ -78,7 +76,10 @@ const TonKho = () => {
     }
     const onFinish = (values) => {
         if (action === 'Add') {
-            createMaterial(values)
+            supplierServices.create({
+                name: values.name,
+                id_product: values.id_product
+            })
                 .then((res) => {
                     MySwal.fire({
                         title: "Thêm mới thành công",
@@ -103,7 +104,7 @@ const TonKho = () => {
                     })
                 })
         } else {
-            updateMaterial(idEdit, values)
+            supplierServices.update(idEdit, values)
                 .then((res) => {
                     MySwal.fire({
                         title: "Chỉnh sửa thành công",
@@ -131,25 +132,21 @@ const TonKho = () => {
 
     }
     const handleDelete = (key) => {
-        deleteMaterial(key)
+        supplierServices.deleteById(key)
             .then((res) => {
                 MySwal.fire({
-                    title: "Xóa lượng nguyên liệu  thành công",
+                    title: "Xóa khách hàng thành công",
                     icon: "success",
                     customClass: {
                         confirmButton: "btn btn-success",
                     },
                 }).then((result) => {
-                    if (currentPage === 1) {
-                        getData(1, rowsPerPage)
-                    } else {
-                        setCurrentPage(1)
-                    }
+                    getData()
                 })
             })
             .catch((error) => {
                 MySwal.fire({
-                    title: "Xóa lượng nguyên liệu  thất bại",
+                    title: "Xóa khách hàng thất bại",
                     icon: "error",
                     customClass: {
                         confirmButton: "btn btn-danger",
@@ -169,36 +166,37 @@ const TonKho = () => {
             ),
         },
         {
-            title: "Tên nguyên liệu ",
+            title: "Tên khách hàng",
             dataIndex: "name",
         },
         {
-            title: "Số lượng",
-            dataIndex: "amount"
+            title: "SĐT",
+            dataIndex: "phone_number",
         },
         {
-            title: "Đơn vị tính",
-            dataIndex: "unit",
+            title: "Giới tính",
+            dataIndex: "gender",
+            width: "20%",
+            align: "center",
+            render: (text, record, index) => {
+                    const gender1 = gender.find(item => item.value === record.gender)
+                    return (
+                        <span>{`${gender1?.label ? gender1.label : ""}`}</span>
+                    )
+                }
+        },
+        {
+            title: "Email",
+            dataIndex: "email",
             width: "20%",
             align: "center",
         },
-        {
-            title: "Ngày hết hạn",
-            dataIndex: "expriation_date",
-            align: "center",
-            render: (text, record, index) => {
-                console.log("ex", record.expriation_date)
-                const formattedDate = moment(record.expriation_date).format("DD-MM-YYYY");
-                return (
-                    <span>{formattedDate}</span>
-                )
-            }
-        },
-        {
-            title: "Mô tả",
-            dataIndex: "description",
-            align: "center",
-        },
+        // {
+        //     title: "Điểm",
+        //     dataIndex: "point",
+        //     width: "20%",
+        //     align: "center",
+        // },
         {
             title: "Thao tác",
             width: 100,
@@ -206,50 +204,53 @@ const TonKho = () => {
             render: (record) => (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                     {
-                            <EditOutlined
-                                id={`tooltip_edit${record.ID}`}
-                                style={{ color: "#036CBF", cursor: 'pointer' }}
-                                onClick={(e) => handleEdit(record)}
-                            />
-                        
-                    }
-                    {
-                        <Popconfirm
-                            title="Bạn chắc chắn xóa?"
-                            onConfirm={() => handleDelete(record.id)}
-                            cancelText="Hủy"
-                            okText="Đồng ý"
-                        >
-                            <DeleteOutlined style={{ color: "red", cursor: 'pointer' }} id={`tooltip_delete${record.ID}`} />
-                         
-                        </Popconfirm>
-
-                    }
-
+            <>
+              <Tooltip destroyTooltipOnHide placement="top" title="Chỉnh sửa">
+                <EditOutlined
+                  style={{ color: "#036CBF", marginRight: "10px" }}
+                  onClick={() => handleEdit(record)}
+                />
+              </Tooltip>
+            </>
+          }
+          {
+            <Popconfirm
+              title="Bạn chắc chắn xóa?"
+              onConfirm={() => handleDelete(record.id)}
+              cancelText="Hủy"
+              okText="Đồng ý"
+            >
+              <Tooltip destroyTooltipOnHide placement="top" title="Xoá">
+                <DeleteOutlined
+                  style={{
+                    color: "red",
+                    cursor: "pointer",
+                    marginRight: "10px",
+                  }}
+                />
+              </Tooltip>
+            </Popconfirm>
+          }
                 </div>
             ),
         },
     ]
     return (
         <Card
-
+           
         >
-            <Breadcrumb
-                style={{ margin: "auto", marginBottom: "14px", marginLeft: 0 }}
+          <Breadcrumb
+                style={{ margin: "auto",marginBottom:"14px", marginLeft: 0 }}
                 items={[
                     {
-                        title: "Quản lý kho hàng",
-                    },
-                    {
                         title: (
-                            <span style={{ fontWeight: "bold" }}>Danh sách các nguyên liệu còn trong kho </span>
+                            <span style={{ fontWeight: "bold" }}>Danh sách khách hàng</span>
                         ),
-
                     },
                 ]}
             />
-            <Divider style={{ margin: "10px" }}></Divider>
-            <Row style={{ justifyContent: "space-between", display: "flex", marginBottom: '10px' }}>
+              <Divider style={{ margin: "10px" }}></Divider>
+            <Row style={{ justifyContent: "space-between", display: "flex", marginBottom:'10px' }}>
                 <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
                     <Label
                         className=""
@@ -265,7 +266,7 @@ const TonKho = () => {
                     </Label>
                     <Input
                         type="text"
-                        placeholder="Tên nguyên liệu"
+                        placeholder="Tìm kiếm"
                         style={{ height: "35px" }}
                         onChange={(e) => {
                             if (e.target.value === "") {
@@ -282,15 +283,12 @@ const TonKho = () => {
                 </Col>
                 <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
-                        <Button
+                         <Button
                             onClick={(e) => {
-                                setAction('Add')
-                                setIsAdd(true)
-                            }}
+                            setAction('Add')
+                            setIsAdd(true)
+                        }}
                             type="primary"
-                            style={{
-                                backgroundColor: "#036CBF",
-                              }}
                         >
                             Thêm mới
                         </Button>
@@ -303,22 +301,22 @@ const TonKho = () => {
                 dataSource={data}
                 bordered
                 pagination={{
-                    current: currentPage,
-                    pageSize: rowsPerPage,
-                    defaultPageSize: rowsPerPage,
-                    showSizeChanger: true,
-                    pageSizeOptions: ["10", "20", "30", '100'],
-                    total: count,
-                    locale: { items_per_page: "/ trang" },
-                    showTotal: (total, range) => <span>Tổng số: {total}</span>,
-                    onShowSizeChange: (current, pageSize) => {
-                        setCurrentPage(current)
-                        setRowsPerpage(pageSize)
-                    },
-                    onChange: (pageNumber) => {
-                        setCurrentPage(pageNumber)
-                    }
-                }}
+                  current: currentPage,
+                  pageSize: rowsPerPage,
+                  defaultPageSize: rowsPerPage,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["10", "20", "30", '100'],
+                  total: count,
+                  locale: { items_per_page: "/ trang" },
+                  showTotal: (total, range) => <span>Tổng số: {total}</span>,
+                  onShowSizeChange: (current, pageSize) => {
+                      setCurrentPage(current)
+                      setRowsPerpage(pageSize)
+                  },
+                  onChange: (pageNumber) => {
+                      setCurrentPage(pageNumber)
+                  }
+              }}
             />
             <Modal
                 open={isAdd}
@@ -328,117 +326,107 @@ const TonKho = () => {
                 autoFocus={false}
                 className="modal-md"
                 footer={[]}
-            >
+                    >
                 <div
                     className=""
                     toggle={handleModal}
                     tag="div"
                 >
-                    <h2 className="modal-title">{
-                        action === 'Add' ? "Thêm mới nguyên liệu " : "Chỉnh sửa nguyên liệu "
+                     <h2 className="modal-title">{
+                        action === 'Add' ? "Thêm mới khách hàng" : "Chỉnh sửa khách hàng"
                     } </h2>
                 </div>
-
+                
                 <div className="flex-grow-1">
                     <Form
                         form={form}
                         name="control-hooks"
                         onFinish={onFinish}
                         layout="vertical"
-                    ><Row>
-
-                            <div className=' col col-12'>
+                    ><Row gutter={15}>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
                                     name="name"
-                                    label="Tên nguyên liệu "
+                                    label="Tên khách hàng"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Nhập tên nguyên liệu '
+                                            message: 'Nhập tên khách hàng'
                                         },
                                         {
                                             validator: (rule, value) => {
                                                 if (value && value.trim() === '') {
-                                                    return Promise.reject('Không hợp lệ')
+                                                    return Promise.reject('Không được nhập toàn dấu cách')
                                                 }
                                                 return Promise.resolve()
                                             },
                                         },
                                     ]}
                                 >
-                                    <Input placeholder='Nhập tên nguyên liệu ' />
+                                    <Input placeholder='Nhập tên khách hàng' />
                                 </Form.Item>
-                            </div>
-                            <div className=' col col-12'>
+                            </Col>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
-                                    name="amount"
-                                    label="Số lượng"
+                                    name="gender"
+                                    label="Giới tính"
                                     rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng nhập số lượng'
-                                        },
-                                    ]}
+                                      {
+                                          required: true,
+                                          message: 'Vui lòng chọn giới tính'
+                                      },
+                                  ]}
                                 >
-                                    <Input placeholder='Nhập số lượng ' />
+                                    <Select
+                                        allowClear
+                                        options={gender} style={{width:"100%"}} placeholder="Chọn giới tính" >
+
+                                        </Select>
                                 </Form.Item>
 
-                            </div>
-                            <div className=' col col-12'>
+                            </Col>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
-                                    name="unit"
-                                    label="Đơn vị tính"
+                                    name="phone_number"
+                                    label="Số điện thoại"
                                     rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng nhập đơn vị tính'
-                                        },
-                                    ]}
+                                      {
+                                          required: true,
+                                          message: 'Số điện thoại'
+                                      },
+                                  ]}
                                 >
-                                    <Input placeholder='Nhập đơn vị tính' />
+                                    <Input placeholder='Nhập số điện thoại' />
                                 </Form.Item>
-                            </div>
-                            <div className=' col col-12'>
+
+                            </Col>
+                            <Col span={12}>
                                 <Form.Item style={{ marginBottom: '4px' }}
-                                    name="expriation_date"
-                                    label="Ngày hết hạn"
+                                    name="email"
+                                    label="Email"
                                     rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng chọn ngày hết hạn'
-                                        },
-                                    ]}
+                                      {
+                                          required: true,
+                                          message: 'Vui lòng nhập email'
+                                      },
+                                  ]}
                                 >
-                                    <DatePicker
-                                        size='large'
-                                        style={{
-                                            width: "100%",
-                                            height: " 34px"
-                                        }}
-                                        placeholder="Ngày hết hạn"
-                                    />
+                                    <Input placeholder='Nhập email' />
                                 </Form.Item>
-                            </div>
-                            <div className=' col col-12'>
+
+                            </Col>
+                            {/* <div className=' col col-12'>
                                 <Form.Item style={{ marginBottom: '4px' }}
-                                    name="description"
-                                    label="Mô tả"
-                                    rules={[
-                                        {
-                                            validator: (rule, value) => {
-                                                if (value && value.trim() === '') {
-                                                    return Promise.reject('Không hợp lệ')
-                                                }
-                                                return Promise.resolve()
-                                            },
-                                        },
-                                    ]}
+                                    name="point"
+                                    label="Điểm tích luỹ"
+                                   
                                 >
-                                    <Input.TextArea placeholder='Nhập mô tả' />
+                                    <Input placeholder='Nhập điểm tích luỹ' type="number"/>
                                 </Form.Item>
-                            </div>
+                            </div> */}
+                            
                         </Row>
-                        <Form.Item style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Form.Item style={{ display: 'flex', justifyContent: 'center', marginTop:'15px'}}>
                             <Button type="primary" htmlType="submit"
                                 className="addBtn" style={{ marginRight: '20px', width: '94px' }}>
                                 Lưu
@@ -451,7 +439,7 @@ const TonKho = () => {
                     </Form>
                 </div>
             </Modal>
-        </Card>
+                 </Card>
     )
 }
-export default TonKho 
+export default DanhSachNhaCC 

@@ -1,4 +1,4 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider,Tooltip } from "antd"
+import { Table, Input, Card, Modal, Button, Popconfirm, Breadcrumb, Form, Select, Divider,Tooltip, Upload } from "antd"
 import React, { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
@@ -13,7 +13,8 @@ import {getProduct, createProduct, deleteProduct, updateProduct } from "../../..
 import { categoryServices } from "../../../../src/utils/services/categoryServices"
 import withReactContent from "sweetalert2-react-content"
 import { ShipmentServices } from "../../../utils/services/shipmentDetail"
-import { deleteShipment, getShipment } from "../../../utils/services/shipment"
+import { deleteShipment, getShipment, uploadExcelShipment } from "../../../utils/services/shipment"
+import {UploadOutlined} from "@ant-design/icons"
 import ListMaterial from "./ListMaterial"
 const NhapKho = () => {
     const [form] = Form.useForm()
@@ -187,6 +188,32 @@ const NhapKho = () => {
             ),
         },
     ]
+
+    const props = {
+        // action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
+        // listType: 'picture',
+        beforeUpload(file) {
+            console.log(file)
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+             const formData = new FormData()
+             formData.set("file", file)
+
+             uploadExcelShipment(formData).then((res) => {
+                  if(res.status) {
+                      getData()
+                  }
+             }).catch((err) => {
+                   console.log(err)
+             })
+             
+          
+            };
+          });
+        },
+      };
     return (
         <Card>
         <Breadcrumb
@@ -238,7 +265,7 @@ const NhapKho = () => {
                 <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {
                          <Button
-                            style={{backgroundColor: "#036CBF"}}
+                            style={{backgroundColor: "#036CBF", marginRight:"5px"}}
                             onClick={(e) => {
                             setAction('Add')
                             setIsAdd(true)
@@ -247,6 +274,18 @@ const NhapKho = () => {
                         >
                             Thêm mới
                         </Button>
+
+                        
+                    }
+
+                    {
+
+                        <Upload
+                        {...props}
+                        >
+                        <Button style={{backgroundColor:"#24A019", color:"white"}} icon={<UploadOutlined />}>Nhập excel</Button>
+                        </Upload>
+                                            
                     }
 
                 </Col>

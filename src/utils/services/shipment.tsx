@@ -31,9 +31,19 @@ const createShipment = (data: any) => {
       data,
     });
   };
+
+
+  const uploadExcelShipment = (data: any) => {
+    return api.makeAuthRequest({
+      url: `/api/v1/shipment/upload-excel`,
+      method: "POST",
+      data,
+    })
+  }
   
 
 export { getShipment };
 export { createShipment };
 export { deleteShipment };
 export { updateShipment };
+export {uploadExcelShipment}

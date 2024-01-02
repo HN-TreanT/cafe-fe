@@ -32,6 +32,7 @@ import {OverVReportItem, OverviewReportBill, OverviewReportOther, ReportOverview
 
 import { convertPrice } from "../../utils/helper/convertPrice";
 import { invoiceServices } from "../../utils/services/invoiceService";
+import { serverConfig } from "../../const/serverConfig";
 const reports = [
     {
       value: "today",
@@ -202,8 +203,9 @@ const OverViewPage = () => {
   }, [time]) 
  
     return <div id="overview_page">
-        <Card>
-            <Breadcrumb
+   <Card>
+      <div style={{display:"flex",flexDirection:"row", justifyContent:"center"}}>
+           <Breadcrumb
             style={{ margin: "auto", marginLeft: 0 }}
             items={[
                 {
@@ -213,8 +215,20 @@ const OverViewPage = () => {
                 },
             ]}
             />
-            <Divider style={{ margin: "10px" }}></Divider>
-            
+
+            <div>
+                 <a href={`${serverConfig.server}/api/v1/invoice/file/report`} download>
+                    <Button style={{marginRight:"7px"}} type="primary">Xuất báo cáo</Button>
+                 </a>
+                 <a href={`${serverConfig.server}/api/v1/invoice/file/bieudo`} download>
+                 <Button type="primary">Biểu đồ tổng quan</Button>
+                 </a>
+                
+
+            </div>
+          
+      </div>
+      <Divider style={{ margin: "10px" }}></Divider>
       <div className="list_select_report distance ">
         <Space wrap>
           <Select

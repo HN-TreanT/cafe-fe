@@ -170,20 +170,14 @@ const DanhSachNhaCC = () => {
             dataIndex: "name",
         },
         {
-            title: "SĐT",
-            dataIndex: "phone_number",
-        },
-        {
-            title: "Giới tính",
-            dataIndex: "gender",
+            title: "Địa chỉ",
+            dataIndex: "address",
             width: "20%",
             align: "center",
-            render: (text, record, index) => {
-                    const gender1 = gender.find(item => item.value === record.gender)
-                    return (
-                        <span>{`${gender1?.label ? gender1.label : ""}`}</span>
-                    )
-                }
+        },
+        {
+            title: "SĐT",
+            dataIndex: "phone_number",
         },
         {
             title: "Email",

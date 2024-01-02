@@ -64,7 +64,6 @@ const Promotion = () => {
         <X className="cursor-pointer" size={15} onClick={handleModal} />
     )
     const handleEdit = (record) => {
-        console.log("edit", record)
         form.setFieldsValue({
             name: record.name,
             id: record.id,
@@ -82,7 +81,6 @@ const Promotion = () => {
         handleModal()
     }
     const onFinish = (values) => {
-        console.log("values", values)
         if (action === 'Add') {
             createPromotion(values)
                 .then((res) => {
@@ -295,6 +293,7 @@ const Promotion = () => {
                             type="primary"
                             style={{
                                 padding: 6,
+                                backgroundColor: '#036CBF'
                             }}
                         >
                             Thêm mới

@@ -1,4 +1,4 @@
-import { Table, Input, Card, Modal, Button, Popconfirm, Tooltip, Breadcrumb, Form, Select, Divider } from "antd"
+import { Table, Input, Card, Modal, Button, Popconfirm, Tooltip, Breadcrumb, Form, Select, Divider, Tag } from "antd"
 import { useState, Fragment, useEffect, useRef } from "react"
 import {
     Label,
@@ -53,7 +53,7 @@ const QuanLyDatBan = () => {
                 limit: rowsPerPage,
             },
             search : search,
-            status : searchStatus
+            // status : searchStatus
         })
             .then((res) => {
                 setData(res.data.data)
@@ -189,7 +189,7 @@ const QuanLyDatBan = () => {
             dataIndex: "status",
             align: "center",
             render: (text, record, index) => (
-                <span>{(record.status ? "Đang sử dụng" : "Còn trống")}</span>
+                <span>{(record.status ? <Tag color="orange">Đang sử dụng</Tag> : <Tag color="green">Còn trống</Tag>)}</span>
             )
         },
         {

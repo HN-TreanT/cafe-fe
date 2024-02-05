@@ -285,7 +285,7 @@ const Employee = () => {
       dataIndex: "id_position",
       align: "center",
       render: (text, record, index) => {
-        return record?.position?.name;
+        return record?.id_position === "A" ? "Chủ cửa hàng" : record?.id_position === "U" ? "Bán hàng" : "Pha chế";
       },
     },
     {

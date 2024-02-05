@@ -310,6 +310,11 @@ const ContentOrderDetail = (props: props) => {
           message.success("Thêm mới thành công")
               invoiceServices.getById(res.data.id).then((res: any) => {
                     if(res.status) {
+                      socket.emit("change_order", {
+                        status: true,
+                        id_invoice: selectedOrder?.id,
+                        table: dataSubmit?.id_tables ? dataSubmit?.id_tables.join(",") : ""
+                       })
                       dispatch(actions.OrderActions.selectedOrder(res.data))
                       dispatch(actions.TableFoodActions.loadData({
                         page: 1,
@@ -476,7 +481,7 @@ const ContentOrderDetail = (props: props) => {
               <Row gutter={[20, 10]}>
                 <Col span={8}>
                   <Button
-                    disabled={selectedOrder?.status === 1 ? true : false}
+                    // disabled={selectedOrder?.status === 1 ? true : false}
                     onClick={() => setIsOpenCancleOrder(true)}
                     danger
                     className="button-controler-order"

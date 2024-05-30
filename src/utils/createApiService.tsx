@@ -55,85 +55,89 @@ const _makeAuthRequest = (instantAxios: any) => async (args: any) => {
   //     return Promise.reject(error);
   //   }
   // );
-  ///test 
+  ///test
   let isRefreshing = false;
- let failedQueue: { resolve: (value: unknown) => void; reject: (reason?: any) => void; }[] = [];
+  let failedQueue: {
+    resolve: (value: unknown) => void;
+    reject: (reason?: any) => void;
+  }[] = [];
 
-       const processQueue = (error: any, token = null) => {
-            failedQueue.forEach(prom => {
-                if (error) {
-                    prom.reject(error);
-                } else {
-                    prom.resolve(token);
-                }
+  const processQueue = (error: any, token = null) => {
+    failedQueue.forEach((prom) => {
+      if (error) {
+        prom.reject(error);
+      } else {
+        prom.resolve(token);
+      }
+    });
+
+    failedQueue = [];
+  };
+
+  instantAxios.interceptors.response.use(
+    (response: any) => {
+      return response;
+    },
+    (err: any) => {
+      const originalRequest = err.config;
+
+      if (err.response.status === 401 && !originalRequest._retry) {
+        if (isRefreshing) {
+          return new Promise(function (resolve, reject) {
+            failedQueue.push({ resolve, reject });
+          })
+            .then((token) => {
+              originalRequest.headers["Authorization"] = "Bearer " + token;
+              return axios(originalRequest);
+            })
+            .catch((err) => {
+              return Promise.reject(err);
             });
+        }
 
-            failedQueue = [];
-        };
+        originalRequest._retry = true;
+        isRefreshing = true;
 
-          instantAxios.interceptors.response.use(
-                      (response: any) => {
-                          return response;
-                      },
-          (err: any) => {
-                          const originalRequest = err.config;
+        return new Promise(function (resolve, reject) {
+          // axios
+          //     .post(`${serverConfig.server}/api/v1/auth/refresh`,
+          //     { headers: {Authorization : `Bearer ${refreshToken}`} }
+          //     )
 
-                if (err.response.status === 401 && !originalRequest._retry) {
-                    if (isRefreshing) {
-                        return new Promise(function(resolve, reject) {
-                            failedQueue.push({ resolve, reject });
-                        })
-                            .then(token => {
-                                originalRequest.headers['Authorization'] = 'Bearer ' + token;
-                                return axios(originalRequest);
-                            })
-                            .catch(err => {
-                                return Promise.reject(err);
-                            });
-                    }
+          axios({
+            method: "POST",
+            url: `${serverConfig.server}/api/v1/auth/refresh`,
+            headers: {
+              Authorization: "Bearer " + refreshToken,
+            },
+          })
+            .then(({ data }) => {
+              console.log("check data", data);
+              if (data.status) {
+                Auth.saveToken(data.data);
+                axios.defaults.headers.common["Authorization"] =
+                  "Bearer " + data.data;
+                originalRequest.headers["Authorization"] =
+                  "Bearer " + data.data;
+                processQueue(null, data.data);
+                resolve(axios(originalRequest));
+              }
+            })
+            .catch((err) => {
+              processQueue(err, null);
+              Auth.removeToken();
+              window.location.href = "/login";
+              reject(err);
+            })
+            .then(() => {
+              isRefreshing = false;
+            });
+        });
+      }
 
-                    originalRequest._retry = true;
-                    isRefreshing = true;
-
-                    return new Promise(function(resolve, reject) {
-                      
-                        // axios
-                        //     .post(`${serverConfig.server}/api/v1/auth/refresh`,
-                        //     { headers: {Authorization : `Bearer ${refreshToken}`} }
-                        //     )
-                        
-                        axios({
-                          method:"POST",
-                          url:`${serverConfig.server}/api/v1/auth/refresh`,
-                          headers: {
-                            Authorization: 'Bearer ' + refreshToken
-                          }
-                        }).then(({ data }) => {
-                          console.log("check data", data)
-                               if (data.status) {
-
-                                Auth.saveToken(data.data)
-                                axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.data;
-                                originalRequest.headers['Authorization'] = 'Bearer ' + data.data;
-                                processQueue(null, data.data);
-                                resolve(axios(originalRequest));
-                               }
-                            })
-                            .catch(err => {
-                                processQueue(err, null);
-                                Auth.removeToken();
-                               window.location.href = "/login";
-                                reject(err);
-                            })
-                            .then(() => {
-                                isRefreshing = false;
-                            });
-                    });
-                }
-
-                return Promise.reject(err);
-            }
-        );
+      return Promise.reject(err);
+    }
+  );
 
   args = {
     ...args,

@@ -1,5 +1,6 @@
 export const RouterLinks = {
   LOGIN: "/login",
+  LOGIN_WITH_FACE: "/login-with-face",
   REGISTER: "/register",
   TONG_QUAN: "/trang-chu/tong-quan",
   HOME_PAGE: "/",
@@ -26,5 +27,5 @@ export const RouterLinks = {
   DANH_SACH_KHACH_HANG: "/khachhang/danhsachkhachhang",
   DANH_SACH_NHA_CC: "/khachhang/danhsachnhacc",
   ORDER_PAGE: "/order-page",
-  CHEF_PAGE:"/chef-page",
+  CHEF_PAGE: "/chef-page",
 };

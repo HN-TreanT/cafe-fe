@@ -6,7 +6,24 @@ const LoginWithFace = () => {
   useEffect(() => {
     startVideo();
     videoRef && callServer();
+    return () => {
+      stopVideo();
+    };
   }, []);
+
+  const stopVideo = () => {
+    const stream = videoRef.current?.srcObject;
+    const tracks = stream?.getTracks();
+
+    tracks?.forEach((track: any) => {
+      track.stop();
+    });
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
   //open web cam
   const startVideo = () => {
     navigator.mediaDevices

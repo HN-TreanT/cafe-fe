@@ -117,14 +117,14 @@ const menuItems = [
       <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     ),
   },
-  {
-    key: RouterLinks.KHUYEN_MAI,
-    label: "Khuyến mãi ",
-    icon: (
-      <AppstoreAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
-    ),
+  // {
+  //   key: RouterLinks.KHUYEN_MAI,
+  //   label: "Khuyến mãi ",
+  //   icon: (
+  //     <AppstoreAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+  //   ),
 
-  },
+  // },
   {
     key: "khohang",
     label: "Kho ",

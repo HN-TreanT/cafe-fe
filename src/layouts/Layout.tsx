@@ -10,6 +10,7 @@ import './Layout.scss'
 import { RouterLinks } from '../const/RouterLinks';
 import AppHeader from './Header';
 import { AppContext } from '../context/appContext';
+import { userServices } from '../utils/services/userService';
 const { Content } = Layout;
 
 const App: React.FC = () => {
@@ -19,11 +20,26 @@ const App: React.FC = () => {
   } = theme.useToken();
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role")
+
+  const getAllPermissionRole= () => {
+    userServices.getAllPermissionRole(role).then((res) => {
+      if (res?.data) {
+        localStorage.setItem("permissions", res.data)
+      }
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
   
   useEffect(() => {
     socket.disconnect();
     socket.connect();
   }, [socket])
+
+  useEffect(() => {
+    getAllPermissionRole()
+  }, [role])
+
   if (!token) {
     return <Navigate to={"/login"} />;
   }

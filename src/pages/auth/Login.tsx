@@ -115,11 +115,12 @@ const Login = () => {
       if (res.status) {
         console.log("res.status", res.data.name);
         dispatch(actions.AuthActions.userInfo(res.data));
-        localStorage.setItem("role", res.data.id_position);
-        localStorage.setItem("username", res.data.TaiKhoan);
+        localStorage.setItem("role", res.data.id_role);
+        localStorage.setItem("username", res.data.username);
         localStorage.setItem("name", res.data.name);
         localStorage.setItem("token", res.data.access_token);
         localStorage.setItem("refresh_token", res.data.refresh_token);
+        localStorage.setItem("permissions", res.data.permissions)
         navigate(RouterLinks.HOME_PAGE);
       } else {
         message.error(res.message);

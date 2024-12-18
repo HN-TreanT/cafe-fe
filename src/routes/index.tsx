@@ -23,6 +23,8 @@ import HoaDon from "../pages/hoadon/DanhSachHoaDon";
 import QuanLyDatBan from "../pages/ban/QuanLyBan";
 import WorkShift from "../pages/workshift/workshift";
 import ThanhToanHoaDon from "../pages/hoadon/ThanhToanHoaDon";
+import NguoiDungPage from "../pages/user/nguoidung";
+import PhanQuyenPage from "../pages/user/phanquyen";
 export const router = createBrowserRouter([
   {
     path: "login",
@@ -109,6 +111,14 @@ export const router = createBrowserRouter([
       {
         path: RouterLinks.DANH_SACH_NHA_CC,
         element: <DanhSachNhaCC />,
+      },
+      {
+        path: RouterLinks.USER_PAGE,
+        element: <NguoiDungPage />,
+      },
+      {
+        path: RouterLinks.ROLE_PAGE,
+        element: <PhanQuyenPage />,
       },
     ],
   },

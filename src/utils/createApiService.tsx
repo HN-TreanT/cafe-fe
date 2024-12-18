@@ -110,6 +110,9 @@ const _makeAuthRequest = (instantAxios: any) => async (args: any) => {
             headers: {
               Authorization: "Bearer " + refreshToken,
             },
+            data: {
+              refresh_token: refreshToken
+            }
           })
             .then(({ data }) => {
               console.log("check data", data);

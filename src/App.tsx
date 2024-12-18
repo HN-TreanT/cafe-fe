@@ -30,6 +30,8 @@ import Workshift from "./pages/workshift/workshift";
 import { AppContext, socket } from "./context/appContext";
 import OverViewPage from "./pages/home/overview-page";
 import LoginWithFace from "./pages/auth/LoginWithFace";
+import NguoiDungPage from "./pages/user/nguoidung";
+import PhanQuyenPage from "./pages/user/phanquyen";
 function App() {
   return (
     <Provider store={store}>
@@ -167,6 +169,23 @@ function App() {
                         </Suspense>
                       }
                     />
+                     <Route
+                      path={RouterLinks.USER_PAGE}
+                      element={
+                        <Suspense fallback={null}>
+                          <NguoiDungPage />
+                        </Suspense>
+                      }
+                    />
+                      <Route
+                      path={RouterLinks.ROLE_PAGE}
+                      element={
+                        <Suspense fallback={null}>
+                          <PhanQuyenPage />
+                        </Suspense>
+                      }
+                    />
+                    
                   </Route>
                   <Route
                     path={RouterLinks.ORDER_PAGE}

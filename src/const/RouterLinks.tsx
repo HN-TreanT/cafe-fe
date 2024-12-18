@@ -28,4 +28,6 @@ export const RouterLinks = {
   DANH_SACH_NHA_CC: "/khachhang/danhsachnhacc",
   ORDER_PAGE: "/order-page",
   CHEF_PAGE: "/chef-page",
+  USER_PAGE: "/nguoidung/user-page",
+  ROLE_PAGE: "/nguoidung/role-page",
 };

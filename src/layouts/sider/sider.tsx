@@ -35,6 +35,7 @@ const Sidebar = () => {
 
   const menuItems = [
     {
+      permission: "view_invoice",
       key: RouterLinks.TONG_QUAN,
       label: "Tổng quan",
       icon: (

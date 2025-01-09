@@ -34,6 +34,7 @@ import NguoiDungPage from "./pages/user/nguoidung";
 import PhanQuyenPage from "./pages/user/phanquyen";
 import Shipper from "./pages/shipper";
 import OnlineOrder from "./pages/online_order/DanhSachHoaDon";
+import EditAccount from "./pages/auth/edit-account";
 function App() {
   return (
     <Provider store={store}>
@@ -87,6 +88,15 @@ function App() {
                       element={
                         <Suspense fallback={null}>
                           <OnlineOrder />
+                        </Suspense>
+                      }
+                    />
+
+                    <Route
+                      path={RouterLinks.DETAIL_ACCOUNT}
+                      element={
+                        <Suspense fallback={null}>
+                          <EditAccount />
                         </Suspense>
                       }
                     />

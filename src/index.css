@@ -1,74 +1,122 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- 
 }
-*{
+* {
   box-sizing: border-box;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
 
 .ant-table-thead .ant-table-cell {
   text-align: center !important;
   color: #fff !important;
-  background-color: #036CBF !important;
+  background-color: #036cbf !important;
 }
 
-.ant-table-thead>tr>th {
+.ant-table-thead > tr > th {
   border-inline-end: 1px solid #b8b8b8 !important;
 }
 
 /* Đối với viền của các ô dữ liệu trong bảng */
-.ant-table-tbody>tr>td {
+.ant-table-tbody > tr > td {
   border-inline-end: 1px solid #b8b8b8 !important;
 }
 
-.ant-table-wrapper .ant-table-container table>thead>tr:first-child>*:first-child {
+.ant-table-wrapper
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  > *:first-child {
   border-start-start-radius: 0px !important;
 }
 
-.ant-table-wrapper .ant-table-container table>thead>tr:first-child>*:last-child {
+.ant-table-wrapper
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  > *:last-child {
   border-start-end-radius: 0px !important;
 }
 
-.ant-table.ant-table-bordered>.ant-table-container>.ant-table-summary>table>tfoot>tr>td {
+.ant-table.ant-table-bordered
+  > .ant-table-container
+  > .ant-table-summary
+  > table
+  > tfoot
+  > tr
+  > td {
   border-inline-end: 1px solid #b8b8b8 !important;
 }
 
-.ant-table-wrapper .ant-table-tbody>tr>td {
+.ant-table-wrapper .ant-table-tbody > tr > td {
   border-bottom: 1px solid #b8b8b8;
   /* border-left: 1px solid #000; */
 }
 
-.ant-table-wrapper .ant-table-tbody>tr>td:first-child {
+.ant-table-wrapper .ant-table-tbody > tr > td:first-child {
   border-left: 1px solid #b8b8b8;
 }
 
-.ant-table-wrapper .ant-table-thead>tr>th {
+.ant-table-wrapper .ant-table-thead > tr > th {
   border-bottom: 1px solid #b8b8b8;
   border-top: 1px solid #b8b8b8;
 }
 
-.ant-table-wrapper .ant-table-thead>tr>th:first-child {
+.ant-table-wrapper .ant-table-thead > tr > th:first-child {
   border-left: 1px solid #b8b8b8;
 }
 
-.ant-table-wrapper .ant-table-thead>tr:second-child>th {
+.ant-table-wrapper .ant-table-thead > tr:second-child > th {
   border-bottom: 1px solid #b8b8b8;
   border-top: 1px solid #b8b8b8;
 }
 
-.ant-table-wrapper .ant-table-thead>tr>th:first-child {
+.ant-table-wrapper .ant-table-thead > tr > th:first-child {
   border-left: 1px solid #b8b8b8;
 }
-.ant-select-selection-item{
+.ant-select-selection-item {
   text-align: start;
+}
+
+/* Thêm styles này vào file CSS của bạn */
+.custom-tabs .ant-tabs-tab {
+  padding: 12px 0 !important;
+  margin: 0 32px 0 0 !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+  background: none !important;
+}
+
+.custom-tabs .ant-tabs-tab:hover {
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+.custom-tabs .ant-tabs-tab.ant-tabs-tab-active {
+  background: none !important;
+}
+
+.custom-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: rgba(0, 0, 0, 0.88) !important;
+  text-shadow: none !important;
+}
+
+.custom-tabs .ant-tabs-nav::before {
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.custom-tabs .ant-tabs-ink-bar {
+  height: 2px !important;
+  background: #1890ff !important;
+}
+
+.custom-tabs .ant-tabs-nav-list {
+  border-bottom: none !important;
 }

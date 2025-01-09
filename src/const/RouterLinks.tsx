@@ -6,6 +6,7 @@ export const RouterLinks = {
   HOME_PAGE: "/",
   BAO_CAO_DOANH_THU: "/baocao/doanhthu",
   BAO_CAO_MAT_HANG: "/baocao/mathang",
+  DETAIL_ACCOUNT: "/edit-account",
   BAO_CAO_KHO_HANG: "/baocao/khohang",
   BAO_CAO_TAI_CHINH: "/baocao/taichinh",
   BAO_CAO_NHAN_VIEN: "/baocao/nhanvien",

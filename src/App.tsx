@@ -32,6 +32,8 @@ import OverViewPage from "./pages/home/overview-page";
 import LoginWithFace from "./pages/auth/LoginWithFace";
 import NguoiDungPage from "./pages/user/nguoidung";
 import PhanQuyenPage from "./pages/user/phanquyen";
+import Shipper from "./pages/shipper";
+import OnlineOrder from "./pages/online_order/DanhSachHoaDon";
 function App() {
   return (
     <Provider store={store}>
@@ -77,6 +79,14 @@ function App() {
                       element={
                         <Suspense fallback={null}>
                           <QuanLyDatBan />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path={RouterLinks.DON_HANG_ONLINE}
+                      element={
+                        <Suspense fallback={null}>
+                          <OnlineOrder />
                         </Suspense>
                       }
                     />
@@ -160,6 +170,14 @@ function App() {
                         </Suspense>
                       }
                     />
+                    <Route
+                      path={RouterLinks.SHIPPER}
+                      element={
+                        <Suspense fallback={null}>
+                          <Shipper />
+                        </Suspense>
+                      }
+                    />
 
                     <Route
                       path={RouterLinks.BAO_CAO_NHAN_VIEN}
@@ -169,7 +187,7 @@ function App() {
                         </Suspense>
                       }
                     />
-                     <Route
+                    <Route
                       path={RouterLinks.USER_PAGE}
                       element={
                         <Suspense fallback={null}>
@@ -177,7 +195,7 @@ function App() {
                         </Suspense>
                       }
                     />
-                      <Route
+                    <Route
                       path={RouterLinks.ROLE_PAGE}
                       element={
                         <Suspense fallback={null}>
@@ -185,7 +203,6 @@ function App() {
                         </Suspense>
                       }
                     />
-                    
                   </Route>
                   <Route
                     path={RouterLinks.ORDER_PAGE}

@@ -2,7 +2,7 @@ import Sider from "antd/es/layout/Sider";
 import { Image, Menu } from "antd";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
-import logo from '../../assets/snapedit_1702777474789.png'
+import logo from "../../assets/snapedit_1702777474789.png";
 import { RouterLinks } from "../../const/RouterLinks";
 import {
   ReconciliationOutlined,
@@ -14,24 +14,23 @@ import {
   MoneyCollectOutlined,
   TableOutlined,
   DropboxOutlined,
-  
 } from "@ant-design/icons";
 import {
   UploadOutlined,
   UserOutlined,
   AppstoreAddOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 import SubMenu from "antd/es/menu/SubMenu";
 import { memo } from "react";
 
 interface props {
-  collapsed: any,
-  setCollapsed: any
+  collapsed: any;
+  setCollapsed: any;
 }
 
 const Sidebar = () => {
-  const permissions_storage = localStorage.getItem('permissions');
-  const permissions = permissions_storage?.split(',')
+  const permissions_storage = localStorage.getItem("permissions");
+  const permissions = permissions_storage?.split(",");
 
   const menuItems = [
     {
@@ -41,31 +40,31 @@ const Sidebar = () => {
       icon: (
         <HomeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
       ),
-  
     },
     {
       permission: "view_invoice",
       key: "hoadon",
       label: "Quản lý hóa đơn",
       icon: (
-        <MoneyCollectOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+        <MoneyCollectOutlined
+          style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
+        />
       ),
       children: [
         {
+          permission: "view_invoice",
           key: RouterLinks.HOA_DON,
           label: "Danh sách hóa đơn",
         },
-        // {
-        //   key: RouterLinks.THANH_TOAN_HOA_DON,
-        //   label: "Thanh toán hoá đơn",
-        // },
       ],
     },
     {
       key: "mathang",
       label: "Mặt hàng",
       icon: (
-        <CoffeeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+        <CoffeeOutlined
+          style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
+        />
       ),
       children: [
         {
@@ -96,16 +95,16 @@ const Sidebar = () => {
       icon: (
         <TableOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
       ),
-  
     },
     {
       permission: "view_workshift",
       key: RouterLinks.CA_LAM,
       label: "Quản lý ca làm",
       icon: (
-        <FieldTimeOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+        <FieldTimeOutlined
+          style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
+        />
       ),
-  
     },
     {
       permission: "view_employee",
@@ -114,22 +113,51 @@ const Sidebar = () => {
       icon: (
         <UserOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
       ),
-  
     },
+    // {
+    //   permission: "view_customer",
+    //   key: RouterLinks.DANH_SACH_KHACH_HANG,
+    //   label: "Danh sách khách hàng",
+    //   icon: (
+    //     <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+    //   ),
+    // },
+
     {
-      permission: "view_customer",
-      key: RouterLinks.DANH_SACH_KHACH_HANG,
-      label: "Danh sách khách hàng",
+      key: "online",
+      label: "Bán hàng online",
       icon: (
-        <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+        <CoffeeOutlined
+          style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
+        />
       ),
+      children: [
+        {
+          permission: "view_order",
+          key: RouterLinks.DON_HANG_ONLINE,
+          label: "Danh sách đơn hàng",
+        },
+        {
+          permission: "view_customer",
+          key: RouterLinks.DANH_SACH_KHACH_HANG,
+          label: "Danh sách khách hàng",
+        },
+        {
+          permission: "view_shipper",
+          key: RouterLinks.SHIPPER,
+          label: "Người giao hàng",
+        },
+      ],
     },
+
     {
       permission: "view_supplier",
       key: RouterLinks.DANH_SACH_NHA_CC,
       label: "Danh sách nhà cung cấp",
       icon: (
-        <UsergroupAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+        <UsergroupAddOutlined
+          style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
+        />
       ),
     },
     // {
@@ -138,14 +166,16 @@ const Sidebar = () => {
     //   icon: (
     //     <AppstoreAddOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
     //   ),
-  
+
     // },
     {
       permission: "view_shipment",
       key: "khohang",
       label: "Kho ",
       icon: (
-        <DropboxOutlined style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }} />
+        <DropboxOutlined
+          style={{ fontSize: "1.3rem", paddingRight: "0.5rem" }}
+        />
       ),
       children: [
         {
@@ -164,7 +194,6 @@ const Sidebar = () => {
           label: "Kiểm kê kho",
         },
       ],
-  
     },
     {
       key: "user",
@@ -184,48 +213,60 @@ const Sidebar = () => {
           label: "Quyền người dùng",
         },
       ],
-  
     },
-   
   ];
 
-  const filteredMenuItems: any = []
+  const filteredMenuItems: any = [];
   menuItems.forEach((item: any) => {
     if (permissions) {
-        if (item?.children) {
-          const child_custom = item?.children.filter((child: any) => permissions.includes(child.permission))
-          if (child_custom && child_custom.length > 0) {
-            filteredMenuItems.push({
-              ...item, 
-              children: child_custom
-            })
-          }
-         
-        } else {
-          if (permissions.includes(item.permission)) {
-            filteredMenuItems.push(item)
-          }
+      if (item?.children) {
+        const child_custom = item?.children.filter((child: any) =>
+          permissions.includes(child.permission)
+        );
+        if (child_custom && child_custom.length > 0) {
+          filteredMenuItems.push({
+            ...item,
+            children: child_custom,
+          });
         }
+      } else {
+        if (permissions.includes(item.permission)) {
+          filteredMenuItems.push(item);
+        }
+      }
     }
   });
 
   const navigate = useNavigate();
   const onClick = (e: any) => {
-    navigate(e.key)
-  }
+    navigate(e.key);
+  };
   return (
-    <Sider style={{
-      overflow: 'auto',
-      height: '100vh',
-      position: 'fixed',
-      left: 0,
-      top: 0,
-      bottom: 0,
-    }} width={300} trigger={null}>
-      <Image src={logo} preview={false} style={{ padding: 5, width: "200px", marginLeft: "34px" }} />
+    <Sider
+      style={{
+        overflow: "auto",
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: 0,
+        bottom: 0,
+      }}
+      width={300}
+      trigger={null}
+    >
+      <Image
+        src={logo}
+        preview={false}
+        style={{ padding: 5, width: "200px", marginLeft: "34px" }}
+      />
       <Menu
-        selectedKeys={['/' + window.location.pathname.split("/")[1] + '/' + window.location.pathname.split("/")[2]]}
-        defaultOpenKeys ={[window.location.pathname.split("/")[1]]}
+        selectedKeys={[
+          "/" +
+            window.location.pathname.split("/")[1] +
+            "/" +
+            window.location.pathname.split("/")[2],
+        ]}
+        defaultOpenKeys={[window.location.pathname.split("/")[1]]}
         theme="dark"
         mode="inline"
         items={filteredMenuItems}
@@ -269,7 +310,6 @@ const Sidebar = () => {
           }
         })} */}
       </Menu>
-
     </Sider>
   );
 };

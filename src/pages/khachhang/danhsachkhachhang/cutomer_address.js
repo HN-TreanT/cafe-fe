@@ -18,15 +18,13 @@ import { Label, UncontrolledTooltip } from "reactstrap";
 import { Plus, X } from "react-feather";
 import { DeleteOutlined, EditOutlined, LockOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
-// import {getCustomer, createCustomer, deleteCustomer, updateCustomer } from "../../../utils/services/customer"
-import { customerOnlineService } from "../../../utils/services/cutomer_online";
+import { customerAddressServices } from "../../../utils/services/customer_address";
 import withReactContent from "sweetalert2-react-content";
 import { react } from "@babel/types";
-import CustomerAddress from "./cutomer_address";
 
 // import { AbilityContext } from '@src/utility/context/Can'
 
-const DanhSachKhachHang = () => {
+const CustomerAddress = ({ customer_id }) => {
   // const ability = useContext(AbilityContext)
   const [form] = Form.useForm();
 
@@ -51,11 +49,11 @@ const DanhSachKhachHang = () => {
   ];
 
   const getData = () => {
-    customerOnlineService
-      .getCustomer({
+    customerAddressServices
+      .get({
         page: currentPage,
         limit: rowsPerPage,
-        ...(search && search !== "" && { search }),
+        id_customer: customer_id,
       })
       .then((res) => {
         setData(res.data.data);
@@ -85,10 +83,11 @@ const DanhSachKhachHang = () => {
   };
   const onFinish = (values) => {
     if (action === "Add") {
-      customerOnlineService
-        .createCustomer({
-          name: values.name,
-          id_product: values.id_product,
+      customerAddressServices
+        .create({
+          id_customer: customer_id,
+          is_default: 1,
+          ...values,
         })
         .then((res) => {
           MySwal.fire({
@@ -114,8 +113,11 @@ const DanhSachKhachHang = () => {
           });
         });
     } else {
-      customerOnlineService
-        .updateCustomer(idEdit, values)
+      customerAddressServices
+        .update(idEdit, {
+          ...values,
+          id_customer: customer_id,
+        })
         .then((res) => {
           MySwal.fire({
             title: "Chỉnh sửa thành công",
@@ -141,16 +143,10 @@ const DanhSachKhachHang = () => {
         });
     }
   };
-  const callEdit = (data) => {
-    const dataSubmit = {
-      ...selected.current,
-      ...data,
-    };
-  };
 
   const handleDelete = (key) => {
-    customerOnlineService
-      .deleteCustomer(key)
+    customerAddressServices
+      .remove(key)
       .then((res) => {
         MySwal.fire({
           title: "Xóa khách hàng thành công",
@@ -184,35 +180,14 @@ const DanhSachKhachHang = () => {
       ),
     },
     {
-      title: "Tên khách hàng",
-      dataIndex: "name",
+      title: "Địa chỉ nhận hàng",
+      dataIndex: "address",
     },
     {
-      title: "SĐT",
+      title: "Số điện thoại liên hệ",
       dataIndex: "phone_number",
     },
-    {
-      title: "Giới tính",
-      dataIndex: "gender",
-      width: "20%",
-      align: "center",
-      render: (text, record, index) => {
-        const gender1 = gender.find((item) => item.value === record.gender);
-        return <span>{`${gender1?.label ? gender1.label : ""}`}</span>;
-      },
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      width: "20%",
-      align: "center",
-    },
-    // {
-    //     title: "Điểm",
-    //     dataIndex: "point",
-    //     width: "20%",
-    //     align: "center",
-    // },
+
     {
       title: "Thao tác",
       width: 100,
@@ -258,7 +233,9 @@ const DanhSachKhachHang = () => {
         items={[
           {
             title: (
-              <span style={{ fontWeight: "bold" }}>Danh sách khách hàng</span>
+              <span style={{ fontWeight: "bold" }}>
+                Danh sách địa chỉ nhận hàng
+              </span>
             ),
           },
         ]}
@@ -272,7 +249,7 @@ const DanhSachKhachHang = () => {
         }}
       >
         <Col sm="4" style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Label
+          {/* <Label
             className=""
             style={{
               width: "100px",
@@ -299,10 +276,10 @@ const DanhSachKhachHang = () => {
                 setCurrentPage(1);
               }
             }}
-          />
+          /> */}
         </Col>
         <Col sm="7" style={{ display: "flex", justifyContent: "flex-end" }}>
-          {/* {
+          {
             <Button
               onClick={(e) => {
                 setAction("Add");
@@ -312,36 +289,35 @@ const DanhSachKhachHang = () => {
             >
               Thêm mới
             </Button>
-          } */}
+          }
         </Col>
       </Row>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={data.map((item) => {
+          return {
+            ...item,
+            key: item.id,
+          };
+        })}
         bordered
-        expandable={{
-          expandedRowRender: (record) => (
-            <CustomerAddress customer_id={record.id} key={record.id} />
-          ),
-          rowExpandable: (record) => record.name !== "Not Expandable",
-        }}
-        pagination={{
-          current: currentPage,
-          pageSize: rowsPerPage,
-          defaultPageSize: rowsPerPage,
-          showSizeChanger: true,
-          pageSizeOptions: ["10", "20", "30", "100"],
-          total: count,
-          locale: { items_per_page: "/ trang" },
-          showTotal: (total, range) => <span>Tổng số: {total}</span>,
-          onShowSizeChange: (current, pageSize) => {
-            setCurrentPage(current);
-            setRowsPerpage(pageSize);
-          },
-          onChange: (pageNumber) => {
-            setCurrentPage(pageNumber);
-          },
-        }}
+        // pagination={{
+        //   current: currentPage,
+        //   pageSize: rowsPerPage,
+        //   defaultPageSize: rowsPerPage,
+        //   showSizeChanger: true,
+        //   pageSizeOptions: ["10", "20", "30", "100"],
+        //   total: count,
+        //   locale: { items_per_page: "/ trang" },
+        //   showTotal: (total, range) => <span>Tổng số: {total}</span>,
+        //   onShowSizeChange: (current, pageSize) => {
+        //     setCurrentPage(current);
+        //     setRowsPerpage(pageSize);
+        //   },
+        //   onChange: (pageNumber) => {
+        //     setCurrentPage(pageNumber);
+        //   },
+        // }}
       />
       <Modal
         open={isAdd}
@@ -354,7 +330,9 @@ const DanhSachKhachHang = () => {
       >
         <div className="" toggle={handleModal} tag="div">
           <h2 className="modal-title">
-            {action === "Add" ? "Thêm mới khách hàng" : "Chỉnh sửa khách hàng"}{" "}
+            {action === "Add"
+              ? "Thêm mới địa chỉ nhận hàng"
+              : "Chỉnh sửa địa chỉ nhận hàng"}{" "}
           </h2>
         </div>
 
@@ -369,87 +347,33 @@ const DanhSachKhachHang = () => {
               <Col span={12}>
                 <Form.Item
                   style={{ marginBottom: "4px" }}
-                  name="name"
-                  label="Tên khách hàng"
+                  name="address"
+                  label="Địa chỉ"
                   rules={[
                     {
                       required: true,
-                      message: "Nhập tên khách hàng",
-                    },
-                    {
-                      validator: (rule, value) => {
-                        if (value && value.trim() === "") {
-                          return Promise.reject(
-                            "Không được nhập toàn dấu cách"
-                          );
-                        }
-                        return Promise.resolve();
-                      },
+                      message: "Nhập địa chỉ",
                     },
                   ]}
                 >
-                  <Input placeholder="Nhập tên khách hàng" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="gender"
-                  label="Giới tính"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng chọn giới tính",
-                    },
-                  ]}
-                >
-                  <Select
-                    allowClear
-                    options={gender}
-                    style={{ width: "100%" }}
-                    placeholder="Chọn giới tính"
-                  ></Select>
+                  <Input placeholder="Nhập địa chỉ" />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
                   style={{ marginBottom: "4px" }}
                   name="phone_number"
-                  label="Số điện thoại"
+                  label="Số điện thoại liên hệ"
                   rules={[
                     {
                       required: true,
-                      message: "Số điện thoại",
+                      message: "Vui lòng nhập số điện thoại liên hệ",
                     },
                   ]}
                 >
-                  <Input placeholder="Nhập số điện thoại" />
+                  <Input placeholder="Nhập số điện thoại liên hệ" />
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  style={{ marginBottom: "4px" }}
-                  name="email"
-                  label="Email"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng nhập email",
-                    },
-                  ]}
-                >
-                  <Input placeholder="Nhập email" />
-                </Form.Item>
-              </Col>
-              {/* <div className=' col col-12'>
-                                <Form.Item style={{ marginBottom: '4px' }}
-                                    name="point"
-                                    label="Điểm tích luỹ"
-                                   
-                                >
-                                    <Input placeholder='Nhập điểm tích luỹ' type="number"/>
-                                </Form.Item>
-                            </div> */}
             </Row>
             <Form.Item
               style={{
@@ -481,4 +405,4 @@ const DanhSachKhachHang = () => {
     </Card>
   );
 };
-export default DanhSachKhachHang;
+export default CustomerAddress;

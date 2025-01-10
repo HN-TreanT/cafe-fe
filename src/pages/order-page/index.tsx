@@ -125,6 +125,7 @@ const OrderPage: React.FC = () => {
   ];
   const selectedOrder = useSelector((state: any) => state.order.selectedOrder);
   const [invoice_details, setInvoiceDetails] = useState<any>([]);
+  console.log(invoice_details);
   const [id_tables, setIdTables] = useState([]);
   const hanldeSetInvoiceDetails = (data: any) => {
     console.log(data);

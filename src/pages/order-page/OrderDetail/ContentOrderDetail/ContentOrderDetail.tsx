@@ -465,6 +465,7 @@ const ContentOrderDetail = (props: props) => {
           invoice_tables={invoice_details}
           visible={openDrawer}
           setVisible={setOpenDrawer}
+          invoice_details={invoice_details}
         />
 
         <Modal
@@ -629,8 +630,18 @@ const ContentOrderDetail = (props: props) => {
                 <div className="total-price-order">
                   <span className="title-total-price-order">Tổng tiền:</span>
                   <span className="price-total">
-                    {selectedOrder?.price
+                    {/* {selectedOrder?.price
                       ? convertPrice(selectedOrder.price)
+                      : `0 đ`} */}
+                    {invoice_details &&
+                    Array.isArray(invoice_details) &&
+                    invoice_details.length > 0
+                      ? convertPrice(
+                          invoice_details.reduce(
+                            (acc, item) => acc + item.price * item.amount,
+                            0
+                          )
+                        )
                       : `0 đ`}
                   </span>
                 </div>
